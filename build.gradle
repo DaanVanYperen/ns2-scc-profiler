@@ -20,7 +20,7 @@ allprojects {
     version = '1.0'
 
     ext {
-        appName = 'GameTemplate'
+        appName = 'NS2 YardStick'
         gdxVersion = '1.5.0'
         artemisVersion = '0.8.1'
         roboVMVersion = '0.0.11'

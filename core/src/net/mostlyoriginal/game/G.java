@@ -6,5 +6,5 @@ package net.mostlyoriginal.game;
 public class G {
 
     public static final int CANVAS_WIDTH = 800;
-    public static final int CANVAS_HEIGHT = 480;
+    public static final int CANVAS_HEIGHT = 800;
 }
