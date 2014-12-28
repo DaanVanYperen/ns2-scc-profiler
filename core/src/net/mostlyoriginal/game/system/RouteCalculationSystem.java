@@ -7,7 +7,6 @@ import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.Color;
-import net.mostlyoriginal.api.ListUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.Path;
@@ -20,6 +19,8 @@ import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 import org.xguzm.pathfinding.grid.finders.ThetaStarGridFinder;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import java.util.List;
  * @author Daan van Yperen
  */
 @Wire
-public class RoutableSystem extends EntitySystem {
+public class RouteCalculationSystem extends EntitySystem {
 
 	protected MapManager mapManager;
 	private boolean resolved = false;
@@ -39,7 +40,7 @@ public class RoutableSystem extends EntitySystem {
 	private PathFinder<GridCell> finder;
 
 
-	public RoutableSystem() {
+	public RouteCalculationSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class));
 	}
 
@@ -59,19 +60,35 @@ public class RoutableSystem extends EntitySystem {
 			resolveForTeam(entities, map, Team.ALIEN);
 			resolveForTeam(entities, map, Team.MARINE);
 
+			for(int i=0,s=entities.size();i<s;i++)
+			{
+				sortRoutesShortestToLongest(entities.get(i));
+			}
+
+			for(int i=0,s=entities.size();i<s;i++)
+			{
+				Entity e = entities.get(i);
+				Routable routable = mRoutable.get(e);
+				if ( routable.paths.size() > 0 ) {
+					renderPath(routable.paths.get(0));
+				}
+			}
+
 			mapManager.refreshTexture();
 		}
 	}
 
+	private void sortRoutesShortestToLongest(Entity e) {
+		Routable routable = mRoutable.get(e);
+		Collections.sort(routable.paths);
+	}
+
 	private void resolveForTeam(ImmutableBag<Entity> entities, MapManager.Map map, Team team) {
 		int size = entities.size();
+
 		for (int a = 0; a < size; a++) {
 			for (int b = a+1; b < size; b++) {
-				Path path = resolveRoute(map.getNavigationGrid(team), entities.get(a), entities.get(b), team);
-				if ( path != null && path.team == Team.MARINE )
-				{
-					renderPath(path);
-				}
+				resolveRoute(map.getNavigationGrid(team), entities.get(a), entities.get(b), team);
 			}
 		}
 	}
@@ -92,9 +109,12 @@ public class RoutableSystem extends EntitySystem {
 			cells.addFirst(new GridCell((int)(posA.x + 4) / mapManager.PATHING_CELL_SIZE,(int)(posA.y + 4) / mapManager.PATHING_CELL_SIZE));
 
 			final Path toDestination = new Path(new SafeEntityReference(b), cells, team);
-			final Path fromDestination = new Path(new SafeEntityReference(a), ListUtils.flip(cells), team);
+
+			ArrayList<GridCell> reversedCells = new ArrayList<GridCell>(cells);
+			Collections.reverse(reversedCells);
+			final Path toSource = new Path(new SafeEntityReference(a),reversedCells, team);
 			mRoutable.get(a).paths.add(toDestination);
-			mRoutable.get(b).paths.add(fromDestination);
+			mRoutable.get(b).paths.add(toSource);
 
 			return toDestination;
 		};

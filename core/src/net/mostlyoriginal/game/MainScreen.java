@@ -16,7 +16,7 @@ import net.mostlyoriginal.game.manager.EntityFactoryManager;
 import net.mostlyoriginal.game.manager.MapManager;
 import net.mostlyoriginal.game.system.BlockadeSystem;
 import net.mostlyoriginal.game.system.MapRenderSystem;
-import net.mostlyoriginal.game.system.RoutableSystem;
+import net.mostlyoriginal.game.system.RouteCalculationSystem;
 
 /**
  * @author Daan van Yperen
@@ -41,7 +41,7 @@ public class MainScreen implements Screen {
 
         /** UTILITY - PASSIVE */
 
-        world.setSystem(new RoutableSystem());
+        world.setSystem(new RouteCalculationSystem());
         world.setSystem(new AssetSystem());
         world.setSystem(new CameraSystem(CAMERA_ZOOM_FACTOR));
         world.setSystem(new BlockadeSystem());
