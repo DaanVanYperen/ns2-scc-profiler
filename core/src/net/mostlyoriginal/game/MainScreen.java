@@ -12,8 +12,9 @@ import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.graphics.RenderBatchingSystem;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.game.manager.AssetSystem;
-import net.mostlyoriginal.game.manager.EntityFactorySystem;
-import net.mostlyoriginal.game.system.RouteSystem;
+import net.mostlyoriginal.game.manager.EntityFactoryManager;
+import net.mostlyoriginal.game.manager.MapManager;
+import net.mostlyoriginal.game.system.MapRenderSystem;
 
 /**
  * @author Daan van Yperen
@@ -33,14 +34,17 @@ public class MainScreen implements Screen {
         world.setManager(new TagManager());
         world.setManager(new UuidEntityManager());
 
+        world.setManager(new EntityFactoryManager());
+        world.setManager(new MapManager());
+
         /** UTILITY - PASSIVE */
 
-        world.setSystem(new EntityFactorySystem());
         world.setSystem(new AssetSystem());
         world.setSystem(new CameraSystem(CAMERA_ZOOM_FACTOR));
 
+
         /** Rendering */
-        world.setSystem(new RouteSystem());
+        world.setSystem(new MapRenderSystem());
 
         RenderBatchingSystem renderBatchingSystem = new RenderBatchingSystem();
         world.setSystem(renderBatchingSystem);

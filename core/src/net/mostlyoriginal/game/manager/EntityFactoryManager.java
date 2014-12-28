@@ -1,9 +1,6 @@
 package net.mostlyoriginal.game.manager;
 
-import com.artemis.Archetype;
-import com.artemis.ArchetypeBuilder;
-import com.artemis.ComponentMapper;
-import com.artemis.Entity;
+import com.artemis.*;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.maps.MapProperties;
 import net.mostlyoriginal.api.component.basic.Pos;
@@ -19,7 +16,7 @@ import net.mostlyoriginal.game.component.TeamAsset;
  * @author Daan van Yperen
  */
 @Wire
-public class EntityFactorySystem extends AbstractEntityFactorySystem {
+public class EntityFactoryManager extends Manager {
 
     private Archetype resourceNode;
     private Archetype techpoint;
@@ -45,7 +42,6 @@ public class EntityFactorySystem extends AbstractEntityFactorySystem {
         ).build(world);
     }
 
-    @Override
     public Entity createEntity(String entity, int cx, int cy, MapProperties properties) {
 
         Entity e = null;

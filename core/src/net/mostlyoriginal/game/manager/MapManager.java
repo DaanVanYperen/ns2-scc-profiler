@@ -1,39 +1,30 @@
-package net.mostlyoriginal.game.system;
+package net.mostlyoriginal.game.manager;
 
+import com.artemis.Manager;
 import com.artemis.annotations.Wire;
-import com.artemis.systems.VoidEntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.game.G;
-import net.mostlyoriginal.game.manager.EntityFactorySystem;
 
 /**
  * @author Daan van Yperen
  */
 @Wire
-public class RouteSystem extends VoidEntitySystem {
+public class MapManager extends Manager {
 
-	private SpriteBatch spriteBatch;
-	private Texture mapTexture;
-
-	private CameraSystem cameraSystem;
+	public Texture mapTexture;
 	private Pixmap map;
 
-	private EntityFactorySystem entityFactorySystem;
+	private EntityFactoryManager entityFactoryManager;
 
 	@Override
 	protected void initialize() {
 		super.initialize();
-		spriteBatch = new SpriteBatch();
 
 		map = new Pixmap(G.CANVAS_WIDTH, G.CANVAS_HEIGHT, Pixmap.Format.RGBA8888);
-
 		byPixmap(new Pixmap(Gdx.files.internal("ns2_caged.tga")));
-
 		mapTexture = new Texture(map);
 	}
 
@@ -61,19 +52,10 @@ public class RouteSystem extends VoidEntitySystem {
 	}
 
 	private void addNode(int x, int y) {
-		entityFactorySystem.createEntity("resourceNode", x, y, null);
+		entityFactoryManager.createEntity("resourceNode", x, y, null);
 	}
 
 	private void addTechpoint(int x, int y) {
-		entityFactorySystem.createEntity("techpoint", x, y, null);
-	}
-
-
-	@Override
-	protected void processSystem() {
-		spriteBatch.setProjectionMatrix(cameraSystem.camera.combined);
-		spriteBatch.begin();
-		spriteBatch.draw(mapTexture, 0, 0, G.CANVAS_WIDTH, G.CANVAS_HEIGHT);
-		spriteBatch.end();
+		entityFactoryManager.createEntity("techpoint", x, y, null);
 	}
 }
