@@ -17,6 +17,7 @@ import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 import org.xguzm.pathfinding.grid.finders.JumpPointFinder;
+import org.xguzm.pathfinding.grid.finders.ThetaStarGridFinder;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class RoutableSystem extends EntitySystem {
 	@Override
 	protected void initialize() {
 		//create a finder either using the default options
-		finder = new AStarFinder<>(GridCell.class, new GridFinderOptions());
+		finder = new ThetaStarGridFinder<>(GridCell.class, new GridFinderOptions());
 	}
 
 	@Override
@@ -77,8 +78,18 @@ public class RoutableSystem extends EntitySystem {
 				grid) : null;
 
 		if (path != null) {
-			for (GridCell cell : path) {
-				map.drawPixel(cell.x * mapManager.PATHING_CELL_SIZE, cell.y * mapManager.PATHING_CELL_SIZE, Color.RED);
+			int x1 = (int)(posA.x + 4) / mapManager.PATHING_CELL_SIZE;
+			int y1 = (int)(posA.y + 4) / mapManager.PATHING_CELL_SIZE;
+			for (int i=1; i< path.size(); i++ )
+			{
+				GridCell p2 = path.get(i);
+				map.pix.setColor(Color.RED);
+				map.pix.drawLine(
+						x1,map.pix.getHeight() - y1,
+						p2.x,map.pix.getHeight() - p2.y);
+
+				x1 = p2.x;
+				y1 = p2.y;
 			}
 			System.out.println("Path found");
 		} else System.out.println("Path missing");

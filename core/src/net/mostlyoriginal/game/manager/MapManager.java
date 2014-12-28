@@ -17,7 +17,7 @@ import org.xguzm.pathfinding.grid.NavigationGrid;
 @Wire
 public class MapManager extends Manager {
 
-	public static final int PATHING_CELL_SIZE = 4;
+	public static final int PATHING_CELL_SIZE = 2;
 	public static final int GRID_HEIGHT = G.CANVAS_HEIGHT / PATHING_CELL_SIZE;
 	public static final int GRID_WIDTH = G.CANVAS_WIDTH / PATHING_CELL_SIZE;
 
