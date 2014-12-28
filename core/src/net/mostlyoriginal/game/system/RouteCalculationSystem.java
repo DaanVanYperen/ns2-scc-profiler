@@ -47,7 +47,9 @@ public class RouteCalculationSystem extends EntitySystem {
 	@Override
 	protected void initialize() {
 		//create a finder either using the default options
-		finder = new ThetaStarGridFinder<>(GridCell.class, new GridFinderOptions());
+		GridFinderOptions opt = new GridFinderOptions();
+		opt.dontCrossCorners=true;
+		finder = new ThetaStarGridFinder<>(GridCell.class, opt);
 	}
 
 	@Override
