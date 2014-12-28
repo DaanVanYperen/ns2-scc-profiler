@@ -7,18 +7,17 @@ import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.Color;
+import net.mostlyoriginal.api.ListUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Routable;
+import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.manager.MapManager;
 import org.xguzm.pathfinding.PathFinder;
-import org.xguzm.pathfinding.finders.AStarFinder;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
-import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
-import org.xguzm.pathfinding.grid.finders.JumpPointFinder;
 import org.xguzm.pathfinding.grid.finders.ThetaStarGridFinder;
 
 import java.util.LinkedList;
@@ -57,41 +56,50 @@ public class RoutableSystem extends EntitySystem {
 			resolved = true;
 			final MapManager.Map map = mapManager.map;
 
-			int size = entities.size();
-			for (int a = 0; a < size; a++) {
-				for (int b = a+1; b < size; b++) {
-					resolveRoute(map, entities.get(a), entities.get(b));
-				}
-			}
+			resolveForTeam(entities, map, Team.ALIEN);
+			resolveForTeam(entities, map, Team.MARINE);
 
 			mapManager.refreshTexture();
 		}
 	}
 
-	private void resolveRoute(MapManager.Map map, Entity a, Entity b) {
+	private void resolveForTeam(ImmutableBag<Entity> entities, MapManager.Map map, Team team) {
+		int size = entities.size();
+		for (int a = 0; a < size; a++) {
+			for (int b = a+1; b < size; b++) {
+				Path path = resolveRoute(map.getNavigationGrid(team), entities.get(a), entities.get(b), team);
+				if ( path != null && path.team == Team.MARINE )
+				{
+					renderPath(path);
+				}
+			}
+		}
+	}
 
-		Pos posA = mPos.get(a);
-		Pos posB = mPos.get(b);
+	private Path resolveRoute(NavigationGrid<GridCell> grid, Entity a, Entity b, Team team) {
 
-		NavigationGrid<GridCell> grid = map.getNavigationGrid();
-		GridCell cellA = grid.getCell((int) (posA.x + 4) / mapManager.PATHING_CELL_SIZE, (int) (posA.y + 4) / mapManager.PATHING_CELL_SIZE);
-		GridCell cellB = grid.getCell((int) (posB.x + 4) / mapManager.PATHING_CELL_SIZE, (int) (posB.y + 4) / mapManager.PATHING_CELL_SIZE);
-		List<GridCell> path = ( cellA != null && cellB != null ) ? finder.findPath(
-				cellA,
-				cellB,
-				grid) : null;
+		// offset to center on the image, and convert to pathing space.
+		// @todo cleanup the space difference.
+		final Pos posA = mPos.get(a);
+		final Pos posB = mPos.get(b);
+		final GridCell cellA = grid.getCell((int) (posA.x + 4) / mapManager.PATHING_CELL_SIZE, (int) (posA.y + 4) / mapManager.PATHING_CELL_SIZE);
+		final GridCell cellB = grid.getCell((int) (posB.x + 4) / mapManager.PATHING_CELL_SIZE, (int) (posB.y + 4) / mapManager.PATHING_CELL_SIZE);
 
-		if (path != null) {
+		final List<GridCell> rawPath = finder.findPath(cellA,cellB,grid);
+		if (rawPath != null) {
 
-			final LinkedList<GridCell> cells = new LinkedList<>(path);
+			final LinkedList<GridCell> cells = new LinkedList<>(rawPath);
 			cells.addFirst(new GridCell((int)(posA.x + 4) / mapManager.PATHING_CELL_SIZE,(int)(posA.y + 4) / mapManager.PATHING_CELL_SIZE));
 
-			final Path path1 = new Path(new SafeEntityReference(b), cells, false);
-			mRoutable.get(a).paths.add(path1);
-			mRoutable.get(b).paths.add(new Path(new SafeEntityReference(a), cells, true));
+			final Path toDestination = new Path(new SafeEntityReference(b), cells, team);
+			final Path fromDestination = new Path(new SafeEntityReference(a), ListUtils.flip(cells), team);
+			mRoutable.get(a).paths.add(toDestination);
+			mRoutable.get(b).paths.add(fromDestination);
 
-			renderPath(path1);
+			return toDestination;
 		};
+
+		return null;
 
 		// eliminate duplicate routes using the following algorithm.
 		// long paths get a small penalty.
@@ -100,7 +108,7 @@ public class RoutableSystem extends EntitySystem {
 	}
 
 	private void renderPath(Path path) {
-		final LinkedList<GridCell> cells = path.cells;
+		final List<GridCell> cells = path.cells;
 		for (int i=1; i<cells.size(); i++ )
 		{
 			GridCell p1 = cells.get(i-1);

@@ -8,6 +8,7 @@ import com.artemis.utils.ImmutableBag;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.component.Blockade;
+import net.mostlyoriginal.game.component.Team;
 
 import javax.swing.text.html.parser.Entity;
 
@@ -59,7 +60,10 @@ public class BlockadeSystem extends EntitySystem {
 	}
 
 	/** Check if screen coordinates are blockaded. */
-	public boolean blockaded(int x, int y) {
+	public boolean blockaded(int x, int y, Team team) {
+
+		// blockades only work for marines.
+		if ( team == Team.ALIEN) return false;
 
 		for (com.artemis.Entity entity : getActives()) {
 			if ( entity != null && overlaps(entity, x, y))

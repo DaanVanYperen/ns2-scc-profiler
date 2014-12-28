@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import net.mostlyoriginal.game.G;
+import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.system.BlockadeSystem;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
@@ -26,15 +27,15 @@ public class MapManager extends Manager {
 
 	public class Map {
 
-		NavigationGrid<GridCell> navigationGrid;
+		private NavigationGrid<GridCell>[] navigationGrid = new NavigationGrid[Team.values().length];
 
 		public Map() {
 			pix = new Pixmap(GRID_WIDTH, GRID_HEIGHT, Pixmap.Format.RGBA8888);
 		}
 
-		public NavigationGrid<GridCell> getNavigationGrid()
+		public NavigationGrid<GridCell> getNavigationGrid( Team team )
 		{
-			if (  navigationGrid == null )
+			if (  navigationGrid[team.ordinal()] == null )
 			{
 				GridCell[][] gridCells = new GridCell[GRID_WIDTH][GRID_HEIGHT];
 				for (int x=0;x<GRID_WIDTH;x++) {
@@ -44,7 +45,7 @@ public class MapManager extends Manager {
 						boolean isWalkable = ((color & 0x000000ff)) / 255f >= 0.5f;
 
 						// prevent walking map borders.
-						if ( x == 0 || y == 0 || x-1 == GRID_WIDTH || y-1 == GRID_HEIGHT || blockadeSystem.blockaded(x * PATHING_CELL_SIZE, y * PATHING_CELL_SIZE ) )
+						if ( x == 0 || y == 0 || x-1 == GRID_WIDTH || y-1 == GRID_HEIGHT || blockadeSystem.blockaded(x * PATHING_CELL_SIZE, y * PATHING_CELL_SIZE, team ) )
 							isWalkable=false;
 
 						gridCells[x][y] = new GridCell(x,y, isWalkable);
@@ -54,10 +55,10 @@ public class MapManager extends Manager {
 						}
 					}
 				}
-				navigationGrid = new NavigationGrid<GridCell>(gridCells);
+				navigationGrid[team.ordinal()] = new NavigationGrid<GridCell>(gridCells);
 			}
 
-			return navigationGrid;
+			return navigationGrid[team.ordinal()];
 		}
 
 		public Pixmap pix;
