@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import net.mostlyoriginal.game.G;
+import net.mostlyoriginal.game.system.BlockadeSystem;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 
@@ -20,6 +21,8 @@ public class MapManager extends Manager {
 	public static final int PATHING_CELL_SIZE = 2;
 	public static final int GRID_HEIGHT = G.CANVAS_HEIGHT / PATHING_CELL_SIZE;
 	public static final int GRID_WIDTH = G.CANVAS_WIDTH / PATHING_CELL_SIZE;
+
+	private BlockadeSystem blockadeSystem;
 
 	public class Map {
 
@@ -41,7 +44,7 @@ public class MapManager extends Manager {
 						boolean isWalkable = ((color & 0x000000ff)) / 255f >= 0.5f;
 
 						// prevent walking map borders.
-						if ( x == 0 || y == 0 || x-1 == GRID_WIDTH || y-1 == GRID_HEIGHT )
+						if ( x == 0 || y == 0 || x-1 == GRID_WIDTH || y-1 == GRID_HEIGHT || blockadeSystem.blockaded(x * PATHING_CELL_SIZE, y * PATHING_CELL_SIZE ) )
 							isWalkable=false;
 
 						gridCells[x][y] = new GridCell(x,y, isWalkable);
@@ -102,10 +105,14 @@ public class MapManager extends Manager {
 
 		// PURIFICATION
 		addNode(260, 160);
+		addDuct(195, 290);
+		addDuct(185, 265);
+		addDuct(335, 248);
 
 		// VENTILATION
 		addNode(410, 140);
 		addTechpoint(465, 125);
+		addDuct(410, 181);
 
 		// GENERATOR
 		addNode(745, 465);
@@ -129,6 +136,10 @@ public class MapManager extends Manager {
 
 		// MONITORING
 		addNode(355, 520);
+	}
+
+	private void addDuct(int x, int y) {
+		entityFactoryManager.createEntity("duct", x, y, null);
 	}
 
 	private void addNode(int x, int y) {

@@ -3,10 +3,12 @@ package net.mostlyoriginal.game.manager;
 import com.artemis.*;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.maps.MapProperties;
+import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.manager.AbstractEntityFactorySystem;
+import net.mostlyoriginal.game.component.Blockade;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.TeamAsset;
 
@@ -21,9 +23,11 @@ public class EntityFactoryManager extends Manager {
 
     private Archetype resourceNode;
     private Archetype techpoint;
+    private Archetype duct;
 
     protected ComponentMapper<Pos> mPos;
     protected ComponentMapper<Anim> mAnim;
+    protected ComponentMapper<Bounds> mBounds;
 
     @Override
     protected void initialize() {
@@ -43,6 +47,13 @@ public class EntityFactoryManager extends Manager {
                 TeamAsset.class,
                 Routable.class
         ).build(world);
+        duct = new ArchetypeBuilder().add(
+                Pos.class,
+                Anim.class,
+                Renderable.class,
+                Blockade.class,
+                Bounds.class
+        ).build(world);
     }
 
     public Entity createEntity(String entity, int cx, int cy, MapProperties properties) {
@@ -55,6 +66,9 @@ public class EntityFactoryManager extends Manager {
                 break;
             case "techpoint":
                 e = createTechpoint();
+                break;
+            case "duct":
+                e = createDuct();
                 break;
         }
 
@@ -73,6 +87,19 @@ public class EntityFactoryManager extends Manager {
 
         Anim anim = mAnim.get(node);
         anim.id = "resource-node";
+
+        return node;
+    }
+
+    private Entity createDuct() {
+        Entity node = world.createEntity(this.duct);
+
+        Anim anim = mAnim.get(node);
+        anim.id = "duct";
+
+        Bounds bounds = mBounds.get(node);
+        bounds.maxx=16;
+        bounds.maxy=16;
 
         return node;
     }
