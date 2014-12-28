@@ -7,6 +7,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.manager.AbstractEntityFactorySystem;
+import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.TeamAsset;
 
 /**
@@ -32,13 +33,15 @@ public class EntityFactoryManager extends Manager {
                 Pos.class,
                 Anim.class,
                 Renderable.class,
-                TeamAsset.class
+                TeamAsset.class,
+                Routable.class
         ).build(world);
         techpoint = new ArchetypeBuilder().add(
                 Pos.class,
                 Anim.class,
                 Renderable.class,
-                TeamAsset.class
+                TeamAsset.class,
+                Routable.class
         ).build(world);
     }
 

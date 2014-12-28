@@ -72,6 +72,9 @@ project(":html") {
         compile "net.mostlyoriginal.artemis-odb:contrib-components:$artemisContribVersion:sources"
         compile "net.mostlyoriginal.artemis-odb:contrib-components-libgdx:$artemisContribVersion:sources"
         compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion:sources"
+
+        compile "com.github.xaguzman:pathfinding:0.2.4-SNAPSHOT"
+        compile "com.github.xaguzman:pathfinding:0.2.4-SNAPSHOT:sources"
     }
 }
 
@@ -91,6 +94,8 @@ project(":core") {
         compile "net.mostlyoriginal.artemis-odb:contrib-components:$artemisContribVersion"
         compile "net.mostlyoriginal.artemis-odb:contrib-components-libgdx:$artemisContribVersion"
         compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion"
+
+        compile "com.github.xaguzman:pathfinding:0.2.4-SNAPSHOT"
     }
 }
 
