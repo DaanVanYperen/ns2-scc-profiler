@@ -69,8 +69,9 @@ public class RouteCalculationSystem extends EntitySystem {
 			{
 				Entity e = entities.get(i);
 				Routable routable = mRoutable.get(e);
-				if ( routable.paths.size() > 0 ) {
-					renderPath(routable.paths.get(0));
+				List<Path> paths = routable.paths.get(Team.ALIEN);
+				if ( paths.size() > 0 ) {
+					renderPath(paths.get(0));
 				}
 			}
 
@@ -80,7 +81,9 @@ public class RouteCalculationSystem extends EntitySystem {
 
 	private void sortRoutesShortestToLongest(Entity e) {
 		Routable routable = mRoutable.get(e);
-		Collections.sort(routable.paths);
+		for (Team team : Team.values()) {
+			Collections.sort(routable.paths.get(team));
+		}
 	}
 
 	private void resolveForTeam(ImmutableBag<Entity> entities, MapManager.Map map, Team team) {
@@ -113,8 +116,8 @@ public class RouteCalculationSystem extends EntitySystem {
 			ArrayList<GridCell> reversedCells = new ArrayList<GridCell>(cells);
 			Collections.reverse(reversedCells);
 			final Path toSource = new Path(new SafeEntityReference(a),reversedCells, team);
-			mRoutable.get(a).paths.add(toDestination);
-			mRoutable.get(b).paths.add(toSource);
+			mRoutable.get(a).paths.get(team).add(toDestination);
+			mRoutable.get(b).paths.get(team).add(toSource);
 
 			return toDestination;
 		};
