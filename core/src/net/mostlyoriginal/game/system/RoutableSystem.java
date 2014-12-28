@@ -22,6 +22,8 @@ import org.xguzm.pathfinding.grid.finders.ThetaStarGridFinder;
 import java.util.List;
 
 /**
+ * Resolve routes between all nodes.
+ *
  * @author Daan van Yperen
  */
 @Wire
@@ -53,10 +55,8 @@ public class RoutableSystem extends EntitySystem {
 
 			int size = entities.size();
 			for (int a = 0; a < size; a++) {
-				for (int b = 0; b < size; b++) {
-					if (a != b) {
-						resolveRoute(map, entities.get(a), entities.get(b));
-					}
+				for (int b = a+1; b < size; b++) {
+					resolveRoute(map, entities.get(a), entities.get(b));
 				}
 			}
 
