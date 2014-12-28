@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.game.G;
+import net.mostlyoriginal.game.manager.EntityFactorySystem;
 
 /**
  * @author Daan van Yperen
@@ -21,6 +22,8 @@ public class RouteSystem extends VoidEntitySystem {
 
 	private CameraSystem cameraSystem;
 	private Pixmap map;
+
+	private EntityFactorySystem entityFactorySystem;
 
 	@Override
 	protected void initialize() {
@@ -43,8 +46,26 @@ public class RouteSystem extends VoidEntitySystem {
 		Rectangle dest = new Rectangle(0, 0, pixmap.getWidth(), pixmap.getHeight()).fitInside(new Rectangle(0, 0, G.CANVAS_WIDTH, G.CANVAS_HEIGHT));
 
 		map.drawPixmap(pixmap,
-				0,0,pixmap.getWidth(), pixmap.getHeight(),
-				0,0,(int)dest.width, (int)dest.height);
+				0, 0, pixmap.getWidth(), pixmap.getHeight(),
+				0, 0, (int) dest.width, (int) dest.height);
+
+		addNode(100, 170);
+		addTechpoint(100, 200);
+
+		addNode(230, 180);
+		addNode(420, 140);
+		addTechpoint(465, 125);
+
+		addNode(760, 420);
+		addTechpoint(760, 450);
+	}
+
+	private void addNode(int x, int y) {
+		entityFactorySystem.createEntity("resourceNode", x, y, null);
+	}
+
+	private void addTechpoint(int x, int y) {
+		entityFactorySystem.createEntity("techpoint", x, y, null);
 	}
 
 

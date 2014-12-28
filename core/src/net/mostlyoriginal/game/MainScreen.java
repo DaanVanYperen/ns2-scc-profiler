@@ -9,7 +9,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
+import net.mostlyoriginal.api.system.graphics.RenderBatchingSystem;
+import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.game.manager.AssetSystem;
+import net.mostlyoriginal.game.manager.EntityFactorySystem;
 import net.mostlyoriginal.game.system.RouteSystem;
 
 /**
@@ -32,11 +35,16 @@ public class MainScreen implements Screen {
 
         /** UTILITY - PASSIVE */
 
+        world.setSystem(new EntityFactorySystem());
         world.setSystem(new AssetSystem());
         world.setSystem(new CameraSystem(CAMERA_ZOOM_FACTOR));
 
         /** Rendering */
         world.setSystem(new RouteSystem());
+
+        RenderBatchingSystem renderBatchingSystem = new RenderBatchingSystem();
+        world.setSystem(renderBatchingSystem);
+        world.setSystem(new AnimRenderSystem(renderBatchingSystem), false);
 
         world.initialize();
     }
