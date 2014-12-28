@@ -13,6 +13,8 @@ import net.mostlyoriginal.game.system.BlockadeSystem;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 
+import java.util.HashMap;
+
 /**
  * @author Daan van Yperen
  */
@@ -27,7 +29,7 @@ public class MapManager extends Manager {
 
 	public class Map {
 
-		private NavigationGrid<GridCell>[] navigationGrid = new NavigationGrid[Team.values().length];
+		private HashMap<Team, NavigationGrid<GridCell>> navigationGrid = new HashMap<>();
 
 		public Map() {
 			pix = new Pixmap(GRID_WIDTH, GRID_HEIGHT, Pixmap.Format.RGBA8888);
@@ -35,30 +37,37 @@ public class MapManager extends Manager {
 
 		public NavigationGrid<GridCell> getNavigationGrid( Team team )
 		{
-			if (  navigationGrid[team.ordinal()] == null )
+			if ( !navigationGrid.containsKey(team) )
 			{
-				GridCell[][] gridCells = new GridCell[GRID_WIDTH][GRID_HEIGHT];
+				final GridCell[][] cells = new GridCell[GRID_WIDTH][GRID_HEIGHT];
 				for (int x=0;x<GRID_WIDTH;x++) {
 					for (int y = 0; y < GRID_HEIGHT; y++)
 					{
-						int color = map.pix.getPixel(x, map.pix.getHeight() - y);
-						boolean isWalkable = ((color & 0x000000ff)) / 255f >= 0.5f;
+						boolean isWalkable;
 
-						// prevent walking map borders.
-						if ( x == 0 || y == 0 || x-1 == GRID_WIDTH || y-1 == GRID_HEIGHT || blockadeSystem.blockaded(x * PATHING_CELL_SIZE, y * PATHING_CELL_SIZE, team ) )
-							isWalkable=false;
+						if ( x == 0 || y == 0 || x-1 == GRID_WIDTH || y-1 == GRID_HEIGHT )
+							// prevent walking map borders.
+							isWalkable = false;
+						else if ( blockadeSystem.blockaded(x * PATHING_CELL_SIZE, y * PATHING_CELL_SIZE, team ) )
+							// blocked by team blockades.
+							isWalkable = false;
+						else {
+							// blocked by map mask.
+							int color = map.pix.getPixel(x, map.pix.getHeight() - y);
+							isWalkable = ((color & 0x000000ff)) / 255f >= 0.5f;
+						}
 
-						gridCells[x][y] = new GridCell(x,y, isWalkable);
+						cells[x][y] = new GridCell(x,y, isWalkable);
 						if (isWalkable)
 						{
 							drawPixel(x *  PATHING_CELL_SIZE,y *  PATHING_CELL_SIZE, Color.GREEN);
 						}
 					}
 				}
-				navigationGrid[team.ordinal()] = new NavigationGrid<GridCell>(gridCells);
+				navigationGrid.put(team, new NavigationGrid<GridCell>(cells));
 			}
 
-			return navigationGrid[team.ordinal()];
+			return navigationGrid.get(team);
 		}
 
 		public Pixmap pix;

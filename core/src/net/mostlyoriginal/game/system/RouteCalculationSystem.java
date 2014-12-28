@@ -14,10 +14,10 @@ import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.manager.MapManager;
 import org.xguzm.pathfinding.PathFinder;
+import org.xguzm.pathfinding.finders.AStarFinder;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
-import org.xguzm.pathfinding.grid.finders.ThetaStarGridFinder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +49,7 @@ public class RouteCalculationSystem extends EntitySystem {
 		//create a finder either using the default options
 		GridFinderOptions opt = new GridFinderOptions();
 		opt.dontCrossCorners=true;
-		finder = new ThetaStarGridFinder<>(GridCell.class, opt);
+		finder = new AStarFinder<>(GridCell.class, opt);
 	}
 
 	@Override
@@ -72,8 +72,12 @@ public class RouteCalculationSystem extends EntitySystem {
 				Entity e = entities.get(i);
 				Routable routable = mRoutable.get(e);
 				List<Path> paths = routable.paths.get(Team.ALIEN);
-				if ( paths.size() > 0 ) {
-					renderPath(paths.get(0));
+				for (Path path : paths) {
+					renderPath(path, Color.RED);
+				}
+				paths = routable.paths.get(Team.MARINE);
+				for (Path path : paths) {
+					renderPath(path, Color.BLUE);
 				}
 			}
 
@@ -132,13 +136,13 @@ public class RouteCalculationSystem extends EntitySystem {
 		// bad routes.
 	}
 
-	private void renderPath(Path path) {
+	private void renderPath(Path path, Color color) {
 		final List<GridCell> cells = path.cells;
 		for (int i=1; i<cells.size(); i++ )
 		{
 			GridCell p1 = cells.get(i-1);
 			GridCell p2 = cells.get(i);
-			mapManager.map.pix.setColor(Color.RED);
+			mapManager.map.pix.setColor(color);
 			mapManager.map.pix.drawLine(
 					p1.x,mapManager.map.pix.getHeight() - p1.y,
 					p2.x,mapManager.map.pix.getHeight() - p2.y);
