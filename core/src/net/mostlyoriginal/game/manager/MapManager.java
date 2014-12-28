@@ -100,12 +100,35 @@ public class MapManager extends Manager {
 		addNode(100, 170);
 		addTechpoint(100, 200);
 
-		addNode(230, 180);
-		addNode(420, 140);
+		// PURIFICATION
+		addNode(260, 160);
+
+		// VENTILATION
+		addNode(410, 140);
 		addTechpoint(465, 125);
 
-		addNode(760, 420);
-		addTechpoint(760, 450);
+		// GENERATOR
+		addNode(745, 465);
+		addTechpoint(745, 425);
+
+		// ROOM NORTH-WEST OF GENERATOR
+		addNode(570, 600);
+
+		// MARINE START
+		addNode(160, 600);
+		addTechpoint(130, 560);
+
+		// SEWER
+		addNode(120, 390);
+
+		// LOADING
+		addNode(635, 230);
+
+		// CENTER
+		addNode(405, 400);
+
+		// MONITORING
+		addNode(355, 520);
 	}
 
 	private void addNode(int x, int y) {

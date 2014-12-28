@@ -41,7 +41,7 @@ public class RoutableSystem extends EntitySystem {
 	@Override
 	protected void initialize() {
 		//create a finder either using the default options
-		finder = new ThetaStarGridFinder<>(GridCell.class, new GridFinderOptions());
+		finder = new AStarFinder<>(GridCell.class, new GridFinderOptions());
 	}
 
 	@Override
