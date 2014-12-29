@@ -95,19 +95,26 @@ public class EntityFactoryManager extends Manager {
                 Bounds.class
         ).build(world);
 
-        Anim anim = new Anim("resource-node");
+        createInstancingButton("resource-node", "resourceNode", 50);
+        createInstancingButton("techpoint", "techpoint", 50 + 40*1);
+        createInstancingButton("duct", "duct", 50 + 40*2);
+        createInstancingButton("wall", "wall", 50 + 40*3);
+    }
+
+    private void createInstancingButton(String animId, final String entityId, int x) {
+        Anim anim = new Anim(animId);
         anim.scale = 2;
         new EntityBuilder(world)
                 .with(
-                        new Pos(50,50),
+                        new Pos(x,50),
                         new Bounds(32,32),
                         anim,
                         new Clickable(),
                         new Renderable(800),
-                        new Button("resource-node", new ButtonListener(){
+                        new Button(animId,animId, animId, new ButtonListener(){
                             @Override
                             public void run() {
-                                Entity entity = createEntity("resourceNode", 0, 0, null);
+                                Entity entity = createEntity(entityId, 0, 0, null);
 
                                 Draggable draggable = mDraggable.get(entity);
                                 draggable.dragging = true;
@@ -117,7 +124,7 @@ public class EntityFactoryManager extends Manager {
                             public boolean enabled() {
                                 return true;
                             }
-                        }, "")).build();
+                        })).build();
     }
 
     public Entity createEntity(String entity, int cx, int cy, MapProperties properties) {
