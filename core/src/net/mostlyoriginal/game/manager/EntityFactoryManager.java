@@ -36,6 +36,7 @@ public class EntityFactoryManager extends Manager {
     protected ComponentMapper<Draggable> mDraggable;
     protected ComponentMapper<Renderable> mRenderable;
     protected ComponentMapper<TeamMember> mTeamMember;
+    protected ComponentMapper<Persistable> mPersistable;
 
 
     @Override
@@ -51,6 +52,7 @@ public class EntityFactoryManager extends Manager {
                 Deletable.class,
                 Draggable.class,
                 Clickable.class,
+                Persistable.class,
                 Routable.class
         ).build(world);
         marine = new ArchetypeBuilder().add(
@@ -80,6 +82,7 @@ public class EntityFactoryManager extends Manager {
                 TeamAsset.class,
                 Deletable.class,
                 Clickable.class,
+                Persistable.class,
                 Routable.class
         ).build(world);
         duct = new ArchetypeBuilder().add(
@@ -91,6 +94,7 @@ public class EntityFactoryManager extends Manager {
                 Blockade.class,
                 Deletable.class,
                 Clickable.class,
+                Persistable.class,
                 Bounds.class
         ).build(world);
 
@@ -213,6 +217,8 @@ public class EntityFactoryManager extends Manager {
         bounds.maxx = 16;
         bounds.maxy = 16;
 
+        mPersistable.get(node).saveId = "resourceNode";
+
         return node;
     }
 
@@ -230,6 +236,8 @@ public class EntityFactoryManager extends Manager {
         Blockade blockade = mBlockade.get(node);
         blockade.passableBy = EnumSet.of(Team.ALIEN);
 
+        mPersistable.get(node).saveId = "duct";
+
         return node;
     }
 
@@ -243,10 +251,11 @@ public class EntityFactoryManager extends Manager {
         bounds.maxx=16;
         bounds.maxy=16;
 
-
         // walls block both teams (null).
         Blockade blockade = mBlockade.get(node);
         blockade.passableBy = EnumSet.noneOf(Team.class);
+
+        mPersistable.get(node).saveId = "wall";
 
         return node;
     }
@@ -260,6 +269,8 @@ public class EntityFactoryManager extends Manager {
         Bounds bounds = mBounds.get(techpoint);
         bounds.maxx = 16;
         bounds.maxy = 16;
+
+        mPersistable.get(techpoint).saveId = "techpoint";
 
         return techpoint;
     }

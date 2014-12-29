@@ -6,7 +6,6 @@ import com.artemis.annotations.Wire;
 import com.artemis.systems.VoidEntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
-import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Traveler;
 
@@ -32,6 +31,8 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 
 	public void load() {
 		layerManager.getRawLayer().drawPixmapToFit(new Pixmap(Gdx.files.internal("ns2_caged_v2.tga")));
+
+		/*
 
 		addNode(100, 170);
 		Entity sewerHive = addTechpoint(100, 200);
@@ -109,8 +110,8 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 			addWall(394 + 28 + i * 14, 520);
 		}
 		for ( int i=1; i<5;i++) {
-			addWall(394 + 28 + i * 14, 580);
-		}
+		 	addWall(394 + 28 + i * 14, 580);
+		} */
 	}
 
 	private void addDuct(int x, int y) {

@@ -55,7 +55,7 @@ public class RefreshHandlerSystem extends EntitySystem {
 	}
 
 	/** restart all generation. */
-	private void restart() {
+	public void restart() {
 
 		purgeAllTransientEntities();
 		clearRoutes();
