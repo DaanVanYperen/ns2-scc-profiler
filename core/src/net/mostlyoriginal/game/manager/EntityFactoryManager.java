@@ -74,6 +74,9 @@ public class EntityFactoryManager extends Manager {
             case "duct":
                 e = createDuct();
                 break;
+            case "wall":
+                e = createWall();
+                break;
         }
 
         if ( e != null && mPos.has(e))
@@ -116,7 +119,7 @@ public class EntityFactoryManager extends Manager {
         Entity node = world.createEntity(this.duct);
 
         Anim anim = mAnim.get(node);
-        anim.id = "duct";
+        anim.id = "wall";
 
         Bounds bounds = mBounds.get(node);
         bounds.maxx=16;

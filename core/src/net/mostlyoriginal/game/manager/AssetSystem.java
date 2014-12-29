@@ -31,6 +31,7 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("resource-node", 136,0, 16,16,1);
         add("techpoint", 136-16,0, 16,16,1);
         add("duct", 136-16,16, 16,16,1);
+        add("wall", 136,16, 16,16,1);
 
         loadSounds(new String[] {
         });

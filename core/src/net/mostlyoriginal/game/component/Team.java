@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Color;
  */
 public enum Team {
 	ALIEN(Color.GREEN, Color.RED),
-	MARINE(Color.YELLOW, Color.BLUE);
+	MARINE(Color.ORANGE, Color.BLUE);
 
 	Team(Color backgroundColor, Color pathColor) {
 		this.backgroundColor = backgroundColor;
