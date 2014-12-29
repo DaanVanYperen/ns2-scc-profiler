@@ -2,7 +2,6 @@ package net.mostlyoriginal.game.manager;
 
 import com.artemis.Manager;
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.system.BlockadeSystem;
@@ -61,7 +60,8 @@ public class NavigationGridManager extends Manager {
 					// generate mask based on blockades.
 					if ( isWalkable )
 					{
-						navMask.drawPixel(x, navMask.pixmap.getHeight() - y, Color.GREEN);
+						navMask.drawPixel(x, navMask.pixmap.getHeight() - y,
+								team.getBackgroundColor());
 					}
 
 					cells[x][y] = new GridCell(x,y, isWalkable);

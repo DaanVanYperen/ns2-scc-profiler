@@ -88,7 +88,7 @@ public class RouteCalculationSystem extends EntitySystem {
 	private void renderPaths(Routable routable, Team team ) {
 		List<Path> paths = routable.paths.get(team);
 		for (Path path : paths) {
-			layerManager.getTeamNavLayer(team).drawPath(path, Color.RED);
+			layerManager.getTeamNavLayer(team).drawPath(path, team.getPathColor());
 		}
 	}
 

@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class Layer extends Component {
 
+	public boolean visible = true;
 	public final Pixmap pixmap;
 
 	public Layer() {

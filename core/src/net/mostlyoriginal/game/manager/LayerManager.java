@@ -41,6 +41,7 @@ public class LayerManager extends Manager {
 		{
 			Entity layerEntity = world.createEntity(layerArchetype);
 			rawMapLayer = mLayer.get(layerEntity);
+			rawMapLayer.visible=false;
 
 			Renderable renderable = mRenderable.get(layerEntity);
 			renderable.layer = -100;
@@ -55,11 +56,13 @@ public class LayerManager extends Manager {
 		{
 			Entity layerEntity = world.createEntity(layerArchetype);
 			layer = mLayer.get(layerEntity);
+			layer.visible=team == Team.MARINE;
 
 			Renderable renderable = mRenderable.get(layerEntity);
 			renderable.layer = -90 + team.ordinal();
 
 			teamNavigationLayer.put(team, layer);
+
 		}
 
 		return layer;

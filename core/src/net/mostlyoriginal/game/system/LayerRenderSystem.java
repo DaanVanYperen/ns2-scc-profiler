@@ -52,21 +52,26 @@ public class LayerRenderSystem extends DeferredEntityProcessingSystem {
 		batch.end();
 	}
 
-	/** Pixel perfect aligning. */
+	/**
+	 * Pixel perfect aligning.
+	 */
 	private float roundToPixels(final float val) {
 		// since we use camera zoom rounding to integers doesn't work properly.
-		return ((int)(val * cameraSystem.zoom)) / (float)cameraSystem.zoom;
+		return ((int) (val * cameraSystem.zoom)) / (float) cameraSystem.zoom;
 	}
 
 	protected void process(final Entity entity) {
 		final Layer layer = mLayer.get(entity);
-		final Pos pos = mPos.get(entity);
 
-		Texture texture = layer.getTexture();
-		batch.draw(texture,
-				roundToPixels(pos.x),
-				roundToPixels(pos.y),
-				G.CANVAS_WIDTH,
-				G.CANVAS_HEIGHT);
+		if (layer.visible) {
+			final Pos pos = mPos.get(entity);
+			final Texture texture = layer.getTexture();
+			batch.draw(texture,
+					roundToPixels(pos.x),
+					roundToPixels(pos.y),
+					G.CANVAS_WIDTH,
+					G.CANVAS_HEIGHT);
+		}
+
 	}
 }
