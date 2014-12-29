@@ -49,6 +49,7 @@ public class NavigationGridManager extends Manager {
 				{
 					boolean isWalkable;
 
+					int rawColor = rawMapLayer.pixmap.getPixel(x, rawMapLayer.pixmap.getHeight() - y);
 					if ( x == 0 || y == 0 || x-1 == GRID_WIDTH || y-1 == GRID_HEIGHT )
 						// prevent walking map borders.
 						isWalkable = false;
@@ -57,23 +58,19 @@ public class NavigationGridManager extends Manager {
 						isWalkable = false;
 					else {
 						// blocked by map mask.
-						int color = rawMapLayer.pixmap.getPixel(x, rawMapLayer.pixmap.getHeight() - y);
-						isWalkable = ((color & 0x000000ff)) / 255f >= 0.5f;
+						isWalkable = ((rawColor & 0x000000ff)) / 255f >= 0.5f;
 					}
 
 					// generate mask based on blockades.
+					tmpCol.set(rawColor);
 					if ( isWalkable )
 					{
-						tmpCol.set(rawMapLayer.pixmap.getPixel(x, rawMapLayer.pixmap.getHeight() - y));
-
 						tmpCol.r = (tmpCol.r + team.getBackgroundColor().r) / 2;
 						tmpCol.g = (tmpCol.g + team.getBackgroundColor().g) / 2;
 						tmpCol.b = (tmpCol.b + team.getBackgroundColor().b) / 2;
 						tmpCol.a = (tmpCol.a + team.getBackgroundColor().a) / 2;
-
-						navMask.drawPixel(x, navMask.pixmap.getHeight() - y,
-								tmpCol);
 					}
+					navMask.drawPixel(x, navMask.pixmap.getHeight() - y,tmpCol);
 
 					cells[x][y] = new GridCell(x,y, isWalkable);
 				}
