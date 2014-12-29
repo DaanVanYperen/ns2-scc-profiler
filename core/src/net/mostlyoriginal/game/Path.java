@@ -5,7 +5,6 @@ import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.component.Team;
 import org.xguzm.pathfinding.grid.GridCell;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -28,7 +27,7 @@ public class Path implements Comparable<Path> {
 		this.reversed = reversed;
 	}
 
-	public int getLength()
+	public int getPixelLength()
 	{
 		float length = 0;
 		for (int i = 1; i < cells.size(); i++) {
@@ -42,6 +41,6 @@ public class Path implements Comparable<Path> {
 
 	@Override
 	public int compareTo(Path o) {
-		return getLength() - o.getLength();
+		return getPixelLength() - o.getPixelLength();
 	}
 }

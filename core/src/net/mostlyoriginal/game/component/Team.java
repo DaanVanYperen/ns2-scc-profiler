@@ -1,17 +1,21 @@
 package net.mostlyoriginal.game.component;
 
 import com.badlogic.gdx.graphics.Color;
+import net.mostlyoriginal.game.G;
 
 /**
  * @author Daan van Yperen
  */
 public enum Team {
-	ALIEN(Color.GREEN, Color.RED),
-	MARINE(Color.ORANGE, Color.BLUE);
+	ALIEN(Color.GREEN, Color.RED, G.ALIEN_SPEED_FAST),
+	MARINE(Color.ORANGE, Color.BLUE, G.MARINE_SPEED_FAST);
 
-	Team(Color backgroundColor, Color pathColor) {
+	private float fastSpeed;
+
+	Team(Color backgroundColor, Color pathColor, float fastSpeed) {
 		this.backgroundColor = backgroundColor;
 		this.pathColor = pathColor;
+		this.fastSpeed = fastSpeed;
 	}
 
 	private Color backgroundColor;
@@ -21,11 +25,11 @@ public enum Team {
 		return backgroundColor;
 	}
 
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
-	}
-
 	public Color getPathColor() {
 		return pathColor;
+	}
+
+	public float getFastSpeed() {
+		return fastSpeed;
 	}
 }

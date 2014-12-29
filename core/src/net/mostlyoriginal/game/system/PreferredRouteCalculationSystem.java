@@ -6,6 +6,7 @@ import com.artemis.utils.EntityBuilder;
 import com.artemis.utils.ImmutableBag;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Renderable;
+import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
@@ -78,8 +79,8 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 			for (Path path : node1.paths.get(team)) {
 				Routable routable = getRoutable(path);
 				if ( routable == node2 ) {
-					float l = path.getLength() * 0.001f;
-					return l*l*l*l*l*l;
+					float l = path.getPixelLength() * 0.05f;
+					return l*l;
 				}
 			}
 
@@ -166,8 +167,8 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 			if (routable == dst ) {
 				if ( !path.preferred && !path.reversed )
 				{
-					if ( team == Team.ALIEN ) {
-						addLabel(path);
+					if ( team == Team.MARINE ) {
+						addLabel(team, path);
 					}
 				}
 				path.preferred = true;
@@ -175,11 +176,16 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 		}
 	}
 
-	private void addLabel(Path path) {
+	private void addLabel(Team team, Path path) {
 		int center = path.cells.size() / 2;
 		GridCell cell = path.cells.get(center);
 
-		Label label = new Label("" + path.getLength());
+		int travelTimeSeconds = Math.round(( path.getPixelLength() * G.PIXELS_TO_UNITS) / team.getFastSpeed());
+
+
+
+
+		Label label = new Label(travelTimeSeconds + "");
 		label.scale = 2;
 		new EntityBuilder(world).with(
 				new Renderable(1000),

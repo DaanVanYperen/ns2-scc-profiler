@@ -56,7 +56,7 @@ public class LayerManager extends Manager {
 		{
 			Entity layerEntity = world.createEntity(layerArchetype);
 			layer = mLayer.get(layerEntity);
-			layer.visible=team == Team.ALIEN;
+			layer.visible=team == Team.MARINE;
 
 			Renderable renderable = mRenderable.get(layerEntity);
 			renderable.layer = -90 + team.ordinal();
