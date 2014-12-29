@@ -4,12 +4,16 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
+import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.PixmapLoader;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
+import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
+import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.mouse.MouseCursor;
 import net.mostlyoriginal.api.utils.EntityUtil;
 
 /**
@@ -36,7 +40,9 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("agent-marine", 136+16, 0, 16,16,1);
         add("agent-alien",  136+16,16, 16,16,1);
 
-        loadSounds(new String[] {
+        add("cursor", 170, 1, 11,12, 1);
+
+        loadSounds(new String[]{
         });
     }
 

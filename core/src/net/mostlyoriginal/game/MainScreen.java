@@ -4,17 +4,27 @@ import com.artemis.World;
 import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 import com.artemis.managers.UuidEntityManager;
+import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.MathUtils;
+import net.mostlyoriginal.api.component.basic.Bounds;
+import net.mostlyoriginal.api.component.basic.Pos;
+import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.component.graphics.Renderable;
+import net.mostlyoriginal.api.component.mouse.MouseCursor;
+import net.mostlyoriginal.api.event.common.EventManager;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.graphics.RenderBatchingSystem;
+import net.mostlyoriginal.api.system.mouse.MouseCursorSystem;
+import net.mostlyoriginal.api.system.physics.CollisionSystem;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.game.manager.*;
 import net.mostlyoriginal.game.system.*;
 import net.mostlyoriginal.game.system.logic.TravelerSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
+import net.mostlyoriginal.game.system.ui.MouseClickSystem;
 
 /**
  * @author Daan van Yperen
@@ -30,6 +40,8 @@ public class MainScreen implements Screen {
 
         /** UTILITY - MANAGERS */
 
+        world.setManager(new EventManager());
+
         world.setManager(new GroupManager());
         world.setManager(new TagManager());
         world.setManager(new UuidEntityManager());
@@ -41,6 +53,11 @@ public class MainScreen implements Screen {
         world.setManager(new FontManager());
 
         /** UTILITY - PASSIVE */
+
+        world.setSystem(new CollisionSystem());
+        world.setSystem(new MouseCursorSystem());
+        world.setSystem(new MouseClickSystem());
+        world.setSystem(new DeletableSystem());
 
         world.setSystem(new LayerLoaderSystem());
 
@@ -65,6 +82,8 @@ public class MainScreen implements Screen {
 
 
         world.initialize();
+
+        new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(0,0,11,12), new Anim("cursor"), new Renderable(10000)).tag("cursor").build();
     }
 
     @Override

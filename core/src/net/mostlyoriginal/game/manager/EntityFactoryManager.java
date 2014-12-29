@@ -8,6 +8,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.component.*;
+import net.mostlyoriginal.game.component.ui.Clickable;
 
 import javax.swing.plaf.metal.MetalPopupMenuSeparatorUI;
 import java.util.EnumSet;
@@ -46,6 +47,8 @@ public class EntityFactoryManager extends Manager {
                 Bounds.class,
                 Renderable.class,
                 TeamAsset.class,
+                Deletable.class,
+                Clickable.class,
                 Routable.class
         ).build(world);
         marine = new ArchetypeBuilder().add(
@@ -70,6 +73,8 @@ public class EntityFactoryManager extends Manager {
                 Bounds.class,
                 Renderable.class,
                 TeamAsset.class,
+                Deletable.class,
+                Clickable.class,
                 Routable.class
         ).build(world);
         duct = new ArchetypeBuilder().add(
@@ -78,6 +83,8 @@ public class EntityFactoryManager extends Manager {
                 Bounds.class,
                 Renderable.class,
                 Blockade.class,
+                Deletable.class,
+                Clickable.class,
                 Bounds.class
         ).build(world);
     }
@@ -194,6 +201,7 @@ public class EntityFactoryManager extends Manager {
         Bounds bounds = mBounds.get(node);
         bounds.maxx=16;
         bounds.maxy=16;
+
 
         // walls block both teams (null).
         Blockade blockade = mBlockade.get(node);
