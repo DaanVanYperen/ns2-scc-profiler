@@ -13,6 +13,7 @@ import net.mostlyoriginal.api.system.graphics.RenderBatchingSystem;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.game.manager.*;
 import net.mostlyoriginal.game.system.*;
+import net.mostlyoriginal.game.system.logic.TravelerSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 
 /**
@@ -37,14 +38,17 @@ public class MainScreen implements Screen {
         world.setManager(new LayerManager());
 
         world.setManager(new EntityFactoryManager());
-        world.setManager(new MapLoaderManager());
         world.setManager(new FontManager());
 
         /** UTILITY - PASSIVE */
 
+        world.setSystem(new MapLoaderSystem());
+
         world.setSystem(new RouteCalculationSystem());
         world.setSystem(new PreferredRouteCalculationSystem());
         world.setSystem(new RoutePlotSystem());
+
+        world.setSystem(new TravelerSystem());
 
         world.setSystem(new AssetSystem());
         world.setSystem(new CameraSystem(CAMERA_ZOOM_FACTOR));

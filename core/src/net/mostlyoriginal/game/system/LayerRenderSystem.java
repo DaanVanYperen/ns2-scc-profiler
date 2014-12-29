@@ -4,19 +4,14 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
-import com.artemis.systems.VoidEntitySystem;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.mostlyoriginal.api.component.basic.Pos;
-import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
 import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.Layer;
-import net.mostlyoriginal.game.component.Team;
-import net.mostlyoriginal.game.manager.LayerManager;
-import net.mostlyoriginal.game.manager.MapLoaderManager;
 
 /**
  * @author Daan van Yperen

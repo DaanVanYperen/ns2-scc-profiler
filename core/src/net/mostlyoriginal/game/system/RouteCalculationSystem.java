@@ -92,14 +92,26 @@ public class RouteCalculationSystem extends EntitySystem {
 		// @todo cleanup the space difference.
 		final Pos posA = mPos.get(a);
 		final Pos posB = mPos.get(b);
-		final GridCell cellA = grid.getCell((int) (posA.x + 4) / LayerManager.CELL_SIZE, (int) (posA.y + 4) / LayerManager.CELL_SIZE);
-		final GridCell cellB = grid.getCell((int) (posB.x + 4) / LayerManager.CELL_SIZE, (int) (posB.y + 4) / LayerManager.CELL_SIZE);
+
+		int aX = (int) (posA.x + 4) / LayerManager.CELL_SIZE;
+		int aY = (int) (posA.y + 4) / LayerManager.CELL_SIZE;
+		final GridCell cellA = grid.getCell(aX, aY);
+
+		int bX = (int) (posB.x + 4) / LayerManager.CELL_SIZE;
+		int bY = (int) (posB.y + 4) / LayerManager.CELL_SIZE;
+		final GridCell cellB = grid.getCell(bX, bY);
+
+		mRoutable.get(a).setX(aX);
+		mRoutable.get(a).setY(aY);
+		mRoutable.get(b).setX(bX);
+		mRoutable.get(b).setY(bY);
 
 		final List<GridCell> rawPath = finder.findPath(cellA,cellB,grid);
 		if (rawPath != null) {
 
+
 			final LinkedList<GridCell> cells = new LinkedList<>(rawPath);
-			cells.addFirst(new GridCell((int)(posA.x + 4) / LayerManager.CELL_SIZE,(int)(posA.y + 4) / LayerManager.CELL_SIZE));
+			cells.addFirst(new GridCell(aX, aY));
 
 			final Path toDestination = new Path(new SafeEntityReference(b), cells, team, false);
 

@@ -7,11 +7,9 @@ import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
-import net.mostlyoriginal.game.component.Blockade;
-import net.mostlyoriginal.game.component.Routable;
-import net.mostlyoriginal.game.component.Team;
-import net.mostlyoriginal.game.component.TeamAsset;
+import net.mostlyoriginal.game.component.*;
 
+import javax.swing.plaf.metal.MetalPopupMenuSeparatorUI;
 import java.util.EnumSet;
 
 /**
@@ -34,6 +32,8 @@ public class EntityFactoryManager extends Manager {
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<Bounds> mBounds;
     protected ComponentMapper<Blockade> mBlockade;
+    protected ComponentMapper<Renderable> mRenderable;
+    protected ComponentMapper<TeamMember> mTeamMember;
 
 
     @Override
@@ -50,11 +50,15 @@ public class EntityFactoryManager extends Manager {
         marine = new ArchetypeBuilder().add(
                 Pos.class,
                 Anim.class,
+                Traveler.class,
+                TeamMember.class,
                 Renderable.class
         ).build(world);
         alien = new ArchetypeBuilder().add(
                 Pos.class,
                 Anim.class,
+                Traveler.class,
+                TeamMember.class,
                 Renderable.class
         ).build(world);
         techpoint = new ArchetypeBuilder().add(
@@ -105,25 +109,37 @@ public class EntityFactoryManager extends Manager {
             pos.y = cy;
         }
 
-        return null;
+        return e;
     }
 
     private Entity createMarine() {
-        Entity node = world.createEntity(marine);
+        Entity marine = world.createEntity(this.marine);
 
-        Anim anim = mAnim.get(node);
+        Anim anim = mAnim.get(marine);
         anim.id = "agent-marine";
 
-        return node;
+        Renderable renderable = mRenderable.get(marine);
+        renderable.layer = 999;
+
+        TeamMember teamMember = mTeamMember.get(marine);
+        teamMember.team = Team.MARINE;
+
+        return marine;
     }
 
     private Entity createAlien() {
-        Entity node = world.createEntity(alien);
+        Entity alien = world.createEntity(this.alien);
 
-        Anim anim = mAnim.get(node);
+        Anim anim = mAnim.get(alien);
         anim.id = "agent-alien";
 
-        return node;
+        Renderable renderable = mRenderable.get(alien);
+        renderable.layer = 1000;
+
+        TeamMember teamMember = mTeamMember.get(alien);
+        teamMember.team = Team.ALIEN;
+
+        return alien;
     }
 
     private Entity createResourceNode() {

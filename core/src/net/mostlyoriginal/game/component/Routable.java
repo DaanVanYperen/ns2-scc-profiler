@@ -22,6 +22,8 @@ public class Routable extends Component implements NavigationNode {
 	}
 
 	/* for path finders*/
+	private int x;
+	private int y;
 	private float f, g, h;
 	private boolean isWalkable = true;
 	private int closedOnJob, openedOnJob;
@@ -107,4 +109,19 @@ public class Routable extends Component implements NavigationNode {
 		this.openedOnJob = openedOnJob;
 	}
 
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
 }
