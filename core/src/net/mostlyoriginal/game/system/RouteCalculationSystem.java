@@ -101,11 +101,11 @@ public class RouteCalculationSystem extends EntitySystem {
 			final LinkedList<GridCell> cells = new LinkedList<>(rawPath);
 			cells.addFirst(new GridCell((int)(posA.x + 4) / LayerManager.CELL_SIZE,(int)(posA.y + 4) / LayerManager.CELL_SIZE));
 
-			final Path toDestination = new Path(new SafeEntityReference(b), cells, team);
+			final Path toDestination = new Path(new SafeEntityReference(b), cells, team, false);
 
 			ArrayList<GridCell> reversedCells = new ArrayList<GridCell>(cells);
 			Collections.reverse(reversedCells);
-			final Path toSource = new Path(new SafeEntityReference(a),reversedCells, team);
+			final Path toSource = new Path(new SafeEntityReference(a),reversedCells, team, true);
 			mRoutable.get(a).paths.get(team).add(toDestination);
 			mRoutable.get(b).paths.get(team).add(toSource);
 

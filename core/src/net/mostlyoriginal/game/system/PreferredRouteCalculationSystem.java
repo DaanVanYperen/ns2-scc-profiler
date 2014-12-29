@@ -164,7 +164,7 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 		for (Path path : src.paths.get(team)) {
 			Routable routable = getRoutable(path);
 			if (routable == dst ) {
-				if ( !path.preferred )
+				if ( !path.preferred && !path.reversed )
 				{
 					if ( team == Team.ALIEN ) {
 						addLabel(path);

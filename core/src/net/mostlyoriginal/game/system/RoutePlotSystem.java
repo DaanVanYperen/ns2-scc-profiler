@@ -61,7 +61,8 @@ public class RoutePlotSystem extends EntitySystem {
 	private void renderPaths(Routable routable, Team team) {
 		List<Path> paths = routable.paths.get(team);
 		for (Path path : paths) {
-			if (path.preferred) {
+			// don't render the reverse paths.
+			if (path.preferred && !path.reversed) {
 				layerManager.getTeamNavLayer(team).drawPath(path, team.getPathColor());
 			}
 		}

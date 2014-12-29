@@ -16,14 +16,16 @@ public class Path implements Comparable<Path> {
 	public SafeEntityReference destination;
 	public List<GridCell> cells;
 	public Team team;
+	public boolean reversed = false;
 	public boolean preferred = false;
 
 	protected static final Vector2 vTmp = new Vector2();
 
-	public Path(SafeEntityReference destination, List<GridCell> cells, Team team) {
+	public Path(SafeEntityReference destination, List<GridCell> cells, Team team, boolean reversed) {
 		this.destination = destination;
 		this.cells = cells;
 		this.team = team;
+		this.reversed = reversed;
 	}
 
 	public int getLength()
