@@ -6,7 +6,9 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import net.mostlyoriginal.api.component.graphics.Invisible;
+import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.RenderMask;
+import net.mostlyoriginal.game.manager.EntityFactoryManager;
 
 /**
  * Set renderables visible or invisible based on active masks.
@@ -20,9 +22,33 @@ public class RenderMaskHandlerSystem extends EntityProcessingSystem {
 	protected ComponentMapper<Invisible> mInvisible;
 
 	protected RenderMask.Mask activeMask = RenderMask.Mask.PATHFIND_ALIEN;
+	private EntityFactoryManager entityFactoryManager;
 
 	public RenderMaskHandlerSystem() {
 		super(Aspect.getAspectForAll(RenderMask.class));
+	}
+
+	@Override
+	protected void initialize() {
+		super.initialize();
+
+		createLayerButton(50 + 40 * 11, "layer-1", RenderMask.Mask.BASIC);
+		createLayerButton(50 + 40 * 12, "layer-2", RenderMask.Mask.PATHFIND_MARINE);
+		createLayerButton(50 + 40 * 13, "layer-3", RenderMask.Mask.PATHFIND_ALIEN);
+	}
+
+	private void createLayerButton(int x, String id, final RenderMask.Mask mask) {
+		entityFactoryManager.createBasicButton(id, x, new ButtonListener() {
+			@Override
+			public void run() {
+				activeMask = mask;
+			}
+
+			@Override
+			public boolean enabled() {
+				return true;
+			}
+		});
 	}
 
 	@Override
