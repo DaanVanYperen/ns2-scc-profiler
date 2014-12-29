@@ -7,7 +7,6 @@ import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
-import net.mostlyoriginal.api.manager.AbstractEntityFactorySystem;
 import net.mostlyoriginal.game.component.Blockade;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
@@ -28,10 +27,14 @@ public class EntityFactoryManager extends Manager {
     private Archetype techpoint;
     private Archetype duct;
 
+    private Archetype marine;
+    private Archetype alien;
+
     protected ComponentMapper<Pos> mPos;
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<Bounds> mBounds;
     protected ComponentMapper<Blockade> mBlockade;
+
 
     @Override
     protected void initialize() {
@@ -43,6 +46,16 @@ public class EntityFactoryManager extends Manager {
                 Renderable.class,
                 TeamAsset.class,
                 Routable.class
+        ).build(world);
+        marine = new ArchetypeBuilder().add(
+                Pos.class,
+                Anim.class,
+                Renderable.class
+        ).build(world);
+        alien = new ArchetypeBuilder().add(
+                Pos.class,
+                Anim.class,
+                Renderable.class
         ).build(world);
         techpoint = new ArchetypeBuilder().add(
                 Pos.class,
@@ -77,6 +90,12 @@ public class EntityFactoryManager extends Manager {
             case "wall":
                 e = createWall();
                 break;
+            case "marine":
+                e = createMarine();
+                break;
+            case "alien":
+                e = createAlien();
+                break;
         }
 
         if ( e != null && mPos.has(e))
@@ -87,6 +106,24 @@ public class EntityFactoryManager extends Manager {
         }
 
         return null;
+    }
+
+    private Entity createMarine() {
+        Entity node = world.createEntity(marine);
+
+        Anim anim = mAnim.get(node);
+        anim.id = "agent-marine";
+
+        return node;
+    }
+
+    private Entity createAlien() {
+        Entity node = world.createEntity(alien);
+
+        Anim anim = mAnim.get(node);
+        anim.id = "agent-alien";
+
+        return node;
     }
 
     private Entity createResourceNode() {

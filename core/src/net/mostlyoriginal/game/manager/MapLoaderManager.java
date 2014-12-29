@@ -58,8 +58,12 @@ public class MapLoaderManager extends Manager {
 		addNode(160, 600);
 		addTechpoint(130, 560);
 
+		entityFactoryManager.createEntity("marine", 165, 175, null);
+
 		// SEWER
 		addNode(120, 390);
+
+		entityFactoryManager.createEntity("alien", 130, 395, null);
 
 		// LOADING
 		addNode(635, 230);
@@ -89,6 +93,7 @@ public class MapLoaderManager extends Manager {
 		for ( int i=1; i<5;i++) {
 			addWall(394 + 28 + i * 14, 580);
 		}
+
 	}
 
 	private void addDuct(int x, int y) {
