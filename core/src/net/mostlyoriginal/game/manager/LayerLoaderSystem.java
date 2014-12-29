@@ -2,13 +2,11 @@ package net.mostlyoriginal.game.manager;
 
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.Manager;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.VoidEntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import net.mostlyoriginal.game.G;
-import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Traveler;
 
@@ -33,7 +31,7 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 	}
 
 	public void load() {
-		layerManager.getRawLayer().drawPixmapToFit(new Pixmap(Gdx.files.internal("ns2_caged.tga")));
+		layerManager.getRawLayer().drawPixmapToFit(new Pixmap(Gdx.files.internal("ns2_caged_v2.tga")));
 
 		addNode(100, 170);
 		Entity sewerHive = addTechpoint(100, 200);

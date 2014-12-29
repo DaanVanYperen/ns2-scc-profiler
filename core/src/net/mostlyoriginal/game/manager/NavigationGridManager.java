@@ -2,6 +2,7 @@ package net.mostlyoriginal.game.manager;
 
 import com.artemis.Manager;
 import com.artemis.annotations.Wire;
+import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.system.BlockadeSystem;
@@ -24,6 +25,9 @@ public class NavigationGridManager extends Manager {
 	private LayerManager layerManager;
 
 	private HashMap<Team, NavigationGrid<GridCell>> navGrid = new HashMap<>();
+
+
+	private Color tmpCol = new Color();
 
 	/**
 	 * Get raw navigation grid for team.
@@ -60,8 +64,15 @@ public class NavigationGridManager extends Manager {
 					// generate mask based on blockades.
 					if ( isWalkable )
 					{
+						tmpCol.set(rawMapLayer.pixmap.getPixel(x, rawMapLayer.pixmap.getHeight() - y));
+
+						tmpCol.r = (tmpCol.r + team.getBackgroundColor().r) / 2;
+						tmpCol.g = (tmpCol.g + team.getBackgroundColor().g) / 2;
+						tmpCol.b = (tmpCol.b + team.getBackgroundColor().b) / 2;
+						tmpCol.a = (tmpCol.a + team.getBackgroundColor().a) / 2;
+
 						navMask.drawPixel(x, navMask.pixmap.getHeight() - y,
-								team.getBackgroundColor());
+								tmpCol);
 					}
 
 					cells[x][y] = new GridCell(x,y, isWalkable);
