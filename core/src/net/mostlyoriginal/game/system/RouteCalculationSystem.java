@@ -12,17 +12,15 @@ import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
-import net.mostlyoriginal.game.manager.MapManager;
+import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.manager.NavigationGridManager;
 import org.xguzm.pathfinding.PathFinder;
 import org.xguzm.pathfinding.finders.AStarFinder;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Resolve routes between all nodes.
@@ -32,12 +30,14 @@ import java.util.List;
 @Wire
 public class RouteCalculationSystem extends EntitySystem {
 
-	protected MapManager mapManager;
+	protected LayerManager layerManager;
+
 	private boolean resolved = false;
 
 	protected ComponentMapper<Pos> mPos;
 	protected ComponentMapper<Routable> mRoutable;
 	private PathFinder<GridCell> finder;
+	private NavigationGridManager navigationGridManager;
 
 
 	public RouteCalculationSystem() {
@@ -57,31 +57,38 @@ public class RouteCalculationSystem extends EntitySystem {
 
 		if (!resolved) {
 			resolved = true;
-			final MapManager.Map map = mapManager.map;
 
-			resolveForTeam(entities, map, Team.ALIEN);
-			resolveForTeam(entities, map, Team.MARINE);
+			for (Team team : Team.values()) {
+				resolveForTeam(entities, team);
+			}
 
 			for(int i=0,s=entities.size();i<s;i++)
 			{
 				sortRoutesShortestToLongest(entities.get(i));
 			}
 
+			// render all paths on team layers.
 			for(int i=0,s=entities.size();i<s;i++)
 			{
-				Entity e = entities.get(i);
-				Routable routable = mRoutable.get(e);
-				List<Path> paths = routable.paths.get(Team.ALIEN);
-				for (Path path : paths) {
-					renderPath(path, Color.RED);
-				}
-				paths = routable.paths.get(Team.MARINE);
-				for (Path path : paths) {
-					renderPath(path, Color.BLUE);
+				final Entity e = entities.get(i);
+				final Routable routable = mRoutable.get(e);
+
+				for (Team team : Team.values()) {
+					renderPaths(routable, team);
 				}
 			}
 
-			mapManager.refreshTexture();
+			// layer is now dirty, regen texture.
+			for (Team team : Team.values()) {
+				layerManager.getTeamNavLayer(team).refresh();
+			}
+		}
+	}
+
+	private void renderPaths(Routable routable, Team team ) {
+		List<Path> paths = routable.paths.get(team);
+		for (Path path : paths) {
+			layerManager.getTeamNavLayer(team).drawPath(path, Color.RED);
 		}
 	}
 
@@ -92,12 +99,12 @@ public class RouteCalculationSystem extends EntitySystem {
 		}
 	}
 
-	private void resolveForTeam(ImmutableBag<Entity> entities, MapManager.Map map, Team team) {
+	private void resolveForTeam(ImmutableBag<Entity> entities,Team team) {
 		int size = entities.size();
 
 		for (int a = 0; a < size; a++) {
 			for (int b = a+1; b < size; b++) {
-				resolveRoute(map.getNavigationGrid(team), entities.get(a), entities.get(b), team);
+				resolveRoute(navigationGridManager.getNavigationGrid(team), entities.get(a), entities.get(b), team);
 			}
 		}
 	}
@@ -108,14 +115,14 @@ public class RouteCalculationSystem extends EntitySystem {
 		// @todo cleanup the space difference.
 		final Pos posA = mPos.get(a);
 		final Pos posB = mPos.get(b);
-		final GridCell cellA = grid.getCell((int) (posA.x + 4) / mapManager.PATHING_CELL_SIZE, (int) (posA.y + 4) / mapManager.PATHING_CELL_SIZE);
-		final GridCell cellB = grid.getCell((int) (posB.x + 4) / mapManager.PATHING_CELL_SIZE, (int) (posB.y + 4) / mapManager.PATHING_CELL_SIZE);
+		final GridCell cellA = grid.getCell((int) (posA.x + 4) / LayerManager.CELL_SIZE, (int) (posA.y + 4) / LayerManager.CELL_SIZE);
+		final GridCell cellB = grid.getCell((int) (posB.x + 4) / LayerManager.CELL_SIZE, (int) (posB.y + 4) / LayerManager.CELL_SIZE);
 
 		final List<GridCell> rawPath = finder.findPath(cellA,cellB,grid);
 		if (rawPath != null) {
 
 			final LinkedList<GridCell> cells = new LinkedList<>(rawPath);
-			cells.addFirst(new GridCell((int)(posA.x + 4) / mapManager.PATHING_CELL_SIZE,(int)(posA.y + 4) / mapManager.PATHING_CELL_SIZE));
+			cells.addFirst(new GridCell((int)(posA.x + 4) / LayerManager.CELL_SIZE,(int)(posA.y + 4) / LayerManager.CELL_SIZE));
 
 			final Path toDestination = new Path(new SafeEntityReference(b), cells, team);
 
@@ -135,20 +142,6 @@ public class RouteCalculationSystem extends EntitySystem {
 		// this makes multiple small paths preferable over small paths, hopefully eliminating
 		// bad routes.
 	}
-
-	private void renderPath(Path path, Color color) {
-		final List<GridCell> cells = path.cells;
-		for (int i=1; i<cells.size(); i++ )
-		{
-			GridCell p1 = cells.get(i-1);
-			GridCell p2 = cells.get(i);
-			mapManager.map.pix.setColor(color);
-			mapManager.map.pix.drawLine(
-					p1.x,mapManager.map.pix.getHeight() - p1.y,
-					p2.x,mapManager.map.pix.getHeight() - p2.y);
-		}
-	}
-
 
 	private void resolveRoutes() {
 	}

@@ -11,11 +11,9 @@ import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.graphics.RenderBatchingSystem;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
-import net.mostlyoriginal.game.manager.AssetSystem;
-import net.mostlyoriginal.game.manager.EntityFactoryManager;
-import net.mostlyoriginal.game.manager.MapManager;
+import net.mostlyoriginal.game.manager.*;
 import net.mostlyoriginal.game.system.BlockadeSystem;
-import net.mostlyoriginal.game.system.MapRenderSystem;
+import net.mostlyoriginal.game.system.LayerRenderSystem;
 import net.mostlyoriginal.game.system.RouteCalculationSystem;
 
 /**
@@ -36,8 +34,11 @@ public class MainScreen implements Screen {
         world.setManager(new TagManager());
         world.setManager(new UuidEntityManager());
 
+        world.setManager(new NavigationGridManager());
+        world.setManager(new LayerManager());
+
         world.setManager(new EntityFactoryManager());
-        world.setManager(new MapManager());
+        world.setManager(new MapLoaderManager());
 
         /** UTILITY - PASSIVE */
 
@@ -48,7 +49,7 @@ public class MainScreen implements Screen {
 
 
         /** Rendering */
-        world.setSystem(new MapRenderSystem());
+        world.setSystem(new LayerRenderSystem());
 
         RenderBatchingSystem renderBatchingSystem = new RenderBatchingSystem();
         world.setSystem(renderBatchingSystem);

@@ -5,18 +5,20 @@ import com.artemis.systems.VoidEntitySystem;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.game.G;
-import net.mostlyoriginal.game.manager.MapManager;
+import net.mostlyoriginal.game.component.Team;
+import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.manager.MapLoaderManager;
 
 /**
  * @author Daan van Yperen
  */
 @Wire
-public class MapRenderSystem extends VoidEntitySystem {
+public class LayerRenderSystem extends VoidEntitySystem {
 
 	private SpriteBatch spriteBatch;
 	private CameraSystem cameraSystem;
 
-	private MapManager mapManager;
+	private LayerManager layerManager;
 
 	@Override
 	protected void initialize() {
@@ -28,7 +30,8 @@ public class MapRenderSystem extends VoidEntitySystem {
 	protected void processSystem() {
 		spriteBatch.setProjectionMatrix(cameraSystem.camera.combined);
 		spriteBatch.begin();
-		spriteBatch.draw(mapManager.mapTexture, 0, 0, G.CANVAS_WIDTH, G.CANVAS_HEIGHT);
+		//spriteBatch.draw(layerManager.rawMapLayer.getTexture(), 0, 0, G.CANVAS_WIDTH, G.CANVAS_HEIGHT);
+		spriteBatch.draw(layerManager.getTeamNavLayer(Team.ALIEN).getTexture(), 0, 0, G.CANVAS_WIDTH, G.CANVAS_HEIGHT);
 		spriteBatch.end();
 	}
 }
