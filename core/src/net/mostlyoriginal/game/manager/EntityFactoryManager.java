@@ -9,10 +9,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.component.*;
-import net.mostlyoriginal.game.component.ui.Button;
-import net.mostlyoriginal.game.component.ui.ButtonListener;
-import net.mostlyoriginal.game.component.ui.Clickable;
-import net.mostlyoriginal.game.component.ui.Draggable;
+import net.mostlyoriginal.game.component.ui.*;
 
 import java.util.EnumSet;
 
@@ -62,6 +59,7 @@ public class EntityFactoryManager extends Manager {
                 Bounds.class,
                 Traveler.class,
                 TeamMember.class,
+                Transient.class,
                 Renderable.class
         ).build(world);
         alien = new ArchetypeBuilder().add(
@@ -70,6 +68,7 @@ public class EntityFactoryManager extends Manager {
                 Bounds.class,
                 Traveler.class,
                 TeamMember.class,
+                Transient.class,
                 Renderable.class
         ).build(world);
         techpoint = new ArchetypeBuilder().add(
@@ -98,10 +97,27 @@ public class EntityFactoryManager extends Manager {
         createInstancingButton("resource-node", "resourceNode", 50);
         createInstancingButton("techpoint", "techpoint", 50 + 40*1);
         createInstancingButton("duct", "duct", 50 + 40*2);
-        createInstancingButton("wall", "wall", 50 + 40*3);
+        createInstancingButton("wall", "wall", 50 + 40 * 3);
     }
 
     private void createInstancingButton(String animId, final String entityId, int x) {
+        createBasicButton(animId, x, new ButtonListener() {
+            @Override
+            public void run() {
+                Entity entity = createEntity(entityId, 0, 0, null);
+
+                Draggable draggable = mDraggable.get(entity);
+                draggable.dragging = true;
+            }
+
+            @Override
+            public boolean enabled() {
+                return true;
+            }
+        });
+    }
+
+    public void createBasicButton(String animId, int x, ButtonListener buttonListener) {
         Anim anim = new Anim(animId);
         anim.scale = 2;
         new EntityBuilder(world)
@@ -111,20 +127,7 @@ public class EntityFactoryManager extends Manager {
                         anim,
                         new Clickable(),
                         new Renderable(800),
-                        new Button(animId,animId, animId, new ButtonListener(){
-                            @Override
-                            public void run() {
-                                Entity entity = createEntity(entityId, 0, 0, null);
-
-                                Draggable draggable = mDraggable.get(entity);
-                                draggable.dragging = true;
-                            }
-
-                            @Override
-                            public boolean enabled() {
-                                return true;
-                            }
-                        })).build();
+                        new Button(animId,animId, animId, buttonListener)).build();
     }
 
     public Entity createEntity(String entity, int cx, int cy, MapProperties properties) {

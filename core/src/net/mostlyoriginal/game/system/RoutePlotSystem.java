@@ -22,7 +22,7 @@ public class RoutePlotSystem extends EntitySystem {
 
 	protected LayerManager layerManager;
 
-	private boolean dirty =true;
+	public boolean dirty =true;
 	protected ComponentMapper<Routable> mRoutable;
 
 

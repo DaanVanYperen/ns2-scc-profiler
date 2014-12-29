@@ -35,7 +35,7 @@ public class RouteCalculationSystem extends EntitySystem {
 
 	protected LayerManager layerManager;
 
-	private boolean dirty = true;
+	public boolean dirty = true;
 
 	protected ComponentMapper<Pos> mPos;
 	protected ComponentMapper<Routable> mRoutable;

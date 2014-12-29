@@ -14,6 +14,7 @@ import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.ui.Label;
+import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
 import org.xguzm.pathfinding.*;
@@ -39,7 +40,7 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 	private PathFinder<Routable> finder;
 	private NavigationGridManager navigationGridManager;
 	private Team pathfindTeam;
-	private boolean dirty = true;
+	public boolean dirty = true;
 
 
 	public PreferredRouteCalculationSystem() {
@@ -184,6 +185,7 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 		label.scale = 2;
 		new EntityBuilder(world).with(
 				new Renderable(1000),
+				new Transient(),
 				new Pos(cell.getX() * LayerManager.CELL_SIZE, cell.getY() * LayerManager.CELL_SIZE),
 				label)
 				.build();
