@@ -66,29 +66,6 @@ public class RouteCalculationSystem extends EntitySystem {
 			{
 				sortRoutesShortestToLongest(entities.get(i));
 			}
-
-			// render all paths on team layers.
-			for(int i=0,s=entities.size();i<s;i++)
-			{
-				final Entity e = entities.get(i);
-				final Routable routable = mRoutable.get(e);
-
-				for (Team team : Team.values()) {
-					renderPaths(routable, team);
-				}
-			}
-
-			// layer is now dirty, regen texture.
-			for (Team team : Team.values()) {
-				layerManager.getTeamNavLayer(team).refresh();
-			}
-		}
-	}
-
-	private void renderPaths(Routable routable, Team team ) {
-		List<Path> paths = routable.paths.get(team);
-		for (Path path : paths) {
-			layerManager.getTeamNavLayer(team).drawPath(path, team.getPathColor());
 		}
 	}
 
@@ -137,13 +114,6 @@ public class RouteCalculationSystem extends EntitySystem {
 
 		return null;
 
-		// eliminate duplicate routes using the following algorithm.
-		// long paths get a small penalty.
-		// this makes multiple small paths preferable over small paths, hopefully eliminating
-		// bad routes.
-	}
-
-	private void resolveRoutes() {
 	}
 
 }

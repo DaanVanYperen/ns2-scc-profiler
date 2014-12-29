@@ -12,9 +12,7 @@ import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.graphics.RenderBatchingSystem;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.game.manager.*;
-import net.mostlyoriginal.game.system.BlockadeSystem;
-import net.mostlyoriginal.game.system.LayerRenderSystem;
-import net.mostlyoriginal.game.system.RouteCalculationSystem;
+import net.mostlyoriginal.game.system.*;
 
 /**
  * @author Daan van Yperen
@@ -43,6 +41,9 @@ public class MainScreen implements Screen {
         /** UTILITY - PASSIVE */
 
         world.setSystem(new RouteCalculationSystem());
+        world.setSystem(new PreferredRouteCalculationSystem());
+        world.setSystem(new RoutePlotSystem());
+
         world.setSystem(new AssetSystem());
         world.setSystem(new CameraSystem(CAMERA_ZOOM_FACTOR));
         world.setSystem(new BlockadeSystem());

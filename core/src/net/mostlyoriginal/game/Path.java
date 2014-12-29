@@ -16,6 +16,7 @@ public class Path implements Comparable<Path> {
 	public SafeEntityReference destination;
 	public List<GridCell> cells;
 	public Team team;
+	public boolean preferred = false;
 
 	protected static final Vector2 vTmp = new Vector2();
 
