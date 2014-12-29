@@ -32,6 +32,8 @@ public class MapLoaderManager extends Manager {
 		addDuct(185, 265);
 		addDuct(335, 248);
 
+		addDuct(360, 325);
+
 		// VENTILATION
 		addNode(410, 140);
 		addTechpoint(465, 125);
@@ -40,6 +42,7 @@ public class MapLoaderManager extends Manager {
 		// GENERATOR
 		addNode(745, 465);
 		addTechpoint(745, 425);
+		addDuct(655, 485);
 
 		// ROOM NORTH-WEST OF GENERATOR
 		addNode(570, 600);
@@ -56,6 +59,7 @@ public class MapLoaderManager extends Manager {
 
 		// CENTER
 		addNode(405, 400);
+		addDuct(570, 380);
 
 		// MONITORING
 		addNode(355, 520);
