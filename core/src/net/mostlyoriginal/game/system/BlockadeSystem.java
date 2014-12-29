@@ -20,6 +20,7 @@ public class BlockadeSystem extends EntitySystem {
 
 	private ComponentMapper<Bounds> bm;
 	private ComponentMapper<Pos> pm;
+	protected ComponentMapper<Blockade> mBlockade;
 
 
 	/**
@@ -62,12 +63,11 @@ public class BlockadeSystem extends EntitySystem {
 	/** Check if screen coordinates are blockaded. */
 	public boolean blockaded(int x, int y, Team team) {
 
-		// blockades only work for marines.
-		if ( team == Team.ALIEN) return false;
-
 		for (com.artemis.Entity entity : getActives()) {
-			if ( entity != null && overlaps(entity, x, y))
+			if (  !mBlockade.get(entity).passableBy.contains(team) && overlaps(entity, x, y) ) {
+				// blockades can be passable by teams.
 				return true;
+			}
 		}
 
 		return false;

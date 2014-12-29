@@ -10,7 +10,10 @@ import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.manager.AbstractEntityFactorySystem;
 import net.mostlyoriginal.game.component.Blockade;
 import net.mostlyoriginal.game.component.Routable;
+import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.TeamAsset;
+
+import java.util.EnumSet;
 
 /**
  * Game specific entity factory.
@@ -28,6 +31,7 @@ public class EntityFactoryManager extends Manager {
     protected ComponentMapper<Pos> mPos;
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<Bounds> mBounds;
+    protected ComponentMapper<Blockade> mBlockade;
 
     @Override
     protected void initialize() {
@@ -100,6 +104,27 @@ public class EntityFactoryManager extends Manager {
         Bounds bounds = mBounds.get(node);
         bounds.maxx=16;
         bounds.maxy=16;
+
+        // ducts can be passed by aliens.
+        Blockade blockade = mBlockade.get(node);
+        blockade.passableBy = EnumSet.of(Team.ALIEN);
+
+        return node;
+    }
+
+    private Entity createWall() {
+        Entity node = world.createEntity(this.duct);
+
+        Anim anim = mAnim.get(node);
+        anim.id = "duct";
+
+        Bounds bounds = mBounds.get(node);
+        bounds.maxx=16;
+        bounds.maxy=16;
+
+        // walls block both teams (null).
+        Blockade blockade = mBlockade.get(node);
+        blockade.passableBy = EnumSet.noneOf(Team.class);
 
         return node;
     }
