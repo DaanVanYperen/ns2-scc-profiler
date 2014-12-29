@@ -13,6 +13,7 @@ import net.mostlyoriginal.api.system.graphics.RenderBatchingSystem;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.game.manager.*;
 import net.mostlyoriginal.game.system.*;
+import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 
 /**
  * @author Daan van Yperen
@@ -37,6 +38,7 @@ public class MainScreen implements Screen {
 
         world.setManager(new EntityFactoryManager());
         world.setManager(new MapLoaderManager());
+        world.setManager(new FontManager());
 
         /** UTILITY - PASSIVE */
 
@@ -55,6 +57,8 @@ public class MainScreen implements Screen {
         world.setSystem(renderBatchingSystem);
         world.setSystem(new AnimRenderSystem(renderBatchingSystem), false);
         world.setSystem(new LayerRenderSystem(renderBatchingSystem), false);
+        world.setSystem(new LabelRenderSystem(renderBatchingSystem), false);
+
 
         world.initialize();
     }

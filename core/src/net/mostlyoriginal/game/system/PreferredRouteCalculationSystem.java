@@ -1,19 +1,20 @@
 package net.mostlyoriginal.game.system;
 
-import com.artemis.Aspect;
-import com.artemis.ComponentMapper;
-import com.artemis.Entity;
-import com.artemis.EntitySystem;
+import com.artemis.*;
 import com.artemis.annotations.Wire;
+import com.artemis.utils.EntityBuilder;
 import com.artemis.utils.ImmutableBag;
 import net.mostlyoriginal.api.component.basic.Pos;
+import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
+import net.mostlyoriginal.game.component.ui.Label;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
 import org.xguzm.pathfinding.*;
 import org.xguzm.pathfinding.finders.AStarFinder;
+import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -163,8 +164,27 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 		for (Path path : src.paths.get(team)) {
 			Routable routable = getRoutable(path);
 			if (routable == dst ) {
+				if ( !path.preferred )
+				{
+					if ( team == Team.ALIEN ) {
+						addLabel(path);
+					}
+				}
 				path.preferred = true;
 			}
 		}
+	}
+
+	private void addLabel(Path path) {
+		int center = path.cells.size() / 2;
+		GridCell cell = path.cells.get(center);
+
+		Label label = new Label("" + path.getLength());
+		label.scale = 2;
+		new EntityBuilder(world).with(
+				new Renderable(1000),
+				new Pos(cell.getX() * LayerManager.CELL_SIZE, cell.getY() * LayerManager.CELL_SIZE),
+				label)
+				.build();
 	}
 }
