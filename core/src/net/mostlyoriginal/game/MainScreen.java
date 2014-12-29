@@ -22,10 +22,11 @@ import net.mostlyoriginal.api.system.physics.CollisionSystem;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.game.manager.*;
 import net.mostlyoriginal.game.system.*;
+import net.mostlyoriginal.game.system.interaction.DeletableSystem;
 import net.mostlyoriginal.game.system.logic.TravelerSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
-import net.mostlyoriginal.game.system.ui.DraggableSystem;
-import net.mostlyoriginal.game.system.ui.MouseClickSystem;
+import net.mostlyoriginal.game.system.interaction.DraggableSystem;
+import net.mostlyoriginal.game.system.interaction.MouseClickSystem;
 
 /**
  * @author Daan van Yperen

@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.system.ui;
+package net.mostlyoriginal.game.system.interaction;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -10,8 +10,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
+import net.mostlyoriginal.api.event.common.EventManager;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.events.DragEvent;
 import net.mostlyoriginal.game.component.ui.Draggable;
 
 /**
@@ -33,6 +35,8 @@ public class DraggableSystem extends EntityProcessingSystem {
 	private boolean rightMousePressed = false;
 	private boolean leftWasDown = false;
 	private boolean rightWasDown = false;
+
+	private EventManager em;
 
 	public DraggableSystem() {
 		super(Aspect.getAspectForAll(Pos.class, Clickable.class, Draggable.class));
@@ -61,6 +65,7 @@ public class DraggableSystem extends EntityProcessingSystem {
 		{
 			if ( !leftMousePressed ) {
 				draggable.dragging = false;
+				em.dispatch(new DragEvent(e));
 			} else {
 				// drag to mouse cursor.
 				final Pos pos = mPos.get(e);
