@@ -31,6 +31,7 @@ import net.mostlyoriginal.game.system.logic.RefreshHandlerSystem;
 import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.TravelerSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
+import net.mostlyoriginal.game.system.render.LayerRenderSystem;
 
 /**
  * @author Daan van Yperen

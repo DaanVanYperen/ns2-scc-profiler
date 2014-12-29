@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.system;
+package net.mostlyoriginal.game.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -59,7 +59,6 @@ public class LayerRenderSystem extends DeferredEntityProcessingSystem {
 	protected void process(final Entity entity) {
 		final Layer layer = mLayer.get(entity);
 
-		if (layer.visible) {
 			final Pos pos = mPos.get(entity);
 			final Texture texture = layer.getTexture();
 			batch.draw(texture,
@@ -67,7 +66,6 @@ public class LayerRenderSystem extends DeferredEntityProcessingSystem {
 					roundToPixels(pos.y),
 					G.CANVAS_WIDTH,
 					G.CANVAS_HEIGHT);
-		}
 
 	}
 }

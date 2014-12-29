@@ -43,7 +43,6 @@ public class LayerManager extends Manager {
 		{
 			Entity layerEntity = world.createEntity(layerArchetype);
 			rawMapLayer = mLayer.get(layerEntity);
-			rawMapLayer.visible=false;
 
 			Renderable renderable = mRenderable.get(layerEntity);
 			renderable.layer = -100;
