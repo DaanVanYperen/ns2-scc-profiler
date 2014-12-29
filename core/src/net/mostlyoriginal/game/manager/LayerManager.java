@@ -7,8 +7,10 @@ import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Team;
+import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.system.BlockadeSystem;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 
 /**
@@ -28,10 +30,11 @@ public class LayerManager extends Manager {
 	public static final int LAYER_HEIGHT = G.CANVAS_HEIGHT / CELL_SIZE;
 	public static final int LAYER_WIDTH = G.CANVAS_WIDTH / CELL_SIZE;
 	private Archetype layerArchetype;
+	private ComponentMapper<RenderMask> mRenderMask;
 
 	@Override
 	protected void initialize() {
-		layerArchetype = new ArchetypeBuilder().add(Pos.class, Layer.class, Renderable.class).build(world);
+		layerArchetype = new ArchetypeBuilder().add(Pos.class, Layer.class, Renderable.class, RenderMask.class).build(world);
 	}
 
 	public Layer getRawLayer()
@@ -44,6 +47,8 @@ public class LayerManager extends Manager {
 
 			Renderable renderable = mRenderable.get(layerEntity);
 			renderable.layer = -100;
+
+			mRenderMask.get(layerEntity).visible = EnumSet.of(RenderMask.Mask.BASIC);
 		}
 		return rawMapLayer;
 	}
@@ -55,7 +60,11 @@ public class LayerManager extends Manager {
 		{
 			Entity layerEntity = world.createEntity(layerArchetype);
 			layer = mLayer.get(layerEntity);
-			layer.visible= team == Team.ALIEN;
+
+			switch ( team ) {
+				case  ALIEN: mRenderMask.get(layerEntity).visible = EnumSet.of(RenderMask.Mask.PATHFIND_ALIEN); break;
+				case MARINE: mRenderMask.get(layerEntity).visible = EnumSet.of(RenderMask.Mask.PATHFIND_MARINE); break;
+			}
 
 			Renderable renderable = mRenderable.get(layerEntity);
 			renderable.layer = -90 + team.ordinal();

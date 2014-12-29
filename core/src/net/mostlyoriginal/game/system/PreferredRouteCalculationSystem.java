@@ -14,6 +14,7 @@ import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.ui.Label;
+import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
@@ -163,9 +164,7 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 			if (routable == dst ) {
 				if ( !path.preferred && !path.reversed )
 				{
-					if ( team == Team.ALIEN ) {
 						addLabel(team, path);
-					}
 				}
 				path.preferred = true;
 			}
@@ -186,6 +185,7 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 		new EntityBuilder(world).with(
 				new Renderable(1000),
 				new Transient(),
+				new RenderMask(team == Team.MARINE ? RenderMask.Mask.PATHFIND_MARINE : RenderMask.Mask.PATHFIND_ALIEN),
 				new Pos(cell.getX() * LayerManager.CELL_SIZE, cell.getY() * LayerManager.CELL_SIZE),
 				label)
 				.build();

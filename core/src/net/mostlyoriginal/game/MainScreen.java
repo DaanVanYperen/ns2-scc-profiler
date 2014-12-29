@@ -28,6 +28,7 @@ import net.mostlyoriginal.game.system.interaction.DraggableSystem;
 import net.mostlyoriginal.game.system.interaction.MouseClickSystem;
 import net.mostlyoriginal.game.system.logic.PersistHandlerSystem;
 import net.mostlyoriginal.game.system.logic.RefreshHandlerSystem;
+import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.TravelerSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 
@@ -81,6 +82,7 @@ public class MainScreen implements Screen {
         world.setSystem(new BlockadeSystem());
 
 
+        world.setSystem(new RenderMaskHandlerSystem());
 
         /** Rendering */
 

@@ -37,6 +37,7 @@ public class EntityFactoryManager extends Manager {
     protected ComponentMapper<Renderable> mRenderable;
     protected ComponentMapper<TeamMember> mTeamMember;
     protected ComponentMapper<Persistable> mPersistable;
+    protected ComponentMapper<RenderMask> mRenderMask;
 
 
     @Override
@@ -53,6 +54,7 @@ public class EntityFactoryManager extends Manager {
                 Draggable.class,
                 Clickable.class,
                 Persistable.class,
+                RenderMask.class,
                 Routable.class
         ).build(world);
         marine = new ArchetypeBuilder().add(
@@ -62,6 +64,7 @@ public class EntityFactoryManager extends Manager {
                 Traveler.class,
                 TeamMember.class,
                 Transient.class,
+                RenderMask.class,
                 Renderable.class
         ).build(world);
         alien = new ArchetypeBuilder().add(
@@ -71,6 +74,7 @@ public class EntityFactoryManager extends Manager {
                 Traveler.class,
                 TeamMember.class,
                 Transient.class,
+                RenderMask.class,
                 Renderable.class
         ).build(world);
         techpoint = new ArchetypeBuilder().add(
@@ -83,6 +87,7 @@ public class EntityFactoryManager extends Manager {
                 Deletable.class,
                 Clickable.class,
                 Persistable.class,
+                RenderMask.class,
                 Routable.class
         ).build(world);
         duct = new ArchetypeBuilder().add(
@@ -95,6 +100,7 @@ public class EntityFactoryManager extends Manager {
                 Deletable.class,
                 Clickable.class,
                 Persistable.class,
+                RenderMask.class,
                 Bounds.class
         ).build(world);
 
@@ -185,6 +191,8 @@ public class EntityFactoryManager extends Manager {
         bounds.maxx = 16;
         bounds.maxy = 16;
 
+        mRenderMask.get(marine).visible = EnumSet.allOf(RenderMask.Mask.class);
+
         return marine;
     }
 
@@ -204,6 +212,8 @@ public class EntityFactoryManager extends Manager {
         bounds.maxx = 16;
         bounds.maxy = 16;
 
+        mRenderMask.get(alien).visible = EnumSet.allOf(RenderMask.Mask.class);
+
         return alien;
     }
 
@@ -218,6 +228,8 @@ public class EntityFactoryManager extends Manager {
         bounds.maxy = 16;
 
         mPersistable.get(node).saveId = "resourceNode";
+
+        mRenderMask.get(node).visible = EnumSet.allOf(RenderMask.Mask.class);
 
         return node;
     }
@@ -238,6 +250,8 @@ public class EntityFactoryManager extends Manager {
 
         mPersistable.get(node).saveId = "duct";
 
+        mRenderMask.get(node).visible = EnumSet.of(RenderMask.Mask.BASIC, RenderMask.Mask.PATHFIND_MARINE);
+
         return node;
     }
 
@@ -257,6 +271,8 @@ public class EntityFactoryManager extends Manager {
 
         mPersistable.get(node).saveId = "wall";
 
+        mRenderMask.get(node).visible = EnumSet.allOf(RenderMask.Mask.class);
+
         return node;
     }
 
@@ -271,6 +287,8 @@ public class EntityFactoryManager extends Manager {
         bounds.maxy = 16;
 
         mPersistable.get(techpoint).saveId = "techpoint";
+
+        mRenderMask.get(techpoint).visible = EnumSet.allOf(RenderMask.Mask.class);
 
         return techpoint;
     }

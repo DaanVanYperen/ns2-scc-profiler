@@ -7,6 +7,7 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.mostlyoriginal.api.component.basic.Pos;
+import net.mostlyoriginal.api.component.graphics.Invisible;
 import net.mostlyoriginal.api.system.camera.CameraSystem;
 import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
 import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
@@ -26,7 +27,7 @@ public class LayerRenderSystem extends DeferredEntityProcessingSystem {
 	private CameraSystem cameraSystem;
 
 	public LayerRenderSystem(EntityProcessPrincipal principal) {
-		super(Aspect.getAspectForAll(Pos.class, Layer.class), principal);
+		super(Aspect.getAspectForAll(Pos.class, Layer.class).exclude(Invisible.class), principal);
 	}
 
 	@Override
