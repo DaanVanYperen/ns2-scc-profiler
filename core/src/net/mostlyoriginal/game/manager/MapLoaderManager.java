@@ -4,7 +4,7 @@ import com.artemis.Manager;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import net.mostlyoriginal.game.component.Layer;
 
 /**
  * Load map layers.
@@ -21,8 +21,7 @@ public class MapLoaderManager extends Manager {
 	protected void initialize() {
 		super.initialize();
 
-		layerManager.rawMapLayer = new LayerManager.Layer();
-		layerManager.rawMapLayer.drawPixmapToFit(new Pixmap(Gdx.files.internal("ns2_caged.tga")));
+		layerManager.getRawLayer().drawPixmapToFit(new Pixmap(Gdx.files.internal("ns2_caged.tga")));
 
 		addNode(100, 170);
 		addTechpoint(100, 200);

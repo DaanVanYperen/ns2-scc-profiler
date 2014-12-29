@@ -49,11 +49,11 @@ public class MainScreen implements Screen {
 
 
         /** Rendering */
-        world.setSystem(new LayerRenderSystem());
 
         RenderBatchingSystem renderBatchingSystem = new RenderBatchingSystem();
         world.setSystem(renderBatchingSystem);
         world.setSystem(new AnimRenderSystem(renderBatchingSystem), false);
+        world.setSystem(new LayerRenderSystem(renderBatchingSystem), false);
 
         world.initialize();
     }
