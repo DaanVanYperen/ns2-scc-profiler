@@ -1,6 +1,9 @@
 package net.mostlyoriginal.game.system;
 
-import com.artemis.*;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
+import com.artemis.Entity;
+import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.EntityBuilder;
 import com.artemis.utils.ImmutableBag;
@@ -29,8 +32,6 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 
 	protected LayerManager layerManager;
 
-	private boolean resolved = false;
-
 	private HashMap<Team, TeamGraph> teamGraphs = new HashMap<>();
 
 	protected ComponentMapper<Pos> mPos;
@@ -38,10 +39,23 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 	private PathFinder<Routable> finder;
 	private NavigationGridManager navigationGridManager;
 	private Team pathfindTeam;
+	private boolean dirty;
 
 
 	public PreferredRouteCalculationSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class));
+	}
+
+	@Override
+	protected void inserted(Entity e) {
+		super.inserted(e);
+		dirty=true;
+	}
+
+	@Override
+	protected void removed(Entity e) {
+		super.removed(e);
+		dirty=true;
 	}
 
 	public final class TeamGraph implements NavigationGraph<Routable> {
@@ -115,19 +129,12 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
 
-		if (!resolved) {
-			resolved = true;
+		if (dirty) {
+			dirty=false;
 
 			for (Team team : Team.values()) {
 				teamGraphs.put(team, new TeamGraph(team) );
 			}
-
-			// eliminate duplicate routes using the following algorithm.
-			// long paths get a small penalty.
-			// this makes multiple small paths preferable over small paths, hopefully eliminating
-			// bad routes.
-
-			// travel from each source to each destination.
 
 			int size = entities.size();
 

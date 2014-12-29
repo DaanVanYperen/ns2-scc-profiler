@@ -6,7 +6,6 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
-import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
@@ -21,7 +20,10 @@ import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Resolve routes between all nodes.
@@ -33,7 +35,7 @@ public class RouteCalculationSystem extends EntitySystem {
 
 	protected LayerManager layerManager;
 
-	private boolean resolved = false;
+	private boolean dirty = true;
 
 	protected ComponentMapper<Pos> mPos;
 	protected ComponentMapper<Routable> mRoutable;
@@ -47,6 +49,18 @@ public class RouteCalculationSystem extends EntitySystem {
 	}
 
 	@Override
+	protected void inserted(Entity e) {
+		super.inserted(e);
+		dirty=true;
+	}
+
+	@Override
+	protected void removed(Entity e) {
+		super.removed(e);
+		dirty=true;
+	}
+
+	@Override
 	protected void initialize() {
 		//create a finder either using the default options
 		GridFinderOptions opt = new GridFinderOptions();
@@ -57,8 +71,18 @@ public class RouteCalculationSystem extends EntitySystem {
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
 
-		if (!resolved) {
-			resolved = true;
+		if (dirty) {
+			dirty=false;
+
+			navigationGridManager.reset();
+
+			// clear existing routes.
+			for(int i=0,s=entities.size();i<s;i++)
+			{
+				for (Team team : Team.values()) {
+					mRoutable.get(entities.get(i)).paths.get(team).clear();
+				}
+			}
 
 			for (Team team : Team.values()) {
 				resolveForTeam(entities, team);
@@ -113,7 +137,6 @@ public class RouteCalculationSystem extends EntitySystem {
 
 		final List<GridCell> rawPath = finder.findPath(cellA,cellB,grid);
 		if (rawPath != null) {
-
 
 			final LinkedList<GridCell> cells = new LinkedList<>(rawPath);
 			cells.addFirst(new GridCell(aX, aY));

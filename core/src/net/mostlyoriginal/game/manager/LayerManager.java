@@ -2,7 +2,6 @@ package net.mostlyoriginal.game.manager;
 
 import com.artemis.*;
 import com.artemis.annotations.Wire;
-import com.artemis.utils.EntityBuilder;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.G;

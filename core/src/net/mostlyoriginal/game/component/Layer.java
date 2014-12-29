@@ -17,7 +17,7 @@ import java.util.List;
 public class Layer extends Component {
 
 	public boolean visible = true;
-	public final Pixmap pixmap;
+	public Pixmap pixmap;
 
 	public Layer() {
 		pixmap = new Pixmap(LayerManager.LAYER_WIDTH, LayerManager.LAYER_HEIGHT, Pixmap.Format.RGBA8888);
@@ -69,5 +69,16 @@ public class Layer extends Component {
 			texture = null;
 		}
 		texture = new Texture(pixmap);
+	}
+
+	public void dispose() {
+		if ( texture != null ) { texture.dispose(); texture = null; }
+		pixmap.dispose();
+	}
+
+	public void clear() {
+		if ( texture != null ) { texture.dispose(); texture = null; }
+		pixmap.setColor(Color.CLEAR);
+		pixmap.fill();
 	}
 }

@@ -5,7 +5,6 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
-import com.artemis.systems.VoidEntitySystem;
 import com.artemis.utils.ImmutableBag;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.Path;
@@ -23,7 +22,7 @@ public class RoutePlotSystem extends EntitySystem {
 
 	protected LayerManager layerManager;
 
-	private boolean resolved = false;
+	private boolean dirty =true;
 	protected ComponentMapper<Routable> mRoutable;
 
 
@@ -36,10 +35,22 @@ public class RoutePlotSystem extends EntitySystem {
 	}
 
 	@Override
+	protected void inserted(Entity e) {
+		super.inserted(e);
+		dirty=true;
+	}
+
+	@Override
+	protected void removed(Entity e) {
+		super.removed(e);
+		dirty=true;
+	}
+
+	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
 
-		if (!resolved) {
-			resolved = true;
+		if (dirty) {
+			dirty = false;
 
 			// render all paths on team layers.
 			for(int i=0,s=entities.size();i<s;i++)

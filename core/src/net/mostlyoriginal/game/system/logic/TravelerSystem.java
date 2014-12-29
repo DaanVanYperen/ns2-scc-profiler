@@ -103,7 +103,9 @@ public class TravelerSystem extends EntityProcessingSystem {
 	private void checkDestinationReached(Traveler traveler) {
 		if ( traveler.distanceTraveled > traveler.path.getPixelLength() )
 		{
-			traveler.location = mRoutable.get(traveler.path.destination.get());
+			if ( traveler.path.destination.isActive()) {
+				traveler.location = mRoutable.get(traveler.path.destination.get());
+			}
 			traveler.path = null;
 		}
 	}

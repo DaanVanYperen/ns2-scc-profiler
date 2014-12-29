@@ -73,4 +73,10 @@ public class NavigationGridManager extends Manager {
 		return navGrid.get(team);
 	}
 
+	public void reset() {
+		navGrid.clear();
+		for (Team team : Team.values()) {
+			layerManager.getTeamNavLayer(team).clear();
+		}
+	}
 }
