@@ -39,23 +39,11 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 	private PathFinder<Routable> finder;
 	private NavigationGridManager navigationGridManager;
 	private Team pathfindTeam;
-	private boolean dirty;
+	private boolean dirty = true;
 
 
 	public PreferredRouteCalculationSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class));
-	}
-
-	@Override
-	protected void inserted(Entity e) {
-		super.inserted(e);
-		dirty=true;
-	}
-
-	@Override
-	protected void removed(Entity e) {
-		super.removed(e);
-		dirty=true;
 	}
 
 	public final class TeamGraph implements NavigationGraph<Routable> {

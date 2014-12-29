@@ -2,12 +2,15 @@ package net.mostlyoriginal.game.manager;
 
 import com.artemis.*;
 import com.artemis.annotations.Wire;
+import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.maps.MapProperties;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.component.*;
+import net.mostlyoriginal.game.component.ui.Button;
+import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Draggable;
 
@@ -33,6 +36,7 @@ public class EntityFactoryManager extends Manager {
     protected ComponentMapper<Anim> mAnim;
     protected ComponentMapper<Bounds> mBounds;
     protected ComponentMapper<Blockade> mBlockade;
+    protected ComponentMapper<Draggable> mDraggable;
     protected ComponentMapper<Renderable> mRenderable;
     protected ComponentMapper<TeamMember> mTeamMember;
 
@@ -90,6 +94,30 @@ public class EntityFactoryManager extends Manager {
                 Clickable.class,
                 Bounds.class
         ).build(world);
+
+        Anim anim = new Anim("resource-node");
+        anim.scale = 2;
+        new EntityBuilder(world)
+                .with(
+                        new Pos(50,50),
+                        new Bounds(32,32),
+                        anim,
+                        new Clickable(),
+                        new Renderable(800),
+                        new Button("resource-node", new ButtonListener(){
+                            @Override
+                            public void run() {
+                                Entity entity = createEntity("resourceNode", 0, 0, null);
+
+                                Draggable draggable = mDraggable.get(entity);
+                                draggable.dragging = true;
+                            }
+
+                            @Override
+                            public boolean enabled() {
+                                return true;
+                            }
+                        }, "")).build();
     }
 
     public Entity createEntity(String entity, int cx, int cy, MapProperties properties) {

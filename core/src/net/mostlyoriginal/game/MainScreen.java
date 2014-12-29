@@ -22,6 +22,7 @@ import net.mostlyoriginal.api.system.physics.CollisionSystem;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.game.manager.*;
 import net.mostlyoriginal.game.system.*;
+import net.mostlyoriginal.game.system.interaction.ButtonSystem;
 import net.mostlyoriginal.game.system.interaction.DeletableSystem;
 import net.mostlyoriginal.game.system.logic.TravelerSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
@@ -61,6 +62,7 @@ public class MainScreen implements Screen {
         world.setSystem(new MouseCursorSystem());
         world.setSystem(new MouseClickSystem());
         world.setSystem(new DraggableSystem());
+        world.setSystem(new ButtonSystem());
 
         world.setSystem(new DeletableSystem());
 

@@ -35,18 +35,6 @@ public class RoutePlotSystem extends EntitySystem {
 	}
 
 	@Override
-	protected void inserted(Entity e) {
-		super.inserted(e);
-		dirty=true;
-	}
-
-	@Override
-	protected void removed(Entity e) {
-		super.removed(e);
-		dirty=true;
-	}
-
-	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
 
 		if (dirty) {

@@ -49,18 +49,6 @@ public class RouteCalculationSystem extends EntitySystem {
 	}
 
 	@Override
-	protected void inserted(Entity e) {
-		super.inserted(e);
-		dirty=true;
-	}
-
-	@Override
-	protected void removed(Entity e) {
-		super.removed(e);
-		dirty=true;
-	}
-
-	@Override
 	protected void initialize() {
 		//create a finder either using the default options
 		GridFinderOptions opt = new GridFinderOptions();
