@@ -42,7 +42,7 @@ public class MainScreen implements Screen {
 
         /** UTILITY - PASSIVE */
 
-        world.setSystem(new MapLoaderSystem());
+        world.setSystem(new LayerLoaderSystem());
 
         world.setSystem(new RouteCalculationSystem());
         world.setSystem(new PreferredRouteCalculationSystem());

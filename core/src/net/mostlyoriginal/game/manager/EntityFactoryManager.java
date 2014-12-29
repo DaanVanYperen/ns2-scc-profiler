@@ -43,6 +43,7 @@ public class EntityFactoryManager extends Manager {
         resourceNode = new ArchetypeBuilder().add(
                 Pos.class,
                 Anim.class,
+                Bounds.class,
                 Renderable.class,
                 TeamAsset.class,
                 Routable.class
@@ -50,6 +51,7 @@ public class EntityFactoryManager extends Manager {
         marine = new ArchetypeBuilder().add(
                 Pos.class,
                 Anim.class,
+                Bounds.class,
                 Traveler.class,
                 TeamMember.class,
                 Renderable.class
@@ -57,6 +59,7 @@ public class EntityFactoryManager extends Manager {
         alien = new ArchetypeBuilder().add(
                 Pos.class,
                 Anim.class,
+                Bounds.class,
                 Traveler.class,
                 TeamMember.class,
                 Renderable.class
@@ -64,6 +67,7 @@ public class EntityFactoryManager extends Manager {
         techpoint = new ArchetypeBuilder().add(
                 Pos.class,
                 Anim.class,
+                Bounds.class,
                 Renderable.class,
                 TeamAsset.class,
                 Routable.class
@@ -71,6 +75,7 @@ public class EntityFactoryManager extends Manager {
         duct = new ArchetypeBuilder().add(
                 Pos.class,
                 Anim.class,
+                Bounds.class,
                 Renderable.class,
                 Blockade.class,
                 Bounds.class
@@ -124,6 +129,10 @@ public class EntityFactoryManager extends Manager {
         TeamMember teamMember = mTeamMember.get(marine);
         teamMember.team = Team.MARINE;
 
+        Bounds bounds = mBounds.get(marine);
+        bounds.maxx = 16;
+        bounds.maxy = 16;
+
         return marine;
     }
 
@@ -139,6 +148,10 @@ public class EntityFactoryManager extends Manager {
         TeamMember teamMember = mTeamMember.get(alien);
         teamMember.team = Team.ALIEN;
 
+        Bounds bounds = mBounds.get(alien);
+        bounds.maxx = 16;
+        bounds.maxy = 16;
+
         return alien;
     }
 
@@ -147,6 +160,10 @@ public class EntityFactoryManager extends Manager {
 
         Anim anim = mAnim.get(node);
         anim.id = "resource-node";
+
+        Bounds bounds = mBounds.get(node);
+        bounds.maxx = 16;
+        bounds.maxy = 16;
 
         return node;
     }
@@ -190,6 +207,10 @@ public class EntityFactoryManager extends Manager {
 
         Anim anim = mAnim.get(techpoint);
         anim.id = "techpoint";
+
+        Bounds bounds = mBounds.get(techpoint);
+        bounds.maxx = 16;
+        bounds.maxy = 16;
 
         return techpoint;
     }

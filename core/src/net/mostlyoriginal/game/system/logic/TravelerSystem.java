@@ -7,6 +7,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Routable;
@@ -31,6 +32,7 @@ public class TravelerSystem extends EntityProcessingSystem {
 	protected ComponentMapper<Pos> mPos;
 	protected ComponentMapper<TeamMember> mTeamMember;
 	protected ComponentMapper<Routable> mRoutable;
+	protected ComponentMapper<Bounds> mBounds;
 	private static Vector2 vTmp = new Vector2();
 
 	public TravelerSystem() {
@@ -59,6 +61,7 @@ public class TravelerSystem extends EntityProcessingSystem {
 
 	private void updateLocation(Entity e, Traveler traveler) {
 		Pos pos = mPos.get(e);
+		Bounds bounds = mBounds.get(e);
 		if ( traveler.path != null )
 		{
 			// estimate location based on path vs distance traveled.
@@ -74,16 +77,16 @@ public class TravelerSystem extends EntityProcessingSystem {
 				if ( length >= traveler.distanceTraveled )
 				{
 					// put at approximate location on path.
-					pos.x = c1.getX() * LayerManager.CELL_SIZE;
-					pos.y = c1.getY() * LayerManager.CELL_SIZE;
+					pos.x = c1.getX() * LayerManager.CELL_SIZE - bounds.cx();
+					pos.y = c1.getY() * LayerManager.CELL_SIZE - bounds.cy();
 					return;
 				}
 			}
 		} else {
 
 			// place traveler at starting location.
-			pos.x = traveler.location.getX() * LayerManager.CELL_SIZE;
-			pos.y = traveler.location.getY() * LayerManager.CELL_SIZE;
+			pos.x = traveler.location.getX() * LayerManager.CELL_SIZE  - bounds.cx();
+			pos.y = traveler.location.getY() * LayerManager.CELL_SIZE - bounds.cy();
 		}
 	}
 

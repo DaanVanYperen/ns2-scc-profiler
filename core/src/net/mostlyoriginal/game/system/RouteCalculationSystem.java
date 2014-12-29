@@ -7,6 +7,7 @@ import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.Color;
+import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.Path;
@@ -36,6 +37,7 @@ public class RouteCalculationSystem extends EntitySystem {
 
 	protected ComponentMapper<Pos> mPos;
 	protected ComponentMapper<Routable> mRoutable;
+	protected ComponentMapper<Bounds> mBounds;
 	private PathFinder<GridCell> finder;
 	private NavigationGridManager navigationGridManager;
 
@@ -93,12 +95,15 @@ public class RouteCalculationSystem extends EntitySystem {
 		final Pos posA = mPos.get(a);
 		final Pos posB = mPos.get(b);
 
-		int aX = (int) (posA.x + 4) / LayerManager.CELL_SIZE;
-		int aY = (int) (posA.y + 4) / LayerManager.CELL_SIZE;
+		Bounds boundsA = mBounds.get(a);
+		Bounds boundsB = mBounds.get(b);
+
+		int aX = (int) (posA.x + boundsA.cx()) / LayerManager.CELL_SIZE;
+		int aY = (int) (posA.y + boundsA.cy()) / LayerManager.CELL_SIZE;
 		final GridCell cellA = grid.getCell(aX, aY);
 
-		int bX = (int) (posB.x + 4) / LayerManager.CELL_SIZE;
-		int bY = (int) (posB.y + 4) / LayerManager.CELL_SIZE;
+		int bX = (int) (posB.x + boundsB.cx()) / LayerManager.CELL_SIZE;
+		int bY = (int) (posB.y + boundsB.cy()) / LayerManager.CELL_SIZE;
 		final GridCell cellB = grid.getCell(bX, bY);
 
 		mRoutable.get(a).setX(aX);
