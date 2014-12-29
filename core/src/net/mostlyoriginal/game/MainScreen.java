@@ -24,6 +24,7 @@ import net.mostlyoriginal.game.manager.*;
 import net.mostlyoriginal.game.system.*;
 import net.mostlyoriginal.game.system.logic.TravelerSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
+import net.mostlyoriginal.game.system.ui.DraggableSystem;
 import net.mostlyoriginal.game.system.ui.MouseClickSystem;
 
 /**
@@ -55,8 +56,11 @@ public class MainScreen implements Screen {
         /** UTILITY - PASSIVE */
 
         world.setSystem(new CollisionSystem());
+
         world.setSystem(new MouseCursorSystem());
         world.setSystem(new MouseClickSystem());
+        world.setSystem(new DraggableSystem());
+
         world.setSystem(new DeletableSystem());
 
         world.setSystem(new LayerLoaderSystem());

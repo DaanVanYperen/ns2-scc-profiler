@@ -9,8 +9,8 @@ import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.component.*;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.component.ui.Draggable;
 
-import javax.swing.plaf.metal.MetalPopupMenuSeparatorUI;
 import java.util.EnumSet;
 
 /**
@@ -48,6 +48,7 @@ public class EntityFactoryManager extends Manager {
                 Renderable.class,
                 TeamAsset.class,
                 Deletable.class,
+                Draggable.class,
                 Clickable.class,
                 Routable.class
         ).build(world);
@@ -71,6 +72,7 @@ public class EntityFactoryManager extends Manager {
                 Pos.class,
                 Anim.class,
                 Bounds.class,
+                Draggable.class,
                 Renderable.class,
                 TeamAsset.class,
                 Deletable.class,
@@ -82,6 +84,7 @@ public class EntityFactoryManager extends Manager {
                 Anim.class,
                 Bounds.class,
                 Renderable.class,
+                Draggable.class,
                 Blockade.class,
                 Deletable.class,
                 Clickable.class,
