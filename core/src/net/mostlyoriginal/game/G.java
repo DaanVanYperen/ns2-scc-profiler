@@ -18,4 +18,6 @@ public class G {
 
     public static final float PIXELS_TO_UNITS = 1/1.6f;
 
+    public static int MARINE_TEAM_SIZE = 8;
+    public static int ALIEN_TEAM_SIZE = 8;
 }

@@ -7,6 +7,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.systems.VoidEntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
+import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Traveler;
@@ -37,9 +38,11 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 		addNode(100, 170);
 		Entity sewerHive = addTechpoint(100, 200);
 
-		Entity alien = entityFactoryManager.createEntity("alien", 130, 395, null);
-		Traveler traveler = mTraveler.get(alien);
-		traveler.location = mRoutable.get(sewerHive);
+		for (int i=0;i< G.ALIEN_TEAM_SIZE;i++) {
+			Entity alien = entityFactoryManager.createEntity("alien", 130, 395, null);
+			Traveler traveler = mTraveler.get(alien);
+			traveler.location = mRoutable.get(sewerHive);
+		}
 
 		// PURIFICATION
 		addNode(260, 160);
@@ -73,9 +76,11 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 		addNode(160, 600);
 		Entity marineSpawn = addTechpoint(130, 560);
 
-		Entity marine = entityFactoryManager.createEntity("marine", 165, 175, null);
-		traveler = mTraveler.get(marine);
-		traveler.location = mRoutable.get(marineSpawn);
+		for (int i=0;i< G.MARINE_TEAM_SIZE;i++) {
+			Entity marine = entityFactoryManager.createEntity("marine", 165, 175, null);
+			Traveler traveler = mTraveler.get(marine);
+			traveler.location = mRoutable.get(marineSpawn);
+		}
 
 		// SEWER
 		addNode(120, 390);
