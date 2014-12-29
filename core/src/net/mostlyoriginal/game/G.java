@@ -20,4 +20,5 @@ public class G {
 
     public static int MARINE_TEAM_SIZE = 8;
     public static int ALIEN_TEAM_SIZE = 8;
+    public static String TITLE = "NS2 Yardstick";
 }

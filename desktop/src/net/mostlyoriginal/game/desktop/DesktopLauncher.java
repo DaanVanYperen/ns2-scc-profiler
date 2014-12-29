@@ -13,6 +13,7 @@ public class DesktopLauncher {
         config.width  = G.CANVAS_WIDTH;
         config.height = G.CANVAS_HEIGHT;
         config.audioDeviceSimultaneousSources=64;
+		config.title = G.TITLE;
 
 		new LwjglApplication(new MyGame(), config);
 	}
