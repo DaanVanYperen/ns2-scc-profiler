@@ -7,15 +7,15 @@ import net.mostlyoriginal.game.G;
  * @author Daan van Yperen
  */
 public enum Team {
-	ALIEN(Color.GREEN, Color.RED, G.ALIEN_SPEED_FAST),
-	MARINE(Color.ORANGE, Color.BLUE, G.MARINE_SPEED_FAST);
+	ALIEN(Color.GREEN, Color.RED, G.ALIEN_SPEED_AVG),
+	MARINE(Color.ORANGE, Color.BLUE, G.MARINE_SPEED_AVG);
 
-	private float fastSpeed;
+	private float avgSpeed;
 
-	Team(Color backgroundColor, Color pathColor, float fastSpeed) {
+	Team(Color backgroundColor, Color pathColor, float avgSpeed) {
 		this.backgroundColor = backgroundColor;
 		this.pathColor = pathColor;
-		this.fastSpeed = fastSpeed;
+		this.avgSpeed = avgSpeed;
 	}
 
 	private Color backgroundColor;
@@ -29,7 +29,7 @@ public enum Team {
 		return pathColor;
 	}
 
-	public float getFastSpeed() {
-		return fastSpeed;
+	public float getAvgSpeed() {
+		return avgSpeed;
 	}
 }

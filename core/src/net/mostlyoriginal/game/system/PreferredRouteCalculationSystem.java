@@ -167,7 +167,7 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 			if (routable == dst ) {
 				if ( !path.preferred && !path.reversed )
 				{
-					if ( team == Team.MARINE ) {
+					if ( team == Team.ALIEN ) {
 						addLabel(team, path);
 					}
 				}
@@ -180,7 +180,7 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 		int center = path.cells.size() / 2;
 		GridCell cell = path.cells.get(center);
 
-		int travelTimeSeconds = Math.round(( path.getPixelLength() * G.PIXELS_TO_UNITS) / team.getFastSpeed());
+		int travelTimeSeconds = Math.round(( path.getPixelLength() * G.PIXELS_TO_UNITS) / team.getAvgSpeed());
 
 
 
