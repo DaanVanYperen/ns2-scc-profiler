@@ -115,6 +115,13 @@ public class EntityFactoryManager extends Manager {
         createInstancingButton("techpoint", "techpoint", 50 + 40*1);
         createInstancingButton("duct", "duct", 50 + 40*2);
         createInstancingButton("wall", "wall", 50 + 40 * 3);
+
+        addMaskTitle(RenderMask.Mask.BASIC, "Map overview", "Drag and place techpoints, rts, blockades and ducts.", "", "Rightclick to delete. Middleclick to cycle team on techpoints.");
+        addMaskTitle(RenderMask.Mask.RT_PRESSURE, "RT head start", "highlight team that reaches RT first.", "Number signifies seconds head start.","Assign at least two techpoints to different teams.");
+        addMaskTitle(RenderMask.Mask.RT_SYMMETRY_ALIEN, "Alien - RT run times", "Travel time in seconds between techpoints and RTs for aliens.", "", "");
+        addMaskTitle(RenderMask.Mask.RT_SYMMETRY_MARINE, "Marine - RT run times", "Travel time in seconds between techpoints and RTs for marines.", "", "");
+        addMaskTitle(RenderMask.Mask.PATHFIND_ALIEN, "Alien - all routes", "Travel time in seconds for aliens.", "", "");
+        addMaskTitle(RenderMask.Mask.PATHFIND_MARINE, "Marine - all routes", "Travel time in seconds for marines.", "", "");
     }
 
     private void createInstancingButton(String animId, final String entityId, int x) {
@@ -135,6 +142,26 @@ public class EntityFactoryManager extends Manager {
 
         // make only visible when rendering.
         button.edit().add(new RenderMask(RenderMask.Mask.BASIC));
+    }
+
+    private void addMaskTitle(RenderMask.Mask mask, String title, String subTitle1, String subTitle2, String help) {
+
+        int y = 760;
+        writeLabel(mask, title, 3, 50, y);
+        if ( !subTitle1.isEmpty() ) writeLabel(mask, subTitle1, 2, 50, y -40);
+        if ( !subTitle2.isEmpty() ) writeLabel(mask, subTitle2, 2, 50, y -60);
+    }
+
+    private void writeLabel(RenderMask.Mask mask, String title, int scale, int x, int y) {
+        Label font = new Label(title);
+        font.scale = scale;
+        new EntityBuilder(world).with(
+                new Renderable(1000),
+                new net.mostlyoriginal.api.component.graphics.Color(0f,0f,0f,1f),
+                new RenderMask(mask),
+                new Pos(x, y),
+                font)
+                .build();
     }
 
     public Entity createBasicButton(String animId, int x, ButtonListener buttonListener) {

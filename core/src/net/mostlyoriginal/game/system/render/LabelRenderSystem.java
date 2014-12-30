@@ -67,7 +67,7 @@ public class LabelRenderSystem extends DeferredEntityProcessingSystem {
 
         if (label.text != null) {
 
-            final BitmapFont font = label.scale == 2f ? fontManager.bigFont : fontManager.font;
+            final BitmapFont font = label.scale == 3f ?  fontManager.extraBigFont : label.scale == 2f ? fontManager.bigFont : fontManager.font;
 
             if ( mColor.has(entity) )
             {

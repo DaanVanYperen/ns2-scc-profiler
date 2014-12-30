@@ -12,6 +12,7 @@ public class FontManager extends Manager {
 
     public BitmapFont font;
     public BitmapFont bigFont;
+    public BitmapFont extraBigFont;
 
     @Override
     protected void initialize() {
@@ -21,5 +22,8 @@ public class FontManager extends Manager {
         bigFont = new BitmapFont(Gdx.files.internal("5x5.fnt"), false);
         bigFont.setColor(1f, 1f, 1f, 1f);
         bigFont.setScale(2);
+        extraBigFont = new BitmapFont(Gdx.files.internal("5x5.fnt"), false);
+        extraBigFont.setColor(1f, 1f, 1f, 1f);
+        extraBigFont.setScale(5);
     }
 }
