@@ -33,6 +33,7 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("duct", 136-16,16, 16,16,1);
         add("wall", 136, 16, 16, 16,1);
 
+        add("screenshot", 136+32,32, 16,16,1);
         add("refresh", 136-16,32, 16,16,1);
         add("save", 136,32, 16,16,1);
         add("load", 136+16,32, 16,16,1);
