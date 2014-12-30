@@ -16,6 +16,7 @@ import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.TeamMember;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.manager.EntityFactoryManager;
+import net.mostlyoriginal.game.manager.LayerLoaderSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,8 @@ public class PersistHandlerSystem extends EntitySystem {
 			this.y = y;
 		}
 	}
+
+	LayerLoaderSystem layerLoaderSystem;
 
 	public PersistHandlerSystem() {
 		super(Aspect.getAspectForAll(Persistable.class));
@@ -119,7 +122,7 @@ public class PersistHandlerSystem extends EntitySystem {
 	}
 
 	private Preferences getPrefs() {
-		return Gdx.app.getPreferences("default");
+		return Gdx.app.getPreferences(layerLoaderSystem.mapFile);
 	}
 
 	private void load() {

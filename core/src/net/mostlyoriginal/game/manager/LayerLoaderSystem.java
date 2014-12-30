@@ -25,13 +25,15 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 	protected ComponentMapper<Routable> mRoutable;
 	private boolean processed;
 
+	public String mapFile = "ns2_summit.tga";
+
 	@Override
 	protected void initialize() {
 		super.initialize();
 	}
 
 	public void load() {
-		layerManager.getLayer("RAW", RenderMask.Mask.BASIC).drawPixmapToFit(new Pixmap(Gdx.files.internal("ns2_caged_v2.tga")));
+		layerManager.getLayer("RAW", RenderMask.Mask.BASIC).drawPixmapToFit(new Pixmap(Gdx.files.internal(mapFile)));
 
 		/*
 
