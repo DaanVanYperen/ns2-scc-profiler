@@ -23,7 +23,10 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
     public AssetSystem() {
         super();
 
-        // @todo GAME SPECIFIC, split into library and game specific logic.
+        add("resource-node-marine", 225+16,0, 16,16,1);
+        add("techpoint-marine", 225,0, 16,16,1);
+        add("resource-node-alien", 225+16,16, 16,16,1);
+        add("techpoint-alien", 225,16, 16,16,1);
 
         add("resource-node", 136,0, 16,16,1);
         add("techpoint", 136-16,0, 16,16,1);

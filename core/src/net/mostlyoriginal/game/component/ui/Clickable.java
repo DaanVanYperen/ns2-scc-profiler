@@ -10,7 +10,8 @@ public class Clickable extends Component {
         NONE,
         HOVER,
         CLICKED_LEFT,
-        CLICKED_RIGHT
+        CLICKED_RIGHT,
+        CLICKED_MIDDLE
     }
 
     public ClickState state = ClickState.NONE;

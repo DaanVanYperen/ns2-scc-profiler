@@ -21,19 +21,18 @@ import net.mostlyoriginal.api.system.mouse.MouseCursorSystem;
 import net.mostlyoriginal.api.system.physics.CollisionSystem;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.game.manager.*;
-import net.mostlyoriginal.game.system.*;
+import net.mostlyoriginal.game.system.BlockadeSystem;
+import net.mostlyoriginal.game.system.PreferredRouteCalculationSystem;
+import net.mostlyoriginal.game.system.RouteCalculationSystem;
 import net.mostlyoriginal.game.system.interaction.ButtonSystem;
 import net.mostlyoriginal.game.system.interaction.DeletableSystem;
 import net.mostlyoriginal.game.system.interaction.DraggableSystem;
 import net.mostlyoriginal.game.system.interaction.MouseClickSystem;
-import net.mostlyoriginal.game.system.logic.PersistHandlerSystem;
-import net.mostlyoriginal.game.system.logic.RefreshHandlerSystem;
-import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
-import net.mostlyoriginal.game.system.logic.TravelerSystem;
-import net.mostlyoriginal.game.system.render.TechpointSymmetrySystem;
+import net.mostlyoriginal.game.system.logic.*;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 import net.mostlyoriginal.game.system.render.LayerRenderSystem;
 import net.mostlyoriginal.game.system.render.RoutePlotSystem;
+import net.mostlyoriginal.game.system.render.TechpointSymmetrySystem;
 
 /**
  * @author Daan van Yperen
@@ -95,6 +94,8 @@ public class MainScreen implements Screen {
         world.setSystem(new AnimRenderSystem(renderBatchingSystem), false);
         world.setSystem(new LayerRenderSystem(renderBatchingSystem), false);
         world.setSystem(new LabelRenderSystem(renderBatchingSystem), false);
+
+        world.setSystem(new TeamChangingSystem());
 
 
         world.setSystem(new RefreshHandlerSystem());

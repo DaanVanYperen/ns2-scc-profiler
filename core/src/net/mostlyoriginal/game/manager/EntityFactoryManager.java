@@ -59,7 +59,23 @@ public class EntityFactoryManager extends Manager {
                 Persistable.class,
                 RenderMask.class,
                 ResourceNode.class,
+                TeamMember.class,
                 Routable.class
+        ).build(world);
+        techpoint = new ArchetypeBuilder().add(
+                Pos.class,
+                Anim.class,
+                Bounds.class,
+                Draggable.class,
+                Renderable.class,
+                TeamAsset.class,
+                Deletable.class,
+                Clickable.class,
+                Persistable.class,
+                RenderMask.class,
+                Routable.class,
+                TeamMember.class,
+                Techpoint.class
         ).build(world);
         marine = new ArchetypeBuilder().add(
                 Pos.class,
@@ -80,20 +96,6 @@ public class EntityFactoryManager extends Manager {
                 Transient.class,
                 RenderMask.class,
                 Renderable.class
-        ).build(world);
-        techpoint = new ArchetypeBuilder().add(
-                Pos.class,
-                Anim.class,
-                Bounds.class,
-                Draggable.class,
-                Renderable.class,
-                TeamAsset.class,
-                Deletable.class,
-                Clickable.class,
-                Persistable.class,
-                RenderMask.class,
-                Routable.class,
-                Techpoint.class
         ).build(world);
         duct = new ArchetypeBuilder().add(
                 Pos.class,
@@ -239,6 +241,11 @@ public class EntityFactoryManager extends Manager {
 
         mRenderMask.get(node).visible = EnumSet.allOf(RenderMask.Mask.class);
 
+        TeamMember teamMember = mTeamMember.get(node);
+        teamMember.artUnaligned = "resource-node";
+        teamMember.art.put(Team.ALIEN, "resource-node-alien");
+        teamMember.art.put(Team.MARINE, "resource-node-marine");
+
         return node;
     }
 
@@ -301,6 +308,11 @@ public class EntityFactoryManager extends Manager {
         mPersistable.get(techpoint).saveId = "techpoint";
 
         mRenderMask.get(techpoint).visible = EnumSet.allOf(RenderMask.Mask.class);
+
+        TeamMember teamMember = mTeamMember.get(techpoint);
+        teamMember.artUnaligned = "techpoint";
+        teamMember.art.put(Team.ALIEN, "techpoint-alien");
+        teamMember.art.put(Team.MARINE, "techpoint-marine");
 
         return techpoint;
     }

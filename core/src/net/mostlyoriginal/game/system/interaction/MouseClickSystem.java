@@ -26,8 +26,10 @@ public class MouseClickSystem extends EntityProcessingSystem {
     protected ComponentMapper<Clickable> mClickable;
     private boolean leftMouseTapped;
     private boolean rightMouseTapped;
+    private boolean middleMouseTapped;
     private boolean leftAlreadyDown;
     private boolean rightAlreadyDown;
+    private boolean middleAlreadyDown;
 
     public MouseClickSystem() {
         super(Aspect.getAspectForAll(Clickable.class, Bounds.class));
@@ -39,6 +41,7 @@ public class MouseClickSystem extends EntityProcessingSystem {
 
         leftMouseTapped = Gdx.input.isButtonPressed(Input.Buttons.LEFT) && !leftAlreadyDown;
         rightMouseTapped = Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && !rightAlreadyDown;
+        middleMouseTapped = Gdx.input.isButtonPressed(Input.Buttons.MIDDLE) && !middleAlreadyDown;
     }
 
     @Override
@@ -46,7 +49,8 @@ public class MouseClickSystem extends EntityProcessingSystem {
         super.end();
 
         leftAlreadyDown = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
-        rightAlreadyDown = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+        rightAlreadyDown = Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
+        middleAlreadyDown = Gdx.input.isButtonPressed(Input.Buttons.MIDDLE);
     }
 
     @Override
@@ -60,6 +64,7 @@ public class MouseClickSystem extends EntityProcessingSystem {
             if ( overlapping )
             {
                 clickable.state =
+                        middleMouseTapped ? Clickable.ClickState.CLICKED_MIDDLE :
                         rightMouseTapped ? Clickable.ClickState.CLICKED_RIGHT :
                         leftMouseTapped ?  Clickable.ClickState.CLICKED_LEFT : Clickable.ClickState.HOVER;
             } else {
