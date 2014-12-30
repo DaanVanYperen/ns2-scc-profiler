@@ -6,7 +6,6 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
-import com.badlogic.gdx.graphics.Pixmap;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Layer;
@@ -42,6 +41,7 @@ public class TechpointSymmetrySystem extends EntitySystem {
 	protected ComponentMapper<Techpoint> mTechpoint;
 	protected ComponentMapper<RenderMask> mRenderMask;
 
+	protected RoutePlotSystem routePlotSystem;
 
 	public TechpointSymmetrySystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class, ResourceNode.class));
@@ -90,13 +90,10 @@ public class TechpointSymmetrySystem extends EntitySystem {
 					GridCell cell1 = path.cells.get(0);
 					GridCell cell2 = path.cells.get(path.cells.size() - 1);
 
-					Pixmap pixmap = path.team == Team.ALIEN ? layerAliens.pixmap : layerMarines.pixmap;
-
-					pixmap.setColor(path.team.getPathColor());
-					pixmap.drawLine(
-							cell1.x, pixmap.getHeight() - cell1.y,
-							cell2.x, pixmap.getHeight() - cell2.y);
-
+					routePlotSystem.renderPath(path,
+							path.team == Team.ALIEN ? layerAliens : layerMarines,
+							path.team.getPathColor(),
+							new RenderMask(path.team == Team.ALIEN ? RenderMask.Mask.RT_SYMMETRY_ALIEN : RenderMask.Mask.RT_SYMMETRY_MARINE));
 				}
 			}
 		}
