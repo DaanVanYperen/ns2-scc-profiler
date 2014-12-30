@@ -18,17 +18,18 @@ import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
 import org.xguzm.pathfinding.grid.GridCell;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 /**
+ * Techpoint Symmetry
+ *
+ * Per team, highlight the shortest paths from techpoint to resource towers, and paths up to 5 seconds longer.
+ * Marines Highlighted in blue, aliens in red.
+ *
  * @author Daan van Yperen
  */
 @Wire
-public class ClosestTechpointPlotSystem extends EntitySystem {
+public class TechpointSymmetrySystem extends EntitySystem {
 
+	public static final float MAX_SYMMETRY_DISCREPANCY = 5f;
 	protected LayerManager layerManager;
 
 	public boolean dirty = true;
@@ -38,7 +39,7 @@ public class ClosestTechpointPlotSystem extends EntitySystem {
 	protected ComponentMapper<RenderMask> mRenderMask;
 
 
-	public ClosestTechpointPlotSystem() {
+	public TechpointSymmetrySystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class, ResourceNode.class));
 	}
 
@@ -66,50 +67,35 @@ public class ClosestTechpointPlotSystem extends EntitySystem {
 
 		Layer layer = layerManager.getLayer("TECHPOINTS", RenderMask.Mask.TECHPOINTS_NEAR_RTS);
 
-		List<Path> combinedPaths = new ArrayList<Path>();
-
 		// build a list of all paths, sorted by TRAVEL TIME. which can be different based on the team running the path.
 		for (Team team : Team.values()) {
+			float closest = -1;
 			for (Path path : routable.paths.get(team)) {
-				combinedPaths.add(path);
-			}
-		}
+				Entity destination = path.destination.get();
+				if (mTechpoint.has(destination)) {
 
-		// sort by ESTIMATED TRAVEL TIME
-		Collections.sort(combinedPaths, new Comparator<Object>() {
-			@Override
-			public int compare(Object o1, Object o2) {
-				Path p1 = (Path) o1;
-				Path p2 = (Path) o2;
-				return p1.team.getTravelTimeInSeconds(p1) - p2.team.getTravelTimeInSeconds(p2);
-			}
-		});
+					int travelTimeInSeconds = path.team.getTravelTimeInSeconds(path);
 
-		float closest = -1;
-		for (Path path : combinedPaths) {
-			Entity destination = path.destination.get();
-			if (mTechpoint.has(destination)) {
+					if (closest == -1) closest = travelTimeInSeconds;
 
-				int travelTimeInSeconds = path.team.getTravelTimeInSeconds(path);
-				if (closest == -1) closest = travelTimeInSeconds;
+					// abort when paths are longer than 10% of the closest techpoint.
+					if (travelTimeInSeconds > closest + MAX_SYMMETRY_DISCREPANCY)
+						break;
 
-				// abort when paths are longer than 30% of the closest techpoint.
-				if (travelTimeInSeconds > closest * 1.3f)
-					break;
+					GridCell cell1 = path.cells.get(0);
+					GridCell cell2 = path.cells.get(path.cells.size() - 1);
+					layer.pixmap.setColor(path.team.getPathColor());
+					if (path.team == Team.ALIEN) {
+						layer.pixmap.drawLine(
+								cell1.x, layer.pixmap.getHeight() - cell1.y,
+								cell2.x, layer.pixmap.getHeight() - cell2.y);
+					} else {
+						layer.pixmap.drawLine(
+								cell1.x + 1, layer.pixmap.getHeight() - cell1.y + 1,
+								cell2.x + 1, layer.pixmap.getHeight() - cell2.y + 1);
+					}
 
-				GridCell cell1 = path.cells.get(0);
-				GridCell cell2 = path.cells.get(path.cells.size() - 1);
-				layer.pixmap.setColor(path.team.getPathColor());
-				if (path.team == Team.ALIEN) {
-					layer.pixmap.drawLine(
-							cell1.x, layer.pixmap.getHeight() - cell1.y,
-							cell2.x, layer.pixmap.getHeight() - cell2.y);
-				} else {
-					layer.pixmap.drawLine(
-							cell1.x + 1, layer.pixmap.getHeight() - cell1.y + 1,
-							cell2.x + 1, layer.pixmap.getHeight() - cell2.y + 1);
 				}
-
 			}
 		}
 	}
