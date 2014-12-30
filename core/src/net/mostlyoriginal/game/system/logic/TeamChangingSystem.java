@@ -28,8 +28,9 @@ public class TeamChangingSystem extends EntityProcessingSystem {
 
 	@Override
 	protected void process(Entity e) {
+		TeamMember teamMember = mTeamMember.get(e);
+		
 		if (mClickable.get(e).state == Clickable.ClickState.CLICKED_MIDDLE) {
-			TeamMember teamMember = mTeamMember.get(e);
 			if (teamMember.team == null) {
 				teamMember.team = Team.MARINE;
 			} else {
@@ -42,9 +43,9 @@ public class TeamChangingSystem extends EntityProcessingSystem {
 						break;
 				}
 			}
-
-			Anim anim = mAnim.get(e);
-			anim.id = teamMember.team != null ? teamMember.art.get(teamMember.team) : teamMember.artUnaligned;
 		}
+
+		Anim anim = mAnim.get(e);
+		anim.id = teamMember.team != null ? teamMember.art.get(teamMember.team) : teamMember.artUnaligned;
 	}
 }
