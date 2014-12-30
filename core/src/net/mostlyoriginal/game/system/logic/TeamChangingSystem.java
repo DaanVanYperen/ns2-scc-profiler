@@ -29,7 +29,7 @@ public class TeamChangingSystem extends EntityProcessingSystem {
 	@Override
 	protected void process(Entity e) {
 		TeamMember teamMember = mTeamMember.get(e);
-		
+
 		if (mClickable.get(e).state == Clickable.ClickState.CLICKED_MIDDLE) {
 			if (teamMember.team == null) {
 				teamMember.team = Team.MARINE;

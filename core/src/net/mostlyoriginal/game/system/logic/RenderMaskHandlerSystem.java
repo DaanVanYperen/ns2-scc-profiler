@@ -37,6 +37,7 @@ public class RenderMaskHandlerSystem extends EntityProcessingSystem {
 		createLayerButton(50 + 40 * 13, "layer-3", RenderMask.Mask.PATHFIND_ALIEN);
 		createLayerButton(50 + 40 * 14, "layer-4", RenderMask.Mask.RT_SYMMETRY_ALIEN);
 		createLayerButton(50 + 40 * 15, "layer-5", RenderMask.Mask.RT_SYMMETRY_MARINE);
+		createLayerButton(50 + 40 * 16, "layer-5", RenderMask.Mask.RT_PRESSURE);
 		//createLayerButton(50 + 40 * 15, "layer-5", RenderMask.Mask.PATHFIND_ALIEN);
 	}
 

@@ -29,10 +29,7 @@ import net.mostlyoriginal.game.system.interaction.DeletableSystem;
 import net.mostlyoriginal.game.system.interaction.DraggableSystem;
 import net.mostlyoriginal.game.system.interaction.MouseClickSystem;
 import net.mostlyoriginal.game.system.logic.*;
-import net.mostlyoriginal.game.system.render.LabelRenderSystem;
-import net.mostlyoriginal.game.system.render.LayerRenderSystem;
-import net.mostlyoriginal.game.system.render.RoutePlotSystem;
-import net.mostlyoriginal.game.system.render.TechpointSymmetrySystem;
+import net.mostlyoriginal.game.system.render.*;
 
 /**
  * @author Daan van Yperen
@@ -96,6 +93,7 @@ public class MainScreen implements Screen {
         world.setSystem(new LabelRenderSystem(renderBatchingSystem), false);
 
         world.setSystem(new TeamChangingSystem());
+        world.setSystem(new TechpointPressureSystem());
 
 
         world.setSystem(new RefreshHandlerSystem());

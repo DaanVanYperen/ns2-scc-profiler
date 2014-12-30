@@ -103,7 +103,7 @@ public class PersistHandlerSystem extends EntitySystem {
 
 				if ( mTeamMember.has(entity))
 				{
-					mTeamMember.get(entity).team = element.team;
+					element.team=mTeamMember.get(entity).team;
 				}
 
 				state.elements.add(element);
