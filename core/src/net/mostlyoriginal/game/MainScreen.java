@@ -7,13 +7,8 @@ import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.ScreenUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
@@ -43,6 +38,7 @@ public class MainScreen implements Screen {
 
 	public static final int CAMERA_ZOOM_FACTOR = 1;
 	private final World world;
+	private final ScreenshotHandlerSystem screenshotHandlerSystem;
 
 	public MainScreen() {
 
@@ -105,23 +101,18 @@ public class MainScreen implements Screen {
 		world.setSystem(new RefreshHandlerSystem());
 		world.setSystem(new PersistHandlerSystem());
 
-		world.setSystem(new ScreenshotHandlerSystem(this));
+		screenshotHandlerSystem = new ScreenshotHandlerSystem();
+		world.setSystem(screenshotHandlerSystem);
 
 		world.initialize();
 
 		new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(0, 0, 11, 12), new Anim("cursor"), new Renderable(10000)).tag("cursor").build();
 	}
 
-	public boolean screenshot = false;
-
 	@Override
 	public void render(float delta) {
 
-		FrameBuffer fbo = null;
-		if (screenshot) {
-			fbo = new FrameBuffer(Pixmap.Format.RGB888, G.CANVAS_WIDTH, G.CANVAS_HEIGHT, false);
-			fbo.begin();
-		}
+		screenshotHandlerSystem.beforeRender();
 
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -130,25 +121,7 @@ public class MainScreen implements Screen {
 		world.setDelta(MathUtils.clamp(delta, 0, 1 / 15f));
 		world.process();
 
-		if (screenshot && fbo != null ) {
-			screenshot = false;
-			int counter=0;
-			try {
-				FileHandle fh;
-				do {
-					fh = new FileHandle("screenshot" + counter++ + ".png");
-				} while (fh.exists());
-				byte[] frameBufferPixels = ScreenUtils.getFrameBufferPixels(0, 0, G.CANVAS_WIDTH, G.CANVAS_HEIGHT , true);
-				Pixmap pixmap = new Pixmap(G.CANVAS_WIDTH, G.CANVAS_HEIGHT, Pixmap.Format.RGBA8888);
-				pixmap.getPixels().put(frameBufferPixels);
-				PixmapIO.writePNG(fh, pixmap);
-				pixmap.dispose();
-			} catch (Exception e) {
-			}
-
-			fbo.end();
-			fbo.dispose();
-		}
+		screenshotHandlerSystem.afterRender();
 	}
 
 	@Override

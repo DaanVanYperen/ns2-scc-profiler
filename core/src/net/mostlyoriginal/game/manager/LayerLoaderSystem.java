@@ -25,7 +25,8 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 	protected ComponentMapper<Routable> mRoutable;
 	private boolean processed;
 
-	public String mapFile = "ns2_summit.tga";
+	public String mapName = "ns2_summit";
+	public String mapFile = mapName + ".tga";
 
 	@Override
 	protected void initialize() {
