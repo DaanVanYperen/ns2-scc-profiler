@@ -89,7 +89,7 @@ public class TechpointSymmetrySystem extends EntitySystem {
 					routePlotSystem.renderPath(path,
 							path.team == Team.ALIEN ? layerAliens : layerMarines,
 							path.team.getPathColor(),
-							new RenderMask(path.team == Team.ALIEN ? RenderMask.Mask.RT_SYMMETRY_ALIEN : RenderMask.Mask.RT_SYMMETRY_MARINE));
+							new RenderMask(path.team == Team.ALIEN ? RenderMask.Mask.RT_SYMMETRY_ALIEN : RenderMask.Mask.RT_SYMMETRY_MARINE), true);
 				}
 			}
 		}

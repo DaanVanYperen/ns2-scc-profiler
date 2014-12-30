@@ -6,6 +6,8 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.*;
@@ -56,7 +58,8 @@ public class TechpointPressureSystem extends EntitySystem {
 		if (dirty) {
 			dirty = false;
 
-			layerManager.getLayer("TECHPOINTS_PRESSURE", RenderMask.Mask.RT_PRESSURE).clear();
+			Layer layer = layerManager.getLayer("TECHPOINTS_PRESSURE", RenderMask.Mask.RT_PRESSURE);
+			layerManager.clearWithMap(layer, Color.WHITE, 0.3f);
 
 			for (int i = 0, s = entities.size(); i < s; i++) {
 				final Entity e = entities.get(i);
@@ -145,16 +148,29 @@ public class TechpointPressureSystem extends EntitySystem {
 					routePlotSystem.renderPath(path,
 							layer,
 							path.team.getPathColor(),
-							new RenderMask(RenderMask.Mask.RT_PRESSURE));
+							new RenderMask(RenderMask.Mask.RT_PRESSURE), false);
 				}
 			}
+		}
 
-			int speedDifference = alienSpeed - marineSpeed;
-			if ( Math.abs(speedDifference) > 0 )
-			{
 
-			}
+		int speedDifference = alienSpeed - marineSpeed;
+		if (Math.abs(speedDifference) > 0) {
+			Team fastestTeam = speedDifference < 0 ? Team.ALIEN : Team.MARINE;
 
+			int radius = 4 + ((int)(Interpolation.pow2Out.apply(Math.min(1f,Math.abs(speedDifference * (1/48f)))) * 8f)) * 2;
+
+			layer.pixmap.setColor(fastestTeam.getPathColor());
+			layer.pixmap.fillCircle(routable.getX(), layer.pixmap.getHeight() -  routable.getY() - 1, radius);
+
+			routePlotSystem.drawBubble(fastestTeam.getPathColor(),
+					Math.abs(speedDifference) + " ",
+					routable.getX(),
+					routable.getY(),
+					routable.getX() + 10 + (int)radius,
+					routable.getY() + 10 + (int)radius,
+					layer.pixmap,
+					new RenderMask(RenderMask.Mask.RT_PRESSURE));
 		}
 	}
 }

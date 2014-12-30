@@ -86,13 +86,13 @@ public class RoutePlotSystem extends EntitySystem {
 		for (Path path : paths) {
 			// don't render the reverse paths.
 			if (path.preferred && !path.reversed) {
-				renderPath(path, layerManager.getTeamNavLayer(team), team.getPathColor(), new RenderMask(path.team == Team.MARINE ? RenderMask.Mask.PATHFIND_MARINE : RenderMask.Mask.PATHFIND_ALIEN));
+				renderPath(path, layerManager.getTeamNavLayer(team), team.getPathColor(), new RenderMask(path.team == Team.MARINE ? RenderMask.Mask.PATHFIND_MARINE : RenderMask.Mask.PATHFIND_ALIEN), true);
 			}
 		}
 	}
 
 	//
-	public void renderPath(Path path, Layer layer, Color color, RenderMask renderMask) {
+	public void renderPath(Path path, Layer layer, Color color, RenderMask renderMask, boolean renderLabel) {
 		// slightly vary path color to make it easier to track.
 
 		path.color.set(color);
@@ -104,8 +104,10 @@ public class RoutePlotSystem extends EntitySystem {
 
 		layer.drawPath(path, path.color, true);
 
-		addLabel(path.color, path, layer.pixmap,
-				renderMask, path.team.getTravelTimeInSeconds(path) + "");
+		if (renderLabel) {
+			addLabel(path.color, path, layer.pixmap,
+					renderMask, path.team.getTravelTimeInSeconds(path) + "");
+		}
 	}
 
 	private void renderSecondaryPaths(Routable routable, Team team) {
@@ -130,6 +132,7 @@ public class RoutePlotSystem extends EntitySystem {
 	private Vector2 vTmp = new Vector2();
 
 
+	/** Add label somewhere halfway along the given path. */
 	private void addLabel(Color lineColor, Path path, Pixmap pixmap, RenderMask renderMask, String text) {
 
 		int center = path.cells.size() / 2;

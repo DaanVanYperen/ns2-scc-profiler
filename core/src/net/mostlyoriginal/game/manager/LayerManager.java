@@ -2,6 +2,7 @@ package net.mostlyoriginal.game.manager;
 
 import com.artemis.*;
 import com.artemis.annotations.Wire;
+import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.G;
@@ -78,4 +79,31 @@ public class LayerManager extends Manager {
 		return layer;
 	}
 
+	/** Clear with Map maked by color */
+	public void clearWithMap(Layer layer, Color color, float colorTransparancy) {
+		layer.clear();
+
+		final Layer rawMapLayer = getLayer("RAW", RenderMask.Mask.BASIC);
+
+		Color tmpColor = new Color();
+
+		for (int x=0;x < rawMapLayer.pixmap.getWidth();x++) {
+			for (int y = 0; y < rawMapLayer.pixmap.getHeight(); y++)
+			{
+				int rawColor = rawMapLayer.pixmap.getPixel(x, rawMapLayer.pixmap.getHeight() - y);
+				boolean isWalkable= ((rawColor & 0x000000ff)) / 255f >= 0.5f;
+
+				// generate mask based on blockades.
+				tmpColor.set(rawColor);
+				if ( isWalkable )
+				{
+					tmpColor.r = (tmpColor.r * colorTransparancy + color.r * (1- colorTransparancy));
+					tmpColor.g = (tmpColor.g * colorTransparancy + color.g * (1- colorTransparancy));
+					tmpColor.b = (tmpColor.b * colorTransparancy + color.b * (1- colorTransparancy));
+					tmpColor.a = (tmpColor.a * colorTransparancy + color.a * (1- colorTransparancy));
+					layer.drawPixel(x, layer.pixmap.getHeight() - y,tmpColor);
+				}
+			}
+		}
+	}
 }
