@@ -65,10 +65,11 @@ public class NavigationGridManager extends Manager {
 					tmpCol.set(rawColor);
 					if ( isWalkable )
 					{
-						tmpCol.r = (tmpCol.r + team.getBackgroundColor().r) / 2;
-						tmpCol.g = (tmpCol.g + team.getBackgroundColor().g) / 2;
-						tmpCol.b = (tmpCol.b + team.getBackgroundColor().b) / 2;
-						tmpCol.a = (tmpCol.a + team.getBackgroundColor().a) / 2;
+						float transparency = 0.32f;
+						tmpCol.r = (tmpCol.r * transparency + team.getBackgroundColor().r * (1-transparency));
+						tmpCol.g = (tmpCol.g * transparency + team.getBackgroundColor().g * (1-transparency));
+						tmpCol.b = (tmpCol.b * transparency + team.getBackgroundColor().b * (1-transparency));
+						tmpCol.a = (tmpCol.a * transparency + team.getBackgroundColor().a * (1-transparency));
 					}
 					navMask.drawPixel(x, navMask.pixmap.getHeight() - y,tmpCol);
 
