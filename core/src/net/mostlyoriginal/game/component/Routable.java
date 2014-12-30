@@ -3,7 +3,6 @@ package net.mostlyoriginal.game.component;
 import com.artemis.Component;
 import net.mostlyoriginal.game.Path;
 import org.xguzm.pathfinding.NavigationNode;
-import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +27,7 @@ public class Routable extends Component implements NavigationNode {
 	private boolean isWalkable = true;
 	private int closedOnJob, openedOnJob;
 	private NavigationNode parent;
+	private boolean ignoreForPreferred = false;
 
 	//for BTree
 	private int index;
@@ -123,5 +123,13 @@ public class Routable extends Component implements NavigationNode {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	public boolean isIgnoreForPreferred() {
+		return ignoreForPreferred;
+	}
+
+	public void setIgnoreForPreferred(boolean ignoreForPreferred) {
+		this.ignoreForPreferred = ignoreForPreferred;
 	}
 }

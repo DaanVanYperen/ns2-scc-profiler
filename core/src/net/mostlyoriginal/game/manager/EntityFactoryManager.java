@@ -38,6 +38,7 @@ public class EntityFactoryManager extends Manager {
     protected ComponentMapper<TeamMember> mTeamMember;
     protected ComponentMapper<Persistable> mPersistable;
     protected ComponentMapper<RenderMask> mRenderMask;
+    private ComponentMapper<Routable> mRoutable;
 
 
     @Override
@@ -281,6 +282,10 @@ public class EntityFactoryManager extends Manager {
 
         Anim anim = mAnim.get(techpoint);
         anim.id = "techpoint";
+
+        // since there is always a techpoint around we never use this for preferred route calculations.
+        Routable routable = mRoutable.get(techpoint);
+        routable.setIgnoreForPreferred(true);
 
         Bounds bounds = mBounds.get(techpoint);
         bounds.maxx = 16;

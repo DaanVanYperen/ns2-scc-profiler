@@ -82,9 +82,9 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 			// get all neighbours for team.
 			for (Path path : node1.paths.get(team)) {
 				Routable routable = getRoutable(path);
-				if ( routable == node2 ) {
+				if (routable == node2) {
 					float l = path.getPixelLength() * 0.05f;
-					return l*l;
+					return l * l;
 				}
 			}
 
@@ -108,11 +108,11 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 		pathFinderOptions.heuristic = new Heuristic() {
 			@Override
 			public float calculate(NavigationNode from, NavigationNode to) {
-				return teamGraphs.get(pathfindTeam).getMovementCost((Routable)from, (Routable)to, null);
+				return teamGraphs.get(pathfindTeam).getMovementCost((Routable) from, (Routable) to, null);
 			}
 		};
 
-		finder = new AStarFinder<>(Routable.class,pathFinderOptions);
+		finder = new AStarFinder<>(Routable.class, pathFinderOptions);
 		//new NavigationGrid();
 	}
 
@@ -120,16 +120,16 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 	protected void processEntities(ImmutableBag<Entity> entities) {
 
 		if (dirty) {
-			dirty=false;
+			dirty = false;
 
 			for (Team team : Team.values()) {
-				teamGraphs.put(team, new TeamGraph(team) );
+				teamGraphs.put(team, new TeamGraph(team));
 			}
 
 			int size = entities.size();
 
 			for (int a = 0; a < size; a++) {
-				for (int b = a+1; b < size; b++) {
+				for (int b = a + 1; b < size; b++) {
 					final Entity entityA = entities.get(a);
 					final Entity entityB = entities.get(b);
 
@@ -142,11 +142,11 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 						pathfindTeam = team;
 
 						List<Routable> path = finder.findPath(routableA, routableB, teamGraphs.get(team));
-						if ( path != null ) {
+						if (path != null) {
 							path.add(0, routableA);
 
 							for (int i = 1; i < path.size(); i++) {
-								markPreferred( team, path.get(i-1), path.get(i));
+								markPreferred(team, path.get(i - 1), path.get(i));
 							}
 						}
 					}
@@ -156,17 +156,20 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 		}
 	}
 
-	/** Mark team route from src to dst as the preferred route. */
+	/**
+	 * Mark team route from src to dst as the preferred route.
+	 */
 	private void markPreferred(Team team, Routable src, Routable dst) {
 
 		for (Path path : src.paths.get(team)) {
-			Routable routable = getRoutable(path);
-			if (routable == dst ) {
-				if ( !path.preferred && !path.reversed )
-				{
+			final Routable routable = getRoutable(path);
+			if (routable == dst) {
+				if (!routable.isIgnoreForPreferred()) {
+					if (!path.preferred && !path.reversed) {
 						addLabel(team, path);
+					}
+					path.preferred = true;
 				}
-				path.preferred = true;
 			}
 		}
 	}
@@ -175,9 +178,7 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 		int center = path.cells.size() / 2;
 		GridCell cell = path.cells.get(center);
 
-		int travelTimeSeconds = Math.round(( path.getPixelLength() * G.PIXELS_TO_UNITS) / team.getAvgSpeed());
-
-
+		int travelTimeSeconds = Math.round((path.getPixelLength() * G.PIXELS_TO_UNITS) / team.getAvgSpeed());
 
 
 		Label label = new Label(travelTimeSeconds + "");
