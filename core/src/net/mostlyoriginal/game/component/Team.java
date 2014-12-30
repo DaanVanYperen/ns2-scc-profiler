@@ -8,7 +8,7 @@ import net.mostlyoriginal.game.G;
  */
 public enum Team {
 	ALIEN(new Color(0.1f,1f,0.5f,1f), new Color(1f,0.2f,0f,1f), G.ALIEN_SPEED_AVG),
-	MARINE(Color.ORANGE, new Color(0,1f,1f,1f), G.MARINE_SPEED_AVG);
+	MARINE(Color.ORANGE, new Color(0,0.3f,1f,1f), G.MARINE_SPEED_AVG);
 
 	private float avgSpeed;
 
