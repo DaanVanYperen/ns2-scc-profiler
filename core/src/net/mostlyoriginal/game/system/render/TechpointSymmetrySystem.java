@@ -16,7 +16,6 @@ import net.mostlyoriginal.game.component.buildings.ResourceNode;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
-import org.xguzm.pathfinding.grid.GridCell;
 
 /**
  * Techpoint Symmetry
@@ -86,9 +85,6 @@ public class TechpointSymmetrySystem extends EntitySystem {
 					// abort when paths are longer than 10% of the closest techpoint.
 					if (travelTimeInSeconds > closest + MAX_SYMMETRY_DISCREPANCY)
 						break;
-
-					GridCell cell1 = path.cells.get(0);
-					GridCell cell2 = path.cells.get(path.cells.size() - 1);
 
 					routePlotSystem.renderPath(path,
 							path.team == Team.ALIEN ? layerAliens : layerMarines,

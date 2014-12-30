@@ -13,7 +13,6 @@ import net.mostlyoriginal.game.component.buildings.ResourceNode;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
-import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +39,7 @@ public class TechpointPressureSystem extends EntitySystem {
 	protected ComponentMapper<Techpoint> mTechpoint;
 	protected ComponentMapper<RenderMask> mRenderMask;
 	protected ComponentMapper<TeamMember> mTeamMember;
+	private RoutePlotSystem routePlotSystem;
 
 
 	public TechpointPressureSystem() {
@@ -55,6 +55,8 @@ public class TechpointPressureSystem extends EntitySystem {
 
 		if (dirty) {
 			dirty = false;
+
+			layerManager.getLayer("TECHPOINTS_PRESSURE", RenderMask.Mask.RT_PRESSURE).clear();
 
 			for (int i = 0, s = entities.size(); i < s; i++) {
 				final Entity e = entities.get(i);
@@ -140,12 +142,10 @@ public class TechpointPressureSystem extends EntitySystem {
 					if (travelTimeInSeconds > closest * 1.1f)
 						break;
 
-					GridCell cell1 = path.cells.get(0);
-					GridCell cell2 = path.cells.get(path.cells.size() - 1);
-					layer.pixmap.setColor(path.team.getPathColor());
-					layer.pixmap.drawLine(
-							cell1.x, layer.pixmap.getHeight() - cell1.y,
-							cell2.x, layer.pixmap.getHeight() - cell2.y);
+					routePlotSystem.renderPath(path,
+							layer,
+							path.team.getPathColor(),
+							new RenderMask(RenderMask.Mask.RT_PRESSURE));
 				}
 			}
 
