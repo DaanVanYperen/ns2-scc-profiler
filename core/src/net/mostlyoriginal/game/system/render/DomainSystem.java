@@ -56,13 +56,13 @@ public class DomainSystem extends EntitySystem {
 		if (dirty) {
 			dirty = false;
 
-			Layer layerRaw = layerManager.getLayer("RAW", RenderMask.Mask.BASIC);
 			Layer layer = layerManager.getLayer("DOMAINS", RenderMask.Mask.TEAM_DOMAINS);
 			layerManager.clearWithMap(layer, Color.WHITE, 0.3f);
 
 
+
 			for (Team team : Team.values()) {
-				floodFill(layerRaw, layer, entities, team);
+				floodFill(layerManager.getTeamNavLayer(team), layer, entities, team);
 			}
 		}
 	}
