@@ -41,15 +41,18 @@ public class Layer extends Component {
 	}
 
 
-	public void drawPath(Path path, Color color) {
+	public void drawPath(Path path, Color color, boolean shadow) {
 
 		// shadow.
-		pixmap.setColor(new Color(0,0,0,0.35f));
 		final List<GridCell> cells = path.cells;
-		for (int i = 1; i < cells.size(); i++) {
-			GridCell p1 = cells.get(i - 1);
-			pixmap.drawPixel(
-					p1.x, pixmap.getHeight() - p1.y + 1);
+
+		if (shadow) {
+			pixmap.setColor(new Color(0, 0, 0, 0.35f));
+			for (int i = 1; i < cells.size(); i++) {
+				GridCell p1 = cells.get(i - 1);
+				pixmap.drawPixel(
+						p1.x, pixmap.getHeight() - p1.y + 1);
+			}
 		}
 
 		pixmap.setColor(color);
@@ -80,12 +83,18 @@ public class Layer extends Component {
 	}
 
 	public void dispose() {
-		if ( texture != null ) { texture.dispose(); texture = null; }
+		if (texture != null) {
+			texture.dispose();
+			texture = null;
+		}
 		pixmap.dispose();
 	}
 
 	public void clear() {
-		if ( texture != null ) { texture.dispose(); texture = null; }
+		if (texture != null) {
+			texture.dispose();
+			texture = null;
+		}
 		pixmap.setColor(Color.CLEAR);
 		pixmap.fill();
 	}

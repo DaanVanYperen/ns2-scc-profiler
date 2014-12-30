@@ -51,7 +51,18 @@ public class RoutePlotSystem extends EntitySystem {
 		if (dirty) {
 			dirty = false;
 
-			// render all paths on team layers.
+			// render all secondary paths as shadows.
+			for(int i=0,s=entities.size();i<s;i++)
+			{
+				final Entity e = entities.get(i);
+				final Routable routable = mRoutable.get(e);
+
+				for (Team team : Team.values()) {
+					renderSecondaryPaths(routable, team);
+				}
+			}
+
+			// render all primary paths on team layers.
 			for(int i=0,s=entities.size();i<s;i++)
 			{
 				final Entity e = entities.get(i);
@@ -62,6 +73,7 @@ public class RoutePlotSystem extends EntitySystem {
 				}
 			}
 
+			// label all distances on primary paths.
 			for(int i=0,s=entities.size();i<s;i++)
 			{
 				final Entity e = entities.get(i);
@@ -96,7 +108,26 @@ public class RoutePlotSystem extends EntitySystem {
 
 				path.color.clamp();
 
-				layerManager.getTeamNavLayer(team).drawPath(path, path.color);
+				layerManager.getTeamNavLayer(team).drawPath(path, path.color, true);
+			}
+		}
+	}
+
+	private void renderSecondaryPaths(Routable routable, Team team) {
+		List<Path> paths = routable.paths.get(team);
+		for (Path path : paths) {
+			// don't render the reverse paths.
+			if ( !path.preferred && !path.reversed) {
+
+				// slightly vary path color to make it easier to track.
+
+				tmpCol.set(team.getPathColor());
+				tmpCol.r = 1f;
+				tmpCol.g = 1f;
+				tmpCol.b = 1f;
+				tmpCol.a = 0.08f;
+
+				layerManager.getTeamNavLayer(team).drawPath(path, tmpCol, false);
 			}
 		}
 	}
