@@ -6,6 +6,7 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.graphics.Pixmap;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Layer;
@@ -20,9 +21,12 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 /**
  * Techpoint Symmetry
- *
+ * <p/>
  * Per team, highlight the shortest paths from techpoint to resource towers, and paths up to 5 seconds longer.
  * Marines Highlighted in blue, aliens in red.
+ * <p/>
+ * Helps determine what techpoints have the most access to RTs for each team, in an unchallenged situation.
+ * Since travel speed is asymmetrical the dynamics change depending on the claimed techpoints.
  *
  * @author Daan van Yperen
  */
@@ -65,7 +69,8 @@ public class TechpointSymmetrySystem extends EntitySystem {
 
 	private void plotCloseTechpoints(Entity e, Routable routable) {
 
-		Layer layer = layerManager.getLayer("TECHPOINTS", RenderMask.Mask.TECHPOINTS_NEAR_RTS);
+		Layer layerAliens = layerManager.getLayer("TECHPOINTS_ALIENS", RenderMask.Mask.RT_SYMMETRY_ALIEN);
+		Layer layerMarines = layerManager.getLayer("TECHPOINTS_MARINES", RenderMask.Mask.RT_SYMMETRY_MARINE);
 
 		// build a list of all paths, sorted by TRAVEL TIME. which can be different based on the team running the path.
 		for (Team team : Team.values()) {
@@ -84,16 +89,13 @@ public class TechpointSymmetrySystem extends EntitySystem {
 
 					GridCell cell1 = path.cells.get(0);
 					GridCell cell2 = path.cells.get(path.cells.size() - 1);
-					layer.pixmap.setColor(path.team.getPathColor());
-					if (path.team == Team.ALIEN) {
-						layer.pixmap.drawLine(
-								cell1.x, layer.pixmap.getHeight() - cell1.y,
-								cell2.x, layer.pixmap.getHeight() - cell2.y);
-					} else {
-						layer.pixmap.drawLine(
-								cell1.x + 1, layer.pixmap.getHeight() - cell1.y + 1,
-								cell2.x + 1, layer.pixmap.getHeight() - cell2.y + 1);
-					}
+
+					Pixmap pixmap = path.team == Team.ALIEN ? layerAliens.pixmap : layerMarines.pixmap;
+
+					pixmap.setColor(path.team.getPathColor());
+					pixmap.drawLine(
+							cell1.x, pixmap.getHeight() - cell1.y,
+							cell2.x, pixmap.getHeight() - cell2.y);
 
 				}
 			}

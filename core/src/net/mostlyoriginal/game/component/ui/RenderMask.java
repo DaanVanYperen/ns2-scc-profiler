@@ -21,7 +21,8 @@ public class RenderMask extends Component {
 		BASIC,
 		PATHFIND_ALIEN,
 		PATHFIND_MARINE,
-		TECHPOINTS_NEAR_RTS,
+		RT_SYMMETRY_ALIEN,
+		RT_SYMMETRY_MARINE,
 		TEAM_DOMAINS
 	}
 

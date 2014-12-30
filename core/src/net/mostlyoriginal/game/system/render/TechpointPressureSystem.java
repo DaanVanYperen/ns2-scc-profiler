@@ -71,7 +71,7 @@ public class TechpointPressureSystem extends EntitySystem {
 
 	private void plotCloseTechpoints(Entity e, Routable routable) {
 
-		Layer layer = layerManager.getLayer("TECHPOINTS", RenderMask.Mask.TECHPOINTS_NEAR_RTS);
+		Layer layer = layerManager.getLayer("TECHPOINTS", RenderMask.Mask.RT_SYMMETRY_ALIEN);
 
 		List<Path> combinedPaths = new ArrayList<Path>();
 
