@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.system;
+package net.mostlyoriginal.game.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -13,7 +13,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Renderable;
-import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
@@ -151,7 +150,7 @@ public class RoutePlotSystem extends EntitySystem {
 		// use a couple distance to get a smoother angle.
 		GridCell cell2 = center + 3 < path.cells.size() ? path.cells.get(center+3) : cell;
 
-		int travelTimeSeconds = Math.round((path.getPixelLength() * G.PIXELS_TO_UNITS) / team.getAvgSpeed());
+		int travelTimeSeconds = team.getTravelTimeInSeconds(path);
 
 		vTmp.set(cell.x,cell.y).sub(cell2.x, cell2.y).rotate90(-1).nor().scl(10).add(cell.x, cell.y);
 

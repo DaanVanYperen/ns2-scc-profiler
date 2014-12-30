@@ -5,6 +5,7 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Team;
+import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.system.BlockadeSystem;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
@@ -40,7 +41,7 @@ public class NavigationGridManager extends Manager {
 		if ( !navGrid.containsKey(team) )
 		{
 			Layer navMask = layerManager.getTeamNavLayer(team);
-			final Layer rawMapLayer = layerManager.getRawLayer();
+			final Layer rawMapLayer = layerManager.getLayer("RAW", RenderMask.Mask.BASIC);
 
 
 			final GridCell[][] cells = new GridCell[GRID_WIDTH][GRID_HEIGHT];

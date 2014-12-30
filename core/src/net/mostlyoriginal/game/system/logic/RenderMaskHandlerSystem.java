@@ -21,7 +21,7 @@ public class RenderMaskHandlerSystem extends EntityProcessingSystem {
 	protected ComponentMapper<RenderMask> mRenderMask;
 	protected ComponentMapper<Invisible> mInvisible;
 
-	protected RenderMask.Mask activeMask = RenderMask.Mask.PATHFIND_ALIEN;
+	protected RenderMask.Mask activeMask = RenderMask.Mask.TECHPOINTS_NEAR_RTS;
 	private EntityFactoryManager entityFactoryManager;
 
 	public RenderMaskHandlerSystem() {

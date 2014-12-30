@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Traveler;
+import net.mostlyoriginal.game.component.ui.RenderMask;
 
 /**
  * Load map layers.
@@ -30,7 +31,7 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 	}
 
 	public void load() {
-		layerManager.getRawLayer().drawPixmapToFit(new Pixmap(Gdx.files.internal("ns2_caged_v2.tga")));
+		layerManager.getLayer("RAW", RenderMask.Mask.BASIC).drawPixmapToFit(new Pixmap(Gdx.files.internal("ns2_caged_v2.tga")));
 
 		/*
 

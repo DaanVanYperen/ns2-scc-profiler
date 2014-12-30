@@ -2,6 +2,7 @@ package net.mostlyoriginal.game.component;
 
 import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.game.G;
+import net.mostlyoriginal.game.Path;
 
 /**
  * @author Daan van Yperen
@@ -32,4 +33,9 @@ public enum Team {
 	public float getAvgSpeed() {
 		return avgSpeed;
 	}
+
+	public int getTravelTimeInSeconds(Path path) {
+		return Math.round((path.getPixelLength() * G.PIXELS_TO_UNITS) / getAvgSpeed());
+	}
+
 }

@@ -13,7 +13,8 @@ import net.mostlyoriginal.game.manager.EntityFactoryManager;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.system.PreferredRouteCalculationSystem;
 import net.mostlyoriginal.game.system.RouteCalculationSystem;
-import net.mostlyoriginal.game.system.RoutePlotSystem;
+import net.mostlyoriginal.game.system.render.ClosestTechpointPlotSystem;
+import net.mostlyoriginal.game.system.render.RoutePlotSystem;
 
 /**
  * @author Daan van Yperen
@@ -27,6 +28,7 @@ public class RefreshHandlerSystem extends EntitySystem {
 	private RouteCalculationSystem routeCalculationSystem;
 	private RoutePlotSystem routePlotSystem;
 	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
+	private ClosestTechpointPlotSystem closestTechpointPlotSystem;
 
 	public RefreshHandlerSystem() {
 		super(Aspect.getAspectForAll(Transient.class));
@@ -66,6 +68,7 @@ public class RefreshHandlerSystem extends EntitySystem {
 		routeCalculationSystem.dirty=true;
 		preferredRouteCalculationSystem.dirty=true;
 		routePlotSystem.dirty=true;
+		closestTechpointPlotSystem.dirty=true;
 	}
 
 	private void clearTeamLayers() {

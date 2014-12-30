@@ -23,7 +23,7 @@ public class LayerManager extends Manager {
 
 	protected ComponentMapper<Layer> mLayer;
 	protected ComponentMapper<Renderable> mRenderable;
-	private Layer rawMapLayer;
+	private HashMap<String, Layer> layers = new HashMap<>();
     private HashMap<Team, Layer> teamNavigationLayer = new HashMap<>();
 
 	public static final int CELL_SIZE = 2;
@@ -37,19 +37,22 @@ public class LayerManager extends Manager {
 		layerArchetype = new ArchetypeBuilder().add(Pos.class, Layer.class, Renderable.class, RenderMask.class).build(world);
 	}
 
-	public Layer getRawLayer()
+	public Layer getLayer( String key, RenderMask.Mask mask )
 	{
-		if ( rawMapLayer == null )
+		Layer layer = this.layers.get(key);
+		if (layer == null)
 		{
 			Entity layerEntity = world.createEntity(layerArchetype);
-			rawMapLayer = mLayer.get(layerEntity);
+			layer = mLayer.get(layerEntity);
 
 			Renderable renderable = mRenderable.get(layerEntity);
 			renderable.layer = -100;
 
-			mRenderMask.get(layerEntity).visible = EnumSet.of(RenderMask.Mask.BASIC);
+			mRenderMask.get(layerEntity).visible = EnumSet.of(mask);
+
+			layers.put(key, layer);
 		}
-		return rawMapLayer;
+		return layer;
 	}
 
 	public Layer getTeamNavLayer(Team team)

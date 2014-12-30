@@ -30,8 +30,10 @@ import net.mostlyoriginal.game.system.logic.PersistHandlerSystem;
 import net.mostlyoriginal.game.system.logic.RefreshHandlerSystem;
 import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.TravelerSystem;
+import net.mostlyoriginal.game.system.render.ClosestTechpointPlotSystem;
 import net.mostlyoriginal.game.system.render.LabelRenderSystem;
 import net.mostlyoriginal.game.system.render.LayerRenderSystem;
+import net.mostlyoriginal.game.system.render.RoutePlotSystem;
 
 /**
  * @author Daan van Yperen
@@ -75,6 +77,7 @@ public class MainScreen implements Screen {
         world.setSystem(new RouteCalculationSystem());
         world.setSystem(new PreferredRouteCalculationSystem());
         world.setSystem(new RoutePlotSystem());
+        world.setSystem(new ClosestTechpointPlotSystem());
 
         world.setSystem(new TravelerSystem());
 
@@ -92,6 +95,7 @@ public class MainScreen implements Screen {
         world.setSystem(new AnimRenderSystem(renderBatchingSystem), false);
         world.setSystem(new LayerRenderSystem(renderBatchingSystem), false);
         world.setSystem(new LabelRenderSystem(renderBatchingSystem), false);
+
 
         world.setSystem(new RefreshHandlerSystem());
         world.setSystem(new PersistHandlerSystem());

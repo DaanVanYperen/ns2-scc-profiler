@@ -9,6 +9,8 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.component.*;
+import net.mostlyoriginal.game.component.buildings.ResourceNode;
+import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.*;
 
 import java.util.EnumSet;
@@ -56,6 +58,7 @@ public class EntityFactoryManager extends Manager {
                 Clickable.class,
                 Persistable.class,
                 RenderMask.class,
+                ResourceNode.class,
                 Routable.class
         ).build(world);
         marine = new ArchetypeBuilder().add(
@@ -89,7 +92,8 @@ public class EntityFactoryManager extends Manager {
                 Clickable.class,
                 Persistable.class,
                 RenderMask.class,
-                Routable.class
+                Routable.class,
+                Techpoint.class
         ).build(world);
         duct = new ArchetypeBuilder().add(
                 Pos.class,
