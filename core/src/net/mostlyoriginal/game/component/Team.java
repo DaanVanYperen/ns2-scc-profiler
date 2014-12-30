@@ -35,7 +35,7 @@ public enum Team {
 	}
 
 	public int getTravelTimeInSeconds(Path path) {
-		return Math.round((path.getPixelLength() * G.PIXELS_TO_UNITS) / getAvgSpeed());
+		return Math.round((path.getPixelLength() * G.UNITS_PER_PIXEL) / getAvgSpeed());
 	}
 
 }

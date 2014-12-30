@@ -16,7 +16,8 @@ public class G {
     public static final float ALIEN_SPEED_FAST = 11f;
     public static final float ALIEN_SPEED_AVG = 9f; // speed is harder for aliens.
 
-    public static final float PIXELS_TO_UNITS = 1/1.6f;
+    //public static final float PIXELS_TO_UNITS = 1/1.6f; // CAGED
+    public static final float UNITS_PER_PIXEL = 1/1.4f; // SUMMIT
 
     public static int MARINE_TEAM_SIZE = 8;
     public static int ALIEN_TEAM_SIZE = 8;

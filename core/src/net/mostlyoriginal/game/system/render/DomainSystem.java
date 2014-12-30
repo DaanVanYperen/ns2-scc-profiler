@@ -140,7 +140,7 @@ public class DomainSystem extends EntitySystem {
 						closed[childNode.x + childNode.y * layerOut.pixmap.getWidth() ] = true;
 					} else {
 						// create crossbar style.
-						if ( (childX + childY + team.ordinal() * 4) % 8 < 4 ) {
+						if ( (childX + (team==Team.MARINE ? childY : childY*7) ) % 8 < 4 ) {
 
 							float tween = childNode.totalCost / maxRouteLength;
 
@@ -162,7 +162,7 @@ public class DomainSystem extends EntitySystem {
 	}
 
 	private float calculateDistance(Team team, int seconds) {
-		return ((Math.round(team.getAvgSpeed() * seconds)) / G.PIXELS_TO_UNITS) * ORTHO_MOVEMENT;
+		return ((Math.round(team.getAvgSpeed() * seconds)) / G.UNITS_PER_PIXEL) * ORTHO_MOVEMENT;
 	}
 
 	private Node createUpdateNode(int x, int y, Node parent, boolean diagonal) {
