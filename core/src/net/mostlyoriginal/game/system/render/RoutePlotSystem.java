@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.Path;
+import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.ui.Label;
@@ -72,17 +73,6 @@ public class RoutePlotSystem extends EntitySystem {
 				}
 			}
 
-			// label all distances on primary paths.
-			for(int i=0,s=entities.size();i<s;i++)
-			{
-				final Entity e = entities.get(i);
-				final Routable routable = mRoutable.get(e);
-
-				for (Team team : Team.values()) {
-					renderLabels(routable, team);
-				}
-			}
-
 			for (Team team : Team.values()) {
 				layerManager.getTeamNavLayer(team).refresh();
 			}
@@ -96,20 +86,26 @@ public class RoutePlotSystem extends EntitySystem {
 		for (Path path : paths) {
 			// don't render the reverse paths.
 			if (path.preferred && !path.reversed) {
-
-				// slightly vary path color to make it easier to track.
-
-				path.color.set(team.getPathColor());
-				path.color.r = path.color.r * MathUtils.random(0.4f,1f) + MathUtils.random(0f,0.1f);
-				path.color.g = path.color.g * MathUtils.random(0.4f,1f) + MathUtils.random(0f,0.1f);
-				path.color.b = path.color.b * MathUtils.random(0.4f,1f) + MathUtils.random(0f,0.1f);
-				path.color.a = 0.8f;
-
-				path.color.clamp();
-
-				layerManager.getTeamNavLayer(team).drawPath(path, path.color, true);
+				renderPath(path, layerManager.getTeamNavLayer(team), team.getPathColor(), new RenderMask(path.team == Team.MARINE ? RenderMask.Mask.PATHFIND_MARINE : RenderMask.Mask.PATHFIND_ALIEN));
 			}
 		}
+	}
+
+	//
+	public void renderPath(Path path, Layer layer, Color color, RenderMask renderMask) {
+		// slightly vary path color to make it easier to track.
+
+		path.color.set(color);
+		path.color.r = path.color.r * MathUtils.random(0.4f, 1f) + MathUtils.random(0f,0.1f);
+		path.color.g = path.color.g * MathUtils.random(0.4f,1f) + MathUtils.random(0f,0.1f);
+		path.color.b = path.color.b * MathUtils.random(0.4f,1f) + MathUtils.random(0f,0.1f);
+		path.color.a = 0.8f;
+		path.color.clamp();
+
+		layer.drawPath(path, path.color, true);
+
+		addLabel(path.color, path, layer.pixmap,
+				renderMask, path.team.getTravelTimeInSeconds(path) + "");
 	}
 
 	private void renderSecondaryPaths(Routable routable, Team team) {
@@ -131,19 +127,10 @@ public class RoutePlotSystem extends EntitySystem {
 		}
 	}
 
-	private void renderLabels(Routable routable, Team team) {
-		List<Path> paths = routable.paths.get(team);
-		for (Path path : paths) {
-			if (path.preferred && !path.reversed) {
-				addLabel(path.color,team, path);
-			}
-		}
-	}
-
 	private Vector2 vTmp = new Vector2();
 
 
-	private void addLabel(Color lineColor, Team team, Path path) {
+	private void addLabel(Color lineColor, Path path, Pixmap pixmap, RenderMask renderMask, String text) {
 
 		int center = path.cells.size() / 2;
 		GridCell cell = path.cells.get(center);
@@ -151,11 +138,8 @@ public class RoutePlotSystem extends EntitySystem {
 		// use a couple distance to get a smoother angle.
 		GridCell cell2 = center + 3 < path.cells.size() ? path.cells.get(center+3) : cell;
 
-		int travelTimeSeconds = team.getTravelTimeInSeconds(path);
-
 		vTmp.set(cell.x,cell.y).sub(cell2.x, cell2.y).rotate90(-1).nor().scl(10).add(cell.x, cell.y);
-
-		drawBubble(lineColor, travelTimeSeconds + "", cell.x, cell.y, (int) vTmp.x, (int) vTmp.y, layerManager.getTeamNavLayer(team).pixmap, new RenderMask(team == Team.MARINE ? RenderMask.Mask.PATHFIND_MARINE : RenderMask.Mask.PATHFIND_ALIEN));
+		drawBubble(lineColor, text, cell.x, cell.y, (int) vTmp.x, (int) vTmp.y, pixmap, renderMask);
 	}
 
 	/**
