@@ -31,13 +31,16 @@ public class Layer extends Component {
 
 		float aspectRatio = source.getWidth() / source.getHeight();
 
+		int paddingTop = 50;
+		int paddingBottom = 50;
+
 		// bind pixmap to window.
 		Rectangle dest = new Rectangle(0, 0, source.getWidth(), source.getHeight())
-				.fitInside(new Rectangle(0, 0, pixmap.getWidth(), pixmap.getHeight()));
+				.fitInside(new Rectangle(0, paddingTop, pixmap.getWidth(), pixmap.getHeight()-paddingBottom-paddingTop));
 
 		pixmap.drawPixmap(source,
 				0, 0, source.getWidth(), source.getHeight(),
-				0, 0, (int) dest.width, (int) dest.height);
+				(int)dest.x, (int)dest.y, (int) dest.width, (int) dest.height);
 	}
 
 
