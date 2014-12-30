@@ -6,6 +6,7 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Layer;
@@ -56,6 +57,8 @@ public class TechpointSymmetrySystem extends EntitySystem {
 		if (dirty) {
 			dirty = false;
 
+			layerManager.clearWithMap(getAlienLayer(), Color.WHITE, 0.3f);
+			layerManager.clearWithMap(getMarineLayer(), Color.WHITE, 0.3f);
 
 			for (int i = 0, s = entities.size(); i < s; i++) {
 				final Entity e = entities.get(i);
@@ -68,8 +71,8 @@ public class TechpointSymmetrySystem extends EntitySystem {
 
 	private void plotCloseTechpoints(Entity e, Routable routable) {
 
-		Layer layerAliens = layerManager.getLayer("TECHPOINTS_ALIENS", RenderMask.Mask.RT_SYMMETRY_ALIEN);
-		Layer layerMarines = layerManager.getLayer("TECHPOINTS_MARINES", RenderMask.Mask.RT_SYMMETRY_MARINE);
+		Layer layerAliens = getAlienLayer();
+		Layer layerMarines = getMarineLayer();
 
 		// build a list of all paths, sorted by TRAVEL TIME. which can be different based on the team running the path.
 		for (Team team : Team.values()) {
@@ -93,5 +96,13 @@ public class TechpointSymmetrySystem extends EntitySystem {
 				}
 			}
 		}
+	}
+
+	private Layer getMarineLayer() {
+		return layerManager.getLayer("TECHPOINTS_MARINES", RenderMask.Mask.RT_SYMMETRY_MARINE);
+	}
+
+	private Layer getAlienLayer() {
+		return layerManager.getLayer("TECHPOINTS_ALIENS", RenderMask.Mask.RT_SYMMETRY_ALIEN);
 	}
 }
