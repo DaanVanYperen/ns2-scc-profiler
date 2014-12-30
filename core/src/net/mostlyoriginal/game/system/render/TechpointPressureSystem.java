@@ -109,32 +109,52 @@ public class TechpointPressureSystem extends EntitySystem {
 
 		);
 
-		float closest = -1;
-		for (
-				Path path
-				: combinedPaths)
 
-		{
-			Entity destination = path.destination.get();
-			if (mTechpoint.has(destination)) {
+		// render fastest paths for each team.
 
-				// relevant team.
-				TeamMember t = mTeamMember.get(path.destination.get());
+		int alienSpeed = 0;
+		int marineSpeed = 0;
 
-				int travelTimeInSeconds = t.team.getTravelTimeInSeconds(path);
-				if (closest == -1) closest = travelTimeInSeconds;
+		for (Team team : Team.values()) {
+			float closest = -1;
+			for (
+					Path path
+					: combinedPaths)
 
-				// abort when paths are longer than 10% of the closest techpoint.
-				if (travelTimeInSeconds > closest * 1.2f)
-					break;
+			{
+				Entity destination = path.destination.get();
+				if (mTechpoint.has(destination)) {
 
-				GridCell cell1 = path.cells.get(0);
-				GridCell cell2 = path.cells.get(path.cells.size() - 1);
-				layer.pixmap.setColor(path.team.getPathColor());
-				layer.pixmap.drawLine(
-						cell1.x, layer.pixmap.getHeight() - cell1.y,
-						cell2.x, layer.pixmap.getHeight() - cell2.y);
+					// relevant team.
+
+					if (path.team != team)
+						continue;
+
+					int travelTimeInSeconds = path.team.getTravelTimeInSeconds(path);
+					if (closest == -1) closest = travelTimeInSeconds;
+
+					if (team == Team.ALIEN && alienSpeed == 0) alienSpeed = travelTimeInSeconds;
+					if (team == Team.MARINE && marineSpeed == 0) marineSpeed = travelTimeInSeconds;
+
+					// abort when paths are longer than 10% of the closest techpoint.
+					if (travelTimeInSeconds > closest * 1.1f)
+						break;
+
+					GridCell cell1 = path.cells.get(0);
+					GridCell cell2 = path.cells.get(path.cells.size() - 1);
+					layer.pixmap.setColor(path.team.getPathColor());
+					layer.pixmap.drawLine(
+							cell1.x, layer.pixmap.getHeight() - cell1.y,
+							cell2.x, layer.pixmap.getHeight() - cell2.y);
+				}
 			}
+
+			int speedDifference = alienSpeed - marineSpeed;
+			if ( Math.abs(speedDifference) > 0 )
+			{
+
+			}
+
 		}
 	}
 }

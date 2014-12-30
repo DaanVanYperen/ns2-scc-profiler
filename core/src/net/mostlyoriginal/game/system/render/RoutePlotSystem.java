@@ -144,6 +144,7 @@ public class RoutePlotSystem extends EntitySystem {
 
 
 	private void addLabel(Color lineColor, Team team, Path path) {
+
 		int center = path.cells.size() / 2;
 		GridCell cell = path.cells.get(center);
 
@@ -154,25 +155,42 @@ public class RoutePlotSystem extends EntitySystem {
 
 		vTmp.set(cell.x,cell.y).sub(cell2.x, cell2.y).rotate90(-1).nor().scl(10).add(cell.x, cell.y);
 
-		Pixmap pixmap =  layerManager.getTeamNavLayer(team).pixmap;
-		pixmap.setColor(lineColor);
+		drawBubble(lineColor, travelTimeSeconds + "", cell.x, cell.y, (int) vTmp.x, (int) vTmp.y, layerManager.getTeamNavLayer(team).pixmap, new RenderMask(team == Team.MARINE ? RenderMask.Mask.PATHFIND_MARINE : RenderMask.Mask.PATHFIND_ALIEN));
+	}
+
+	/**
+	 /** Render lined bubble in pixmap space.
+	 *
+	 * @param color
+	 * @param text
+	 * @param x1 line origin
+	 * @param y1 line origin
+	 * @param x2 line end (where bubble will be)
+	 * @param y2 line end (where bubble will be)
+	 * @param pixmap pixmap to render to.
+	 * @param renderMask render mask for label.
+	 */
+	public void drawBubble(Color color, String text, int x1, int y1, int x2, int y2, Pixmap pixmap, RenderMask renderMask) {
+
+		pixmap.setColor(color);
 		pixmap.drawLine(
-				cell.x, pixmap.getHeight() - cell.y,
-				(int)vTmp.x, pixmap.getHeight() - (int)vTmp.y);
+				x1, pixmap.getHeight() - y1,
+				x2, pixmap.getHeight() - y2);
 
-		tmpCol.set(lineColor).a = 1f;
+		tmpCol.set(color).a = 1f;
 		pixmap.setColor(tmpCol);
-		pixmap.fillRectangle((int) vTmp.x - 6, pixmap.getHeight() - (int) vTmp.y - 4, 11, 8);
+		pixmap.fillRectangle(x2 - 6, pixmap.getHeight() - y2 - 4, 11, 8);
 
-		Label label = new Label(travelTimeSeconds + "");
+		// label is in screen space.
+		Label label = new Label(text);
 		label.scale = 2;
 		label.align = Label.Align.CENTER;
 		new EntityBuilder(world).with(
 				new Renderable(1000),
 				new Transient(),
 				new net.mostlyoriginal.api.component.graphics.Color(1f,1f,1f,1f),
-				new RenderMask(team == Team.MARINE ? RenderMask.Mask.PATHFIND_MARINE : RenderMask.Mask.PATHFIND_ALIEN),
-				new Pos((int)((int)vTmp.x* LayerManager.CELL_SIZE), (int)((int)vTmp.y * LayerManager.CELL_SIZE)),
+				renderMask,
+				new Pos((int)(x2* LayerManager.CELL_SIZE), (int)(y2 * LayerManager.CELL_SIZE)),
 				label)
 				.build();
 	}
