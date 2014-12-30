@@ -112,7 +112,7 @@ public class EntityFactoryManager extends Manager {
     }
 
     private void createInstancingButton(String animId, final String entityId, int x) {
-        createBasicButton(animId, x, new ButtonListener() {
+        Entity button = createBasicButton(animId, x, new ButtonListener() {
             @Override
             public void run() {
                 Entity entity = createEntity(entityId, 0, 0, null);
@@ -126,12 +126,15 @@ public class EntityFactoryManager extends Manager {
                 return true;
             }
         });
+
+        // make only visible when rendering.
+        button.edit().add(new RenderMask(RenderMask.Mask.BASIC));
     }
 
-    public void createBasicButton(String animId, int x, ButtonListener buttonListener) {
+    public Entity createBasicButton(String animId, int x, ButtonListener buttonListener) {
         Anim anim = new Anim(animId);
         anim.scale = 2;
-        new EntityBuilder(world)
+        return new EntityBuilder(world)
                 .with(
                         new Pos(x,50),
                         new Bounds(32,32),
@@ -251,7 +254,7 @@ public class EntityFactoryManager extends Manager {
 
         mPersistable.get(node).saveId = "duct";
 
-        mRenderMask.get(node).visible = EnumSet.of(RenderMask.Mask.BASIC, RenderMask.Mask.PATHFIND_MARINE);
+        mRenderMask.get(node).visible = EnumSet.of(RenderMask.Mask.BASIC);
 
         return node;
     }
@@ -272,7 +275,7 @@ public class EntityFactoryManager extends Manager {
 
         mPersistable.get(node).saveId = "wall";
 
-        mRenderMask.get(node).visible = EnumSet.allOf(RenderMask.Mask.class);
+        mRenderMask.get(node).visible = EnumSet.of(RenderMask.Mask.BASIC);
 
         return node;
     }

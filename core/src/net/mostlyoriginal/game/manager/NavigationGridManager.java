@@ -70,8 +70,8 @@ public class NavigationGridManager extends Manager {
 						tmpCol.g = (tmpCol.g * transparency + team.getBackgroundColor().g * (1-transparency));
 						tmpCol.b = (tmpCol.b * transparency + team.getBackgroundColor().b * (1-transparency));
 						tmpCol.a = (tmpCol.a * transparency + team.getBackgroundColor().a * (1-transparency));
+						navMask.drawPixel(x, navMask.pixmap.getHeight() - y,tmpCol);
 					}
-					navMask.drawPixel(x, navMask.pixmap.getHeight() - y,tmpCol);
 
 					cells[x][y] = new GridCell(x,y, isWalkable);
 				}

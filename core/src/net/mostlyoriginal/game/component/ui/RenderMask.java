@@ -20,7 +20,9 @@ public class RenderMask extends Component {
 	{
 		BASIC,
 		PATHFIND_ALIEN,
-		PATHFIND_MARINE
+		PATHFIND_MARINE,
+		TECHPOINTS_NEAR_RTS,
+		TEAM_DOMAINS
 	}
 
 	public EnumSet<Mask> visible = EnumSet.noneOf(Mask.class);
