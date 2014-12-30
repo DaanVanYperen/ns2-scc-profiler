@@ -52,7 +52,7 @@ public class RouteCalculationSystem extends EntitySystem {
 	protected void initialize() {
 		//create a finder either using the default options
 		GridFinderOptions opt = new GridFinderOptions();
-		opt.dontCrossCorners=true;
+		opt.dontCrossCorners=false;
 		finder = new AStarFinder<>(GridCell.class, opt);
 	}
 

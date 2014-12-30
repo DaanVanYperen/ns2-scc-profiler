@@ -84,7 +84,8 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 				Routable routable = getRoutable(path);
 				if (routable == node2) {
 					float l = path.getPixelLength();
-					return l * l;
+					float l2 = l * 0.005f;
+					return l * (l2 > 1 ? l2 :  1);
 				}
 			}
 
