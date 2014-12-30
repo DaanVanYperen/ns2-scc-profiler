@@ -5,22 +5,15 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
-import com.artemis.utils.EntityBuilder;
 import com.artemis.utils.ImmutableBag;
 import net.mostlyoriginal.api.component.basic.Pos;
-import net.mostlyoriginal.api.component.graphics.Renderable;
-import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
-import net.mostlyoriginal.game.component.ui.Label;
-import net.mostlyoriginal.game.component.ui.RenderMask;
-import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
 import org.xguzm.pathfinding.*;
 import org.xguzm.pathfinding.finders.AStarFinder;
-import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -167,29 +160,11 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 			if (routable == dst) {
 				if (!routable.isIgnoreForPreferred()) {
 					if (!path.preferred && !path.reversed) {
-						addLabel(team, path);
+						//addLabel(team, path);
 					}
 					path.preferred = true;
 				}
 			}
 		}
-	}
-
-	private void addLabel(Team team, Path path) {
-		int center = path.cells.size() / 2;
-		GridCell cell = path.cells.get(center);
-
-		int travelTimeSeconds = Math.round((path.getPixelLength() * G.PIXELS_TO_UNITS) / team.getAvgSpeed());
-
-
-		Label label = new Label(travelTimeSeconds + "");
-		label.scale = 2;
-		new EntityBuilder(world).with(
-				new Renderable(1000),
-				new Transient(),
-				new RenderMask(team == Team.MARINE ? RenderMask.Mask.PATHFIND_MARINE : RenderMask.Mask.PATHFIND_ALIEN),
-				new Pos(cell.getX() * LayerManager.CELL_SIZE, cell.getY() * LayerManager.CELL_SIZE),
-				label)
-				.build();
 	}
 }
