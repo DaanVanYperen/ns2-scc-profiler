@@ -56,7 +56,7 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 			// get all neighbours for team.
 			for (Path path : node.paths.get(team)) {
 				Routable routable = getRoutable(path);
-				if (routable != null) {
+				if (routable != null && !routable.isIgnoreForPreferred() ) {
 					list.add(routable);
 				}
 			}
@@ -78,7 +78,7 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 				if (routable == node2) {
 					float l = path.getPixelLength();
 					float l2 = l * 0.005f;
-					return l * (l2 > 1 ? l2 :  1);
+					return l * (l2 > 1 ? l2 : 1);
 				}
 			}
 
@@ -92,7 +92,9 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 	}
 
 	private Routable getRoutable(Path path) {
-		return path != null && path.destination != null && path.destination.isActive() ? mRoutable.get(path.destination.get()) : null;
+		return path != null
+				&& path.destination != null
+				&& path.destination.isActive() ? mRoutable.get(path.destination.get()) : null;
 	}
 
 	@Override
@@ -130,6 +132,10 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 					Routable routableA = mRoutable.get(entityA);
 					Routable routableB = mRoutable.get(entityB);
 
+					// we don't care about ignored preferred nodes.
+					if ( routableA.isIgnoreForPreferred() || routableB.isIgnoreForPreferred() )
+						continue;
+
 					for (Team team : Team.values()) {
 
 						// bit of a hack to get the right distances for each team.
@@ -156,14 +162,10 @@ public class PreferredRouteCalculationSystem extends EntitySystem {
 	private void markPreferred(Team team, Routable src, Routable dst) {
 
 		for (Path path : src.paths.get(team)) {
+			// get path destination
 			final Routable routable = getRoutable(path);
 			if (routable == dst) {
-				if (!routable.isIgnoreForPreferred()) {
-					if (!path.preferred && !path.reversed) {
-						//addLabel(team, path);
-					}
-					path.preferred = true;
-				}
+				path.preferred = true;
 			}
 		}
 	}
