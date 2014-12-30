@@ -122,7 +122,7 @@ public class EntityFactoryManager extends Manager {
         addMaskTitle(RenderMask.Mask.RT_SYMMETRY_MARINE, "Marine - RT run times", "Travel time in seconds between techpoints and RTs for marines.", "", "");
         addMaskTitle(RenderMask.Mask.PATHFIND_ALIEN, "Alien - all routes", "Travel time in seconds for aliens.", "", "");
         addMaskTitle(RenderMask.Mask.PATHFIND_MARINE, "Marine - all routes", "Travel time in seconds for marines.", "", "");
-        addMaskTitle(RenderMask.Mask.TEAM_DOMAINS, "Area of influence", "Action radius .", "", "");
+        addMaskTitle(RenderMask.Mask.TEAM_DOMAINS, "Presence", "Estimated presence of each team, strong to weak.", "Overlap indicates high encounter chance.", "");
     }
 
     private void createInstancingButton(String animId, final String entityId, int x) {

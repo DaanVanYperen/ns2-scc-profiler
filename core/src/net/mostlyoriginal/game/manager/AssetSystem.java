@@ -43,7 +43,7 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("layer-4", 136+32,48, 16,16,1);
         add("layer-5", 136+48+16,48, 16,16,1);
         add("layer-6", 136+48,48, 16,16,1);
-        add("layer-7", 136+48,48, 16,16,1);
+        add("layer-7", 136+48+32,48, 16,16,1);
 
         add("agent-marine", 136+16, 0, 16,16,1);
         add("agent-alien",  136+16,16, 16,16,1);
