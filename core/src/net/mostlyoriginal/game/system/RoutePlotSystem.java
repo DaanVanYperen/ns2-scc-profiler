@@ -6,6 +6,8 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.component.Routable;
@@ -57,12 +59,23 @@ public class RoutePlotSystem extends EntitySystem {
 		}
 	}
 
+	Color tmpCol = new Color();
+
 	private void renderPaths(Routable routable, Team team) {
 		List<Path> paths = routable.paths.get(team);
 		for (Path path : paths) {
 			// don't render the reverse paths.
 			if (path.preferred && !path.reversed) {
-				layerManager.getTeamNavLayer(team).drawPath(path, team.getPathColor());
+
+				// slightly vary path color to make it easier to track.
+				tmpCol.set(team.getPathColor());
+				tmpCol.r = tmpCol.r * MathUtils.random(0.4f,1f) + MathUtils.random(0f,0.1f);
+				tmpCol.g = tmpCol.g * MathUtils.random(0.4f,1f) + MathUtils.random(0f,0.1f);
+				tmpCol.b = tmpCol.b * MathUtils.random(0.4f,1f) + MathUtils.random(0f,0.1f);
+
+				tmpCol.clamp();
+
+				layerManager.getTeamNavLayer(team).drawPath(path, tmpCol);
 			}
 		}
 	}

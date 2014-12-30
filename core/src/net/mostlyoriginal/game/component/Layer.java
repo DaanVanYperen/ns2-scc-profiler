@@ -42,8 +42,17 @@ public class Layer extends Component {
 
 
 	public void drawPath(Path path, Color color) {
-		pixmap.setColor(color);
+
+		// shadow.
+		pixmap.setColor(new Color(0,0,0,0.35f));
 		final List<GridCell> cells = path.cells;
+		for (int i = 1; i < cells.size(); i++) {
+			GridCell p1 = cells.get(i - 1);
+			pixmap.drawPixel(
+					p1.x, pixmap.getHeight() - p1.y + 1);
+		}
+
+		pixmap.setColor(color);
 		for (int i = 1; i < cells.size(); i++) {
 			GridCell p1 = cells.get(i - 1);
 			GridCell p2 = cells.get(i);
