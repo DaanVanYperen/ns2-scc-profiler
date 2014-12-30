@@ -94,6 +94,7 @@ public class MainScreen implements Screen {
 
         world.setSystem(new TeamChangingSystem());
         world.setSystem(new TechpointPressureSystem());
+        world.setSystem(new DomainSystem());
 
 
         world.setSystem(new RefreshHandlerSystem());

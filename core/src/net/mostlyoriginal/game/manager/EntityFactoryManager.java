@@ -122,6 +122,7 @@ public class EntityFactoryManager extends Manager {
         addMaskTitle(RenderMask.Mask.RT_SYMMETRY_MARINE, "Marine - RT run times", "Travel time in seconds between techpoints and RTs for marines.", "", "");
         addMaskTitle(RenderMask.Mask.PATHFIND_ALIEN, "Alien - all routes", "Travel time in seconds for aliens.", "", "");
         addMaskTitle(RenderMask.Mask.PATHFIND_MARINE, "Marine - all routes", "Travel time in seconds for marines.", "", "");
+        addMaskTitle(RenderMask.Mask.TEAM_DOMAINS, "Area of influence", "Action radius .", "", "");
     }
 
     private void createInstancingButton(String animId, final String entityId, int x) {
@@ -138,7 +139,7 @@ public class EntityFactoryManager extends Manager {
             public boolean enabled() {
                 return true;
             }
-        });
+        }, 50);
 
         // make only visible when rendering.
         button.edit().add(new RenderMask(RenderMask.Mask.BASIC));
@@ -164,12 +165,12 @@ public class EntityFactoryManager extends Manager {
                 .build();
     }
 
-    public Entity createBasicButton(String animId, int x, ButtonListener buttonListener) {
+    public Entity createBasicButton(String animId, int x, ButtonListener buttonListener, int y) {
         Anim anim = new Anim(animId);
         anim.scale = 2;
         return new EntityBuilder(world)
                 .with(
-                        new Pos(x,50),
+                        new Pos(x, y),
                         new Bounds(32,32),
                         anim,
                         new Clickable(),

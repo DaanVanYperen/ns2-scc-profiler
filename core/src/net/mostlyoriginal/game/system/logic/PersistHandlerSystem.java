@@ -75,7 +75,7 @@ public class PersistHandlerSystem extends EntitySystem {
 			public boolean enabled() {
 				return true;
 			}
-		});
+		}, 50);
 		entityFactoryManager.createBasicButton("load", 50 + 40 * 8, new ButtonListener() {
 			@Override
 			public void run() {
@@ -86,7 +86,7 @@ public class PersistHandlerSystem extends EntitySystem {
 			public boolean enabled() {
 				return true;
 			}
-		});
+		}, 50);
 
 		load();
 	}
