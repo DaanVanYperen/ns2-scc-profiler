@@ -1,5 +1,6 @@
 package net.mostlyoriginal.game;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.component.Team;
@@ -19,6 +20,7 @@ public class Path implements Comparable<Path> {
 	public boolean preferred = false;
 
 	protected static final Vector2 vTmp = new Vector2();
+	public Color color = new Color();
 
 	public Path(SafeEntityReference destination, List<GridCell> cells, Team team, boolean reversed) {
 		this.destination = destination;

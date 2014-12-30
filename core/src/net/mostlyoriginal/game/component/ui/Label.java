@@ -18,6 +18,6 @@ public class Label extends Component {
     }
 
     public enum Align {
-        LEFT, RIGHT;
+        LEFT, RIGHT, CENTER;
     }
 }

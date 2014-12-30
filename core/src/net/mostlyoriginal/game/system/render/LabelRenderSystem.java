@@ -81,6 +81,9 @@ public class LabelRenderSystem extends DeferredEntityProcessingSystem {
                 case LEFT:
                     font.draw(batch, label.text, pos.x, pos.y);
                     break;
+                case CENTER:
+                    font.draw(batch, label.text, (int)(pos.x - font.getBounds(label.text).width / 2), (int)(pos.y + font.getBounds(label.text).height / 2));
+                    break;
                 case RIGHT:
                     font.draw(batch, label.text, pos.x - font.getBounds(label.text).width, pos.y);
                     break;
