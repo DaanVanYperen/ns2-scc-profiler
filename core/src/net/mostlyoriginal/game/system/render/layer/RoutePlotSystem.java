@@ -50,7 +50,7 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 	}
 
 	@Override
-	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs) {
+	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs) {
 
 		// render all secondary paths as shadows.
 		for (int i = 0, s = entities.size(); i < s; i++) {
@@ -71,8 +71,6 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 				renderPaths(routable, team);
 			}
 		}
-
-		postJobs();
 	}
 
 	@Override

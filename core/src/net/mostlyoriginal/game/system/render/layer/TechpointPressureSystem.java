@@ -53,7 +53,7 @@ public class TechpointPressureSystem extends DelayedEntitySystem {
 	}
 
 	@Override
-	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs) {
+	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs) {
 		Layer layer = getTechpointLayer();
 		layerManager.clearWithMap(layer, Color.WHITE, 0.3f);
 

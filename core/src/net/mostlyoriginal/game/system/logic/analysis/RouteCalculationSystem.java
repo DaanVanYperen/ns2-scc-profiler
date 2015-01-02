@@ -53,7 +53,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 	}
 
 	@Override
-	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs) {
+	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs) {
 
 		navigationGridManager.reset();
 
@@ -79,7 +79,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 
 
 	/** Job to resolve route between two entities. */
-	private class resolveRouteJob implements Runnable {
+	private class resolveRouteJob implements Job {
 
 		private final NavigationGrid<GridCell> grid;
 		private final Entity a;
@@ -133,9 +133,14 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 				mRoutable.get(b).paths.get(team).add(toSource);
 			}
 		}
+
+		@Override
+		public boolean isCompleted() {
+			return true;
+		}
 	}
 
-	private class SortRoutesJob implements Runnable {
+	private class SortRoutesJob implements Job {
 		@Override
 		public void run() {
 			ImmutableBag<Entity> actives = getActives();
@@ -147,6 +152,11 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 					Collections.sort(routable.paths.get(team));
 				}
 			}
+		}
+
+		@Override
+		public boolean isCompleted() {
+			return true;
 		}
 	}
 }

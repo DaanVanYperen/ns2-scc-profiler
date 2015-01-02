@@ -26,7 +26,11 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 		super(aspect);
 	}
 
-	private LinkedList<Runnable> jobs = new LinkedList<>();
+	private LinkedList<Job> jobs = new LinkedList<>();
+
+	public static abstract interface Job extends Runnable {
+		boolean isCompleted();
+	}
 
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
@@ -40,12 +44,13 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 		}
 
 		// run a single job, if any.
-		//while ( !jobs.isEmpty()) {
-		Runnable runnable = jobs.pollFirst();
+		Job runnable = jobs.peekFirst();
 		if (runnable != null) {
 			runnable.run();
+			if ( runnable.isCompleted() ) {
+				jobs.removeFirst();
+			}
 		}
-		//}
 
 		if ( !idle && jobs.isEmpty() ) {
 			postJobs();
@@ -69,11 +74,10 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 	 * Gather jobs, perform initial jobs.
 	 * <p/>
 	 * Called when this system is dirty and after all prerequisite systems are done processing.
-	 *
-	 * @param entities
+	 *  @param entities
 	 * @param jobs
 	 */
-	protected abstract void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs);
+	protected abstract void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs);
 
 	/**
 	 * Requires a rerun.

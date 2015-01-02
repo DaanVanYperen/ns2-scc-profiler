@@ -61,7 +61,7 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 	}
 
 	@Override
-	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs) {
+	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs) {
 
 		for (Team team : Team.values()) {
 			teamGraphs.put(team, new TeamGraph(team));
@@ -74,7 +74,7 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 		}
 	}
 
-	private class CalculatePreferredRoute implements Runnable {
+	private class CalculatePreferredRoute implements Job {
 		private final Entity entityA;
 		private final Entity entityB;
 
@@ -119,6 +119,11 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 					path.preferred = true;
 				}
 			}
+		}
+
+		@Override
+		public boolean isCompleted() {
+			return true;
 		}
 	}
 

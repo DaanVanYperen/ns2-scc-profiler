@@ -56,7 +56,7 @@ public class TechpointSymmetrySystem extends DelayedEntitySystem {
 	}
 
 	@Override
-	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs) {
+	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs) {
 		layerManager.clearWithMap(getAlienLayer(), Color.WHITE, 0.3f);
 		layerManager.clearWithMap(getMarineLayer(), Color.WHITE, 0.3f);
 
