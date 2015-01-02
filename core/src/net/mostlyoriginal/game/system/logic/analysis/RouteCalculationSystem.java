@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.system.logic;
+package net.mostlyoriginal.game.system.logic.analysis;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -13,6 +13,7 @@ import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
+import net.mostlyoriginal.game.system.logic.LogicPipelineSystem;
 import org.xguzm.pathfinding.PathFinder;
 import org.xguzm.pathfinding.finders.AStarFinder;
 import org.xguzm.pathfinding.grid.GridCell;
@@ -29,7 +30,7 @@ import java.util.List;
  *
  * @author Daan van Yperen
  */
-@Wire
+@Wire(injectInherited = true)
 public class RouteCalculationSystem extends LogicPipelineSystem {
 
 	protected ComponentMapper<Pos> mPos;

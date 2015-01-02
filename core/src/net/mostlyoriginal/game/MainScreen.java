@@ -22,8 +22,8 @@ import net.mostlyoriginal.api.system.physics.CollisionSystem;
 import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.game.manager.*;
 import net.mostlyoriginal.game.system.BlockadeSystem;
-import net.mostlyoriginal.game.system.PreferredRouteCalculationSystem;
-import net.mostlyoriginal.game.system.logic.RouteCalculationSystem;
+import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
+import net.mostlyoriginal.game.system.logic.analysis.RouteCalculationSystem;
 import net.mostlyoriginal.game.system.interaction.ButtonSystem;
 import net.mostlyoriginal.game.system.interaction.DeletableSystem;
 import net.mostlyoriginal.game.system.interaction.DraggableSystem;
@@ -71,8 +71,11 @@ public class MainScreen implements Screen {
 
 		world.setSystem(new LayerLoaderSystem());
 
+		// 1. Route Calculation./
 		world.setSystem(new RouteCalculationSystem());
 		world.setSystem(new PreferredRouteCalculationSystem());
+
+		// 2. Plotting.
 		world.setSystem(new RoutePlotSystem());
 		world.setSystem(new TechpointSymmetrySystem());
 

@@ -20,18 +20,11 @@ public abstract class LogicPipelineSystem extends EntitySystem {
 
 	protected LayerManager layerManager;
 	private ImmutableBag<Entity> entities;
-	private LogicPipelineSystem[] prerequisites;
-
-	public LogicPipelineSystem(Aspect aspect, LogicPipelineSystem ... prerequisites)
-	{
-		super(aspect);
-		this.prerequisites = prerequisites;
-	}
+	private LogicPipelineSystem[] prerequisites = new LogicPipelineSystem[0];
 
 	public LogicPipelineSystem(Aspect aspect)
 	{
 		super(aspect);
-		this.prerequisites = new LogicPipelineSystem[0];
 	}
 
 	private LinkedList<Runnable> jobs = new LinkedList<>();
@@ -52,9 +45,10 @@ public abstract class LogicPipelineSystem extends EntitySystem {
 			Runnable runnable = jobs.pollFirst();
 			if (runnable != null) {
 				runnable.run();
-				idle = false;
-			} else idle = true;
+			}
 		}
+
+		idle = jobs.isEmpty();
 	}
 
 	private boolean prerequisitesMet() {
@@ -66,6 +60,14 @@ public abstract class LogicPipelineSystem extends EntitySystem {
 		return true;
 	}
 
+	/**
+	 * Gather jobs, perform initial jobs.
+	 *
+	 * Called when this system is dirty and after all prerequisite systems are done processing.
+	 *
+	 * @param entities
+	 * @param jobs
+	 */
 	protected abstract void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs);
 
 	/** Requires a rerun. */
@@ -80,5 +82,10 @@ public abstract class LogicPipelineSystem extends EntitySystem {
 	/** Done with all jobs. */
 	public boolean isIdle() {
 		return idle;
+	}
+
+	/** Job systems that need to be done processing before this system can process. */
+	public void setPrerequisiteSystems(LogicPipelineSystem ... prerequisites) {
+		this.prerequisites = prerequisites;
 	}
 }
