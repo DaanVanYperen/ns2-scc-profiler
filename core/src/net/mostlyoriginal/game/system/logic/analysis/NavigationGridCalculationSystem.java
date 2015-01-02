@@ -42,7 +42,7 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 
 	private boolean isWalkable(int rawColor) {
 		tmpColor.set(rawColor);
-		return tmpColor.a >= 0.5f && (tmpColor.r < 1f && tmpColor.g < 1f && tmpColor.b < 1f);
+		return tmpColor.a >= 0.5f && (tmpColor.r < 1f || tmpColor.g < 1f || tmpColor.b < 1f);
 	}
 
 	@Override

@@ -142,7 +142,6 @@ public class EntityFactoryManager extends Manager {
         }, 50);
 
         // make only visible when rendering.
-        button.edit().add(new RenderMask(RenderMask.Mask.BASIC));
     }
 
     private void addMaskTitle(RenderMask.Mask mask, String title, String subTitle1, String subTitle2, String help) {

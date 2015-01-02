@@ -10,13 +10,16 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.api.DelayedEntitySystem;
+import net.mostlyoriginal.game.component.Input;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
+import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Label;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.component.ui.Transient;
@@ -190,6 +193,9 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 				new Transient(),
 				new net.mostlyoriginal.api.component.graphics.Color(1f, 1f, 1f, 1f),
 				renderMask,
+				new Input(1,2),
+				new Bounds(0,0, 11,8),
+				new Clickable(),
 				new Pos((int) (x2 * LayerManager.CELL_SIZE), (int) (y2 * LayerManager.CELL_SIZE)),
 				label)
 				.build();

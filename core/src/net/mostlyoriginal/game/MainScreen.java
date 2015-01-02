@@ -116,6 +116,8 @@ public class MainScreen implements Screen {
 		world.setSystem(new RouteCalculationSystem());
 		world.setSystem(new NavigationGridCalculationSystem());
 
+		world.setSystem(new InputSystem());
+
 		world.initialize();
 
 		new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(0, 0, 11, 12), new Anim("cursor"), new Renderable(10000)).tag("cursor").build();
