@@ -51,6 +51,9 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
 
         add("cursor", 170, 1, 11,12, 1);
 
+        add("tool-techpoint", 259, 2, 20,19, 1);
+        add("tool-resource-node", 283, 2, 20,19, 1);
+
         loadSounds(new String[]{
         });
     }

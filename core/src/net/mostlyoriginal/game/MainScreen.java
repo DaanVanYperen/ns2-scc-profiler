@@ -74,6 +74,7 @@ public class MainScreen implements Screen {
 		world.setSystem(new MouseClickSystem());
 		world.setSystem(new DraggableSystem());
 		world.setSystem(new ButtonSystem());
+		world.setSystem(new ToolSystem());
 
 		world.setSystem(new DeletableSystem());
 

@@ -2,7 +2,9 @@ package net.mostlyoriginal.game.manager;
 
 import com.artemis.*;
 import com.artemis.annotations.Wire;
+import com.artemis.managers.TagManager;
 import com.artemis.utils.EntityBuilder;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapProperties;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
@@ -12,6 +14,7 @@ import net.mostlyoriginal.game.component.*;
 import net.mostlyoriginal.game.component.buildings.ResourceNode;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.*;
+import net.mostlyoriginal.game.system.logic.ToolSystem;
 
 import java.util.EnumSet;
 
@@ -41,6 +44,7 @@ public class EntityFactoryManager extends Manager {
     protected ComponentMapper<Persistable> mPersistable;
     protected ComponentMapper<RenderMask> mRenderMask;
     private ComponentMapper<Routable> mRoutable;
+    private TagManager tagManager;
 
 
     @Override
@@ -111,10 +115,10 @@ public class EntityFactoryManager extends Manager {
                 Bounds.class
         ).build(world);
 
-        createInstancingButton("resource-node", "resourceNode", 50);
-        createInstancingButton("techpoint", "techpoint", 50 + 40*1);
-        createInstancingButton("duct", "duct", 50 + 40*2);
-        createInstancingButton("wall", "wall", 50 + 40 * 3);
+        createInstancingButton("tool-resource-node", "resource-node", "resourceNode", 50);
+        createInstancingButton("tool-techpoint", "techpoint", "techpoint", 50 + 40*1);
+        createInstancingButton("duct", "duct", "duct", 50 + 40*2);
+        createInstancingButton("wall", "wall", "wall", 50 + 40 * 3);
 
         addMaskTitle(RenderMask.Mask.BASIC, "Map overview", "Drag and place techpoints, rts, blockades and ducts.", "", "Rightclick to delete. Middleclick to cycle team on techpoints.");
         addMaskTitle(RenderMask.Mask.RT_PRESSURE, "RT head start", "highlight team that reaches RT first.", "Number signifies seconds head start.","Assign at least two techpoints to different teams.");
@@ -125,14 +129,43 @@ public class EntityFactoryManager extends Manager {
         addMaskTitle(RenderMask.Mask.TEAM_DOMAINS, "Presence", "Estimated presence of each team, strong to weak.", "Overlap indicates high encounter chance.", "");
     }
 
-    private void createInstancingButton(String animId, final String entityId, int x) {
+    ToolSystem toolSystem;
+    AssetSystem assetSystem;
+
+    private void createInstancingButton(final String toolIcon, final String animId, final String entityId, int x) {
         Entity button = createBasicButton(animId, x, new ButtonListener() {
             @Override
             public void run() {
-                Entity entity = createEntity(entityId, 0, 0, null);
 
-                Draggable draggable = mDraggable.get(entity);
-                draggable.dragging = true;
+                Tool tool = new Tool(new ButtonListener() {
+                    @Override
+                    public void run() {
+
+                        final Entity cursor = tagManager.getEntity("cursor");
+
+                        if ( cursor != null ) {
+                            Entity entity = createEntity(entityId, 0, 0, null);
+
+                            Pos cursorPos = mPos.get(cursor);
+
+                            // don't allow placement under a certain cursor position.
+                            if ( cursorPos.y <= 100 ) return;
+
+                            Pos ePos = mPos.get(entity);
+                            TextureRegion icon = assetSystem.get(mAnim.get(entity).id).getKeyFrame(0);
+                            ePos.x = cursorPos.x - icon.getRegionWidth()/2;
+                            ePos.y = cursorPos.y - icon.getRegionHeight()/2;
+                        }
+                    }
+
+                    @Override
+                    public boolean enabled() {
+                        return true;
+                    }
+                });
+                tool.continuous = false;
+                toolSystem.reset();
+                new EntityBuilder(world).with(tool, new Pos(), new Renderable(1200), new Anim(toolIcon)).build();
             }
 
             @Override
