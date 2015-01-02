@@ -21,6 +21,7 @@ import net.mostlyoriginal.game.component.ui.Label;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.system.logic.RefreshHandlerSystem;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 import org.xguzm.pathfinding.grid.GridCell;
 
@@ -38,6 +39,7 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 	protected ComponentMapper<Routable> mRoutable;
 
 	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
+	private RefreshHandlerSystem refreshHandlerSystem;
 
 	public RoutePlotSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class));
@@ -51,6 +53,8 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 
 	@Override
 	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs) {
+
+		refreshHandlerSystem.purgeAllTransientEntities();
 
 		// render all secondary paths as shadows.
 		for (int i = 0, s = entities.size(); i < s; i++) {

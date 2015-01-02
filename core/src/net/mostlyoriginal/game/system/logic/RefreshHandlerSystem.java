@@ -7,7 +7,6 @@ import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import net.mostlyoriginal.api.utils.EntityUtil;
-import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.events.DeleteEvent;
 import net.mostlyoriginal.game.events.DragEvent;
@@ -68,10 +67,7 @@ public class RefreshHandlerSystem extends EntitySystem {
 	 * restart all generation.
 	 */
 	public void restart() {
-
-		purgeAllTransientEntities();
 		clearRoutes();
-		clearTeamLayers();
 	}
 
 	private void clearRoutes() {
@@ -87,13 +83,7 @@ public class RefreshHandlerSystem extends EntitySystem {
 		domainSystem.setDirty(true);
 	}
 
-	private void clearTeamLayers() {
-		for (Team team : Team.values()) {
-			layerManager.getTeamNavLayer(team).clear();
-		}
-	}
-
-	private void purgeAllTransientEntities() {
+	public void purgeAllTransientEntities() {
 		EntityUtil.safeDeleteAll(getActives());
 	}
 }
