@@ -22,6 +22,7 @@ import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.system.logic.RefreshHandlerSystem;
+import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 import org.xguzm.pathfinding.grid.GridCell;
 
@@ -40,6 +41,7 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 
 	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
 	private RefreshHandlerSystem refreshHandlerSystem;
+	private RenderMaskHandlerSystem renderMaskHandlerSystem;
 
 	public RoutePlotSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class));
@@ -49,6 +51,12 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 	protected void initialize() {
 		super.initialize();
 		setPrerequisiteSystems(preferredRouteCalculationSystem);
+	}
+
+	@Override
+	protected boolean prerequisitesMet() {
+		// only render when on the right layer.
+		return super.prerequisitesMet() && (renderMaskHandlerSystem.getActiveMask() == RenderMask.Mask.PATHFIND_ALIEN || renderMaskHandlerSystem.getActiveMask() == RenderMask.Mask.PATHFIND_MARINE);
 	}
 
 	@Override

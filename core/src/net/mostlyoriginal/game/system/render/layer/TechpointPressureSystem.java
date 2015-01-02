@@ -15,6 +15,7 @@ import net.mostlyoriginal.game.component.buildings.ResourceNode;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 
 import java.util.*;
@@ -41,6 +42,7 @@ public class TechpointPressureSystem extends DelayedEntitySystem {
 
 	private RoutePlotSystem routePlotSystem;
 	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
+	private RenderMaskHandlerSystem renderMaskHandlerSystem;
 
 
 	public TechpointPressureSystem() {
@@ -72,6 +74,13 @@ public class TechpointPressureSystem extends DelayedEntitySystem {
 	@Override
 	protected void postJobs() {
 		getTechpointLayer().invalidateTexture();
+	}
+
+
+	@Override
+	protected boolean prerequisitesMet() {
+		// only render when on the right layer.
+		return super.prerequisitesMet() && renderMaskHandlerSystem.getActiveMask() == RenderMask.Mask.RT_PRESSURE;
 	}
 
 

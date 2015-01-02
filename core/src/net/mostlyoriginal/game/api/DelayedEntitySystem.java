@@ -82,7 +82,7 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 	// called right after all jobs are done processing.
 	protected void postJobs() {}
 
-	private boolean prerequisitesMet() {
+	protected boolean prerequisitesMet() {
 		for (DelayedEntitySystem prerequisite : prerequisites) {
 			// parent systems need to be done computing completely.
 			if (prerequisite.isDirty() || !prerequisite.isIdle())

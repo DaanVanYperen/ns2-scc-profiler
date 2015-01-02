@@ -17,6 +17,7 @@ import net.mostlyoriginal.game.component.buildings.ResourceNode;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 
 import java.util.LinkedList;
@@ -45,6 +46,7 @@ public class TechpointSymmetrySystem extends DelayedEntitySystem {
 
 	protected RoutePlotSystem routePlotSystem;
 	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
+	private RenderMaskHandlerSystem renderMaskHandlerSystem;
 
 	public TechpointSymmetrySystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class, ResourceNode.class));
@@ -67,6 +69,13 @@ public class TechpointSymmetrySystem extends DelayedEntitySystem {
 			plotCloseTechpoints(e, routable);
 		}
 	}
+
+	@Override
+	protected boolean prerequisitesMet() {
+		// only render when on the right layer.
+		return super.prerequisitesMet() && (renderMaskHandlerSystem.getActiveMask() == RenderMask.Mask.RT_SYMMETRY_ALIEN || renderMaskHandlerSystem.getActiveMask() == RenderMask.Mask.RT_SYMMETRY_MARINE);
+	}
+
 
 	@Override
 	protected void postJobs() {

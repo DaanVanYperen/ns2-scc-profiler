@@ -54,6 +54,13 @@ public class DomainSystem extends DelayedEntitySystem {
 		setPrerequisiteSystems(preferredRouteCalculationSystem);
 	}
 
+
+	@Override
+	protected boolean prerequisitesMet() {
+		// only render when on the right layer.
+		return super.prerequisitesMet() && renderMaskHandlerSystem.getActiveMask() == RenderMask.Mask.TEAM_DOMAINS;
+	}
+
 	@Override
 	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs) {
 		Layer layer = getDomainsLayer();
