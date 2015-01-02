@@ -46,12 +46,35 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 		for (Team team : Team.values()) {
 
 			layerManager.getTeamNavLayer(team).clear();
-
 			Layer navMask = layerManager.getTeamNavLayer(team);
-			final Layer rawMapLayer = layerManager.getLayer("RAW", RenderMask.Mask.BASIC);
+
 			NavigationGrid<GridCell> grid = new NavigationGrid<GridCell>(new GridCell[NavigationGridManager.GRID_WIDTH][NavigationGridManager.GRID_HEIGHT]);
 			navigationGridManager.setNavigationGrid(team, grid);
-			for (int x = 0; x < NavigationGridManager.GRID_WIDTH; x++) {
+
+			jobs.add(new RefreshNavigationGrid(team, navMask, grid));
+		}
+	}
+
+	private class RefreshNavigationGrid implements Job {
+		private int x;
+		private Team team;
+		private final Layer navMask;
+		private final Layer rawMapLayer;
+		private final NavigationGrid<GridCell> grid;
+
+		public RefreshNavigationGrid(Team team, Layer navMask, NavigationGrid<GridCell> grid) {
+			this.team = team;
+			this.navMask = navMask;
+			this.rawMapLayer = layerManager.getLayer("RAW", RenderMask.Mask.BASIC);
+			this.grid = grid;
+
+			this.x = 0;
+		}
+
+		public void run() {
+
+			int remainingCycles = 100;
+			while ( remainingCycles-- > 0 && x < NavigationGridManager.GRID_WIDTH ) {
 				for (int y = 0; y < NavigationGridManager.GRID_HEIGHT; y++) {
 					boolean isWalkable;
 					int rawColor = rawMapLayer.pixmap.getPixel(x, rawMapLayer.pixmap.getHeight() - y);
@@ -76,10 +99,16 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 						tmpCol.a = (tmpCol.a * transparency + team.getBackgroundColor().a * (1 - transparency));
 						navMask.drawPixel(x, navMask.pixmap.getHeight() - y, tmpCol);
 					}
-					grid.setCell(x,y, new GridCell(x, y, isWalkable));
+					grid.setCell(x, y, new GridCell(x, y, isWalkable));
 				}
-			}
 
+				x++;
+			}
+		}
+
+		@Override
+		public boolean isCompleted() {
+			return x == NavigationGridManager.GRID_WIDTH;
 		}
 	}
 }
