@@ -119,8 +119,8 @@ public class EntityFactoryManager extends Manager {
 
         createInstancingButton("tool-resource-node", "resource-node", "resourceNode", 50);
         createInstancingButton("tool-techpoint", "techpoint", "techpoint", 50 + 40*1);
-        createInstancingButton("duct", "duct", "duct", 50 + 40*2);
-        createInstancingButton("wall", "wall", "wall", 50 + 40 * 3);
+        //createInstancingButton("duct", "duct", "duct", 50 + 40*2);
+        //createInstancingButton("wall", "wall", "wall", 50 + 40 * 3);
 
         addMaskTitle(RenderMask.Mask.BASIC, "Map overview", "Drag and place techpoints, rts, blockades and ducts.", "", "Rightclick to delete. Middleclick to cycle team on techpoints.");
         addMaskTitle(RenderMask.Mask.RT_PRESSURE, "RT head start", "highlight team that reaches RT first.", "Number signifies seconds head start.","Assign at least two techpoints to different teams.");

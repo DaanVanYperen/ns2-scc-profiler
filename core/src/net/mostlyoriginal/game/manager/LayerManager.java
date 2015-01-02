@@ -20,8 +20,6 @@ import java.util.HashMap;
 @Wire
 public class LayerManager extends Manager {
 
-	private BlockadeSystem blockadeSystem;
-
 	protected ComponentMapper<Layer> mLayer;
 	protected ComponentMapper<Renderable> mRenderable;
 	private HashMap<String, Layer> layers = new HashMap<>();

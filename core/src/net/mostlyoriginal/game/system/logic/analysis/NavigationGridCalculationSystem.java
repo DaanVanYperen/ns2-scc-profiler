@@ -11,7 +11,6 @@ import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
-import net.mostlyoriginal.game.system.BlockadeSystem;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 
@@ -24,7 +23,6 @@ import java.util.LinkedList;
 public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 
 	NavigationGridManager navigationGridManager;
-	private BlockadeSystem blockadeSystem;
 	private LayerManager layerManager;
 
 	private Color tmpCol = new Color();
@@ -104,9 +102,6 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 					int rawColor = rawMapLayer.pixmap.getPixel(x, rawMapLayer.pixmap.getHeight() - y);
 					if (x == 0 || y == 0 || x - 1 == NavigationGridManager.GRID_WIDTH || y - 1 == NavigationGridManager.GRID_HEIGHT)
 						// prevent walking map borders.
-						isWalkable = false;
-					else if (blockadeSystem.blockaded(x * NavigationGridManager.PATHING_CELL_SIZE, y * NavigationGridManager.PATHING_CELL_SIZE, team))
-						// blocked by team blockades.
 						isWalkable = false;
 					else {
 						// blocked by map mask.

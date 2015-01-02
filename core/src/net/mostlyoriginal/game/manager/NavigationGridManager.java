@@ -3,7 +3,6 @@ package net.mostlyoriginal.game.manager;
 import com.artemis.Manager;
 import com.artemis.annotations.Wire;
 import net.mostlyoriginal.game.component.Team;
-import net.mostlyoriginal.game.system.BlockadeSystem;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 
@@ -19,7 +18,6 @@ public class NavigationGridManager extends Manager {
 	public static final int GRID_HEIGHT = LayerManager.LAYER_HEIGHT;
 	public static final int PATHING_CELL_SIZE = LayerManager.CELL_SIZE;
 
-	private BlockadeSystem blockadeSystem;
 	private LayerManager layerManager;
 
 	private HashMap<Team, NavigationGrid<GridCell>> navGrid = new HashMap<>();
