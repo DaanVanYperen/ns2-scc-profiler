@@ -38,6 +38,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 	protected ComponentMapper<Bounds> mBounds;
 	private PathFinder<GridCell> finder;
 	private NavigationGridManager navigationGridManager;
+	private NavigationGridCalculationSystem navigationGridCalculationSystem;
 
 
 	public RouteCalculationSystem() {
@@ -46,6 +47,9 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 
 	@Override
 	protected void initialize() {
+
+		setPrerequisiteSystems(navigationGridCalculationSystem);
+
 		//create a finder either using the default options
 		GridFinderOptions opt = new GridFinderOptions();
 		opt.dontCrossCorners=false;
@@ -54,8 +58,6 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 
 	@Override
 	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs) {
-
-		navigationGridManager.reset();
 
 		// clear existing routes.
 		for(int i=0,s=entities.size();i<s;i++)
