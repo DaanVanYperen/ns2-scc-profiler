@@ -10,10 +10,12 @@ import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
+import net.mostlyoriginal.api.event.common.EventManager;
 import net.mostlyoriginal.game.component.*;
 import net.mostlyoriginal.game.component.buildings.ResourceNode;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.*;
+import net.mostlyoriginal.game.events.DragEvent;
 import net.mostlyoriginal.game.system.logic.ToolSystem;
 
 import java.util.EnumSet;
@@ -131,6 +133,7 @@ public class EntityFactoryManager extends Manager {
 
     ToolSystem toolSystem;
     AssetSystem assetSystem;
+    EventManager em;
 
     private void createInstancingButton(final String toolIcon, final String animId, final String entityId, int x) {
         Entity button = createBasicButton(animId, x, new ButtonListener() {
@@ -155,6 +158,8 @@ public class EntityFactoryManager extends Manager {
                             TextureRegion icon = assetSystem.get(mAnim.get(entity).id).getKeyFrame(0);
                             ePos.x = cursorPos.x - icon.getRegionWidth()/2;
                             ePos.y = cursorPos.y - icon.getRegionHeight()/2;
+
+                            em.dispatch(new DragEvent(entity));
                         }
                     }
 
