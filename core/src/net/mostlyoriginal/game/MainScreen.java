@@ -23,7 +23,7 @@ import net.mostlyoriginal.api.system.render.AnimRenderSystem;
 import net.mostlyoriginal.game.manager.*;
 import net.mostlyoriginal.game.system.BlockadeSystem;
 import net.mostlyoriginal.game.system.PreferredRouteCalculationSystem;
-import net.mostlyoriginal.game.system.RouteCalculationSystem;
+import net.mostlyoriginal.game.system.logic.RouteCalculationSystem;
 import net.mostlyoriginal.game.system.interaction.ButtonSystem;
 import net.mostlyoriginal.game.system.interaction.DeletableSystem;
 import net.mostlyoriginal.game.system.interaction.DraggableSystem;

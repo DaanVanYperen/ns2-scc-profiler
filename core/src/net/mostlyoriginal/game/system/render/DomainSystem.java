@@ -17,6 +17,7 @@ import net.mostlyoriginal.game.component.TeamMember;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 
 import java.util.LinkedList;
 
@@ -36,6 +37,7 @@ public class DomainSystem extends EntitySystem {
 	public static final int DIAGO_MOVEMENT = 14;
 	public static final int MAX_SECONDS_RADIUS = 27;
 	protected LayerManager layerManager;
+	protected RenderMaskHandlerSystem renderMaskHandlerSystem;
 
 	public boolean dirty = true;
 	protected ComponentMapper<Routable> mRoutable;
@@ -53,7 +55,7 @@ public class DomainSystem extends EntitySystem {
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
 
-		if (dirty) {
+		if (dirty && renderMaskHandlerSystem.getActiveMask() == RenderMask.Mask.TEAM_DOMAINS) {
 			dirty = false;
 
 			Layer layer = layerManager.getLayer("DOMAINS", RenderMask.Mask.TEAM_DOMAINS);
@@ -124,11 +126,15 @@ public class DomainSystem extends EntitySystem {
 				final int childX = node.x + xOff[i];
 				final int childY = node.y + yOff[i];
 
+				// bound check.
+				if ( childX < 0 || childY < 0 || childX >= layerOut.pixmap.getWidth() || childY >= layerOut.pixmap.getHeight() )
+					continue;
+
 				int rawColor = layerRaw.pixmap.getPixel(childX, layerOut.pixmap.getHeight() - childY);
 				boolean isWalkable= ((rawColor & 0x000000ff)) / 255f >= 0.5f;
 
 				// node not closed yet and location walkable? ONWARD!
-				if (!closed[childX + childY * layerOut.pixmap.getWidth()] && isWalkable) {
+				if ( !closed[childX + childY * layerOut.pixmap.getWidth()] && isWalkable) {
 
 					final boolean diagonal = xOff[i] != 0 && yOff[i] != 0;
 

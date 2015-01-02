@@ -74,4 +74,8 @@ public class RenderMaskHandlerSystem extends EntityProcessingSystem {
 			}
 		}
 	}
+
+	public RenderMask.Mask getActiveMask() {
+		return activeMask;
+	}
 }

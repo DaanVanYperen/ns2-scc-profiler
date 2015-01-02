@@ -5,14 +5,15 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
+import net.mostlyoriginal.api.event.common.Subscribe;
 import net.mostlyoriginal.api.utils.EntityUtil;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Transient;
+import net.mostlyoriginal.game.events.DragEvent;
 import net.mostlyoriginal.game.manager.EntityFactoryManager;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.system.PreferredRouteCalculationSystem;
-import net.mostlyoriginal.game.system.RouteCalculationSystem;
 import net.mostlyoriginal.game.system.render.DomainSystem;
 import net.mostlyoriginal.game.system.render.TechpointPressureSystem;
 import net.mostlyoriginal.game.system.render.TechpointSymmetrySystem;
@@ -60,6 +61,13 @@ public class RefreshHandlerSystem extends EntitySystem {
 		}, 50);
 	}
 
+	@Subscribe
+	public void listenerMoved( DragEvent event )
+	{
+		restart();
+	}
+
+
 	/** restart all generation. */
 	public void restart() {
 
@@ -69,8 +77,11 @@ public class RefreshHandlerSystem extends EntitySystem {
 	}
 
 	private void clearRoutes() {
-		routeCalculationSystem.dirty=true;
+		// Core Dependencies
+		routeCalculationSystem.setDirty(true);
 		preferredRouteCalculationSystem.dirty=true;
+
+		// Separate view specific:
 		routePlotSystem.dirty=true;
 		techpointSymmetrySystem.dirty=true;
 		techpointPressureSystem.dirty=true;
