@@ -35,6 +35,13 @@ public class ToolSystem extends EntityProcessingSystem {
 
 	@Override
 	protected void process(Entity e) {
+
+		if ( Gdx.input.isButtonPressed(1) )
+		{
+			reset();
+			return;
+		}
+
 		final Entity cursor = tagManager.getEntity("cursor");
 		if ( cursor != null ) {
 			Pos cursorPos = mPos.get(cursor);
