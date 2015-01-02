@@ -58,7 +58,7 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 		long start = TimeUtils.millis();
 		long now = start;
 
-		// run one or multiple times, until alloted time runs out.
+		// run one or multiple times, until allotted time runs out.
 		while ( now <= start + maxDuration() ) {
 
 			Job runnable = jobs.peekFirst();

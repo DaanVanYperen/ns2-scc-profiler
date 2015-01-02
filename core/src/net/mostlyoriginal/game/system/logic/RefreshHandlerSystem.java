@@ -13,12 +13,13 @@ import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.events.DragEvent;
 import net.mostlyoriginal.game.manager.EntityFactoryManager;
 import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.system.logic.analysis.NavigationGridCalculationSystem;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 import net.mostlyoriginal.game.system.logic.analysis.RouteCalculationSystem;
 import net.mostlyoriginal.game.system.render.layer.DomainSystem;
+import net.mostlyoriginal.game.system.render.layer.RoutePlotSystem;
 import net.mostlyoriginal.game.system.render.layer.TechpointPressureSystem;
 import net.mostlyoriginal.game.system.render.layer.TechpointSymmetrySystem;
-import net.mostlyoriginal.game.system.render.layer.RoutePlotSystem;
 
 /**
  * @author Daan van Yperen
@@ -35,6 +36,7 @@ public class RefreshHandlerSystem extends EntitySystem {
 	private TechpointSymmetrySystem techpointSymmetrySystem;
 	private TechpointPressureSystem techpointPressureSystem;
 	private DomainSystem domainSystem;
+	private NavigationGridCalculationSystem navigationGridCalculationSystem;
 
 	public RefreshHandlerSystem() {
 		super(Aspect.getAspectForAll(Transient.class));
@@ -79,6 +81,7 @@ public class RefreshHandlerSystem extends EntitySystem {
 
 	private void clearRoutes() {
 		// Core Dependencies
+		navigationGridCalculationSystem.setDirty(true);
 		routeCalculationSystem.setDirty(true);
 		preferredRouteCalculationSystem.setDirty(true);
 

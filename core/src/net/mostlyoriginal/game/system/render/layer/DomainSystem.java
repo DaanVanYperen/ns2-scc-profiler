@@ -91,6 +91,12 @@ public class DomainSystem extends DelayedEntitySystem {
 			return totalCost;
 		}
 	}
+
+	@Override
+	protected long maxDuration() {
+		return 10;
+	}
+
 	private class FloodFillJob implements Job {
 
 		private final Layer layerRaw;
@@ -134,6 +140,7 @@ public class DomainSystem extends DelayedEntitySystem {
 			colorFar.a = 0f;
 			colorFar.g = 1f;
 		}
+
 
 		private float calculateDistance(Team team, int seconds) {
 			return ((Math.round(team.getAvgSpeed() * seconds)) / G.UNITS_PER_PIXEL) * ORTHO_MOVEMENT;
