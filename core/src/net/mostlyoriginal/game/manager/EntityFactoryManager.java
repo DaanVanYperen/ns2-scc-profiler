@@ -145,14 +145,13 @@ public class EntityFactoryManager extends Manager {
                     public void run() {
 
                         final Entity cursor = tagManager.getEntity("cursor");
-
                         if ( cursor != null ) {
-                            Entity entity = createEntity(entityId, 0, 0, null);
-
                             Pos cursorPos = mPos.get(cursor);
 
                             // don't allow placement under a certain cursor position.
                             if ( cursorPos.y <= 100 ) return;
+
+                            Entity entity = createEntity(entityId, 0, 0, null);
 
                             Pos ePos = mPos.get(entity);
                             TextureRegion icon = assetSystem.get(mAnim.get(entity).id).getKeyFrame(0);
