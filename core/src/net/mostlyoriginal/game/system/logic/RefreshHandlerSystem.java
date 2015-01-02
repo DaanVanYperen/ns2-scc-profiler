@@ -8,8 +8,8 @@ import com.artemis.utils.ImmutableBag;
 import net.mostlyoriginal.api.event.common.Subscribe;
 import net.mostlyoriginal.api.utils.EntityUtil;
 import net.mostlyoriginal.game.component.Team;
-import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Transient;
+import net.mostlyoriginal.game.events.DeleteEvent;
 import net.mostlyoriginal.game.events.DragEvent;
 import net.mostlyoriginal.game.manager.EntityFactoryManager;
 import net.mostlyoriginal.game.manager.LayerManager;
@@ -47,31 +47,20 @@ public class RefreshHandlerSystem extends EntitySystem {
 
 	}
 
-	@Override
-	protected void initialize() {
-		super.initialize();
-
-		entityFactoryManager.createBasicButton("refresh", 50 + 40 * 5, new ButtonListener() {
-			@Override
-			public void run() {
-				restart();
-			}
-
-			@Override
-			public boolean enabled() {
-				return true;
-			}
-		}, 50);
+	@Subscribe
+	public void listenerMoved(DragEvent event) {
+		restart();
 	}
 
 	@Subscribe
-	public void listenerMoved( DragEvent event )
-	{
+	public void listenerMoved(DeleteEvent event) {
 		restart();
 	}
 
 
-	/** restart all generation. */
+	/**
+	 * restart all generation.
+	 */
 	public void restart() {
 
 		purgeAllTransientEntities();
