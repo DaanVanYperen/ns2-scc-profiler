@@ -142,6 +142,13 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 		}
 	}
 
+
+	@Override
+	protected long maxDuration() {
+		// routes to calculate each run.
+		return 5;
+	}
+
 	private class SortRoutesJob implements Job {
 		@Override
 		public void run() {

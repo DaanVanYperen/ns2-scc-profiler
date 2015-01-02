@@ -4,6 +4,7 @@ import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.utils.TimeUtils;
 import net.mostlyoriginal.game.manager.LayerManager;
 
 import java.util.LinkedList;
@@ -32,6 +33,17 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 		boolean isCompleted();
 	}
 
+	/**
+	 * Maximum duration in which to start new jobs.
+	 *
+	 * Start new jobs within first job start time + maxDuration milliseconds.
+	 * Not ideal, since new jobs might run far beyond the max duration, but it suffices.
+	 *
+	 */
+	protected long maxDuration() {
+		return 0;
+	}
+
 	@Override
 	protected void processEntities(ImmutableBag<Entity> entities) {
 
@@ -43,18 +55,27 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 			collectJobs(entities, jobs);
 		}
 
-		// run a single job, if any.
-		Job runnable = jobs.peekFirst();
-		if (runnable != null) {
-			runnable.run();
-			if ( runnable.isCompleted() ) {
-				jobs.removeFirst();
-			}
-		}
+		long start = TimeUtils.millis();
+		long now = start;
 
-		if ( !idle && jobs.isEmpty() ) {
-			postJobs();
-			idle = true;
+		// run one or multiple times, until alloted time runs out.
+		while ( now <= start + maxDuration() ) {
+
+			Job runnable = jobs.peekFirst();
+			if (runnable != null) {
+				runnable.run();
+				if (runnable.isCompleted()) {
+					jobs.removeFirst();
+				}
+			}
+
+			if (!idle && jobs.isEmpty()) {
+				postJobs();
+				idle = true;
+				break;
+			}
+
+			now = TimeUtils.millis();
 		}
 	}
 
