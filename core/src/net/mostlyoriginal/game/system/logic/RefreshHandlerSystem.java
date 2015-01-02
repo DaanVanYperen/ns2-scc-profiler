@@ -11,6 +11,7 @@ import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.events.DeleteEvent;
 import net.mostlyoriginal.game.events.DragEvent;
+import net.mostlyoriginal.game.events.TeamChangeEvent;
 import net.mostlyoriginal.game.manager.EntityFactoryManager;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.system.logic.analysis.NavigationGridCalculationSystem;
@@ -54,6 +55,11 @@ public class RefreshHandlerSystem extends EntitySystem {
 
 	@Subscribe
 	public void listenerMoved(DeleteEvent event) {
+		restart();
+	}
+
+	@Subscribe
+	public void listenerMoved(TeamChangeEvent event) {
 		restart();
 	}
 

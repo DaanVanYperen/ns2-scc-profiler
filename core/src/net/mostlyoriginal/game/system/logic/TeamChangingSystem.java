@@ -6,9 +6,11 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import net.mostlyoriginal.api.component.graphics.Anim;
+import net.mostlyoriginal.api.event.common.EventManager;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.TeamMember;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.events.TeamChangeEvent;
 
 /**
  * Switch team with middle mouse button.
@@ -21,6 +23,7 @@ public class TeamChangingSystem extends EntityProcessingSystem {
 	protected ComponentMapper<Clickable> mClickable;
 	protected ComponentMapper<TeamMember> mTeamMember;
 	protected ComponentMapper<Anim> mAnim;
+	public EventManager em;
 
 	public TeamChangingSystem() {
 		super(Aspect.getAspectForAll(TeamMember.class, Clickable.class, Anim.class));
@@ -43,6 +46,7 @@ public class TeamChangingSystem extends EntityProcessingSystem {
 						break;
 				}
 			}
+			em.dispatch(new TeamChangeEvent(e));
 		}
 
 		Anim anim = mAnim.get(e);
