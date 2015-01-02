@@ -1,25 +1,23 @@
-package net.mostlyoriginal.game.system.render;
+package net.mostlyoriginal.game.system.render.layer;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.Path;
+import net.mostlyoriginal.game.api.DelayedEntitySystem;
 import net.mostlyoriginal.game.component.*;
 import net.mostlyoriginal.game.component.buildings.ResourceNode;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Estimate what techpoints will be able to pressure resource towers
@@ -31,17 +29,18 @@ import java.util.List;
  * @author Daan van Yperen
  */
 @Wire
-public class TechpointPressureSystem extends EntitySystem {
+public class TechpointPressureSystem extends DelayedEntitySystem {
 
 	protected LayerManager layerManager;
 
-	public boolean dirty = true;
 	protected ComponentMapper<Routable> mRoutable;
 	protected ComponentMapper<Persistable> mPersistable;
 	protected ComponentMapper<Techpoint> mTechpoint;
 	protected ComponentMapper<RenderMask> mRenderMask;
 	protected ComponentMapper<TeamMember> mTeamMember;
+
 	private RoutePlotSystem routePlotSystem;
+	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
 
 
 	public TechpointPressureSystem() {
@@ -50,23 +49,19 @@ public class TechpointPressureSystem extends EntitySystem {
 
 	@Override
 	protected void initialize() {
+		setPrerequisiteSystems(preferredRouteCalculationSystem);
 	}
 
 	@Override
-	protected void processEntities(ImmutableBag<Entity> entities) {
+	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs) {
+		Layer layer = layerManager.getLayer("TECHPOINTS_PRESSURE", RenderMask.Mask.RT_PRESSURE);
+		layerManager.clearWithMap(layer, Color.WHITE, 0.3f);
 
-		if (dirty) {
-			dirty = false;
+		for (int i = 0, s = entities.size(); i < s; i++) {
+			final Entity e = entities.get(i);
+			final Routable routable = mRoutable.get(e);
 
-			Layer layer = layerManager.getLayer("TECHPOINTS_PRESSURE", RenderMask.Mask.RT_PRESSURE);
-			layerManager.clearWithMap(layer, Color.WHITE, 0.3f);
-
-			for (int i = 0, s = entities.size(); i < s; i++) {
-				final Entity e = entities.get(i);
-				final Routable routable = mRoutable.get(e);
-
-				plotCloseTechpoints(e, routable);
-			}
+			plotCloseTechpoints(e, routable);
 		}
 	}
 
@@ -158,17 +153,17 @@ public class TechpointPressureSystem extends EntitySystem {
 		if (Math.abs(speedDifference) > 0) {
 			Team fastestTeam = speedDifference < 0 ? Team.ALIEN : Team.MARINE;
 
-			int radius = 4 + ((int)(Interpolation.pow2Out.apply(Math.min(1f,Math.abs(speedDifference * (1/48f)))) * 8f)) * 2;
+			int radius = 4 + ((int) (Interpolation.pow2Out.apply(Math.min(1f, Math.abs(speedDifference * (1 / 48f)))) * 8f)) * 2;
 
 			layer.pixmap.setColor(fastestTeam.getPathColor());
-			layer.pixmap.fillCircle(routable.getX(), layer.pixmap.getHeight() -  routable.getY() - 1, radius);
+			layer.pixmap.fillCircle(routable.getX(), layer.pixmap.getHeight() - routable.getY() - 1, radius);
 
 			routePlotSystem.drawBubble(fastestTeam.getPathColor(),
 					Math.abs(speedDifference) + " ",
 					routable.getX(),
 					routable.getY(),
-					routable.getX() + 10 + (int)radius,
-					routable.getY() + 10 + (int)radius,
+					routable.getX() + 10 + (int) radius,
+					routable.getY() + 10 + (int) radius,
 					layer.pixmap,
 					new RenderMask(RenderMask.Mask.RT_PRESSURE));
 		}

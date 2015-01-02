@@ -7,11 +7,11 @@ import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.Path;
+import net.mostlyoriginal.game.api.DelayedEntitySystem;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
-import net.mostlyoriginal.game.system.logic.LogicPipelineSystem;
 import org.xguzm.pathfinding.*;
 import org.xguzm.pathfinding.finders.AStarFinder;
 
@@ -24,7 +24,7 @@ import java.util.List;
  * @author Daan van Yperen
  */
 @Wire(injectInherited = true)
-public class PreferredRouteCalculationSystem extends LogicPipelineSystem {
+public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 
 	protected LayerManager layerManager;
 
@@ -35,7 +35,6 @@ public class PreferredRouteCalculationSystem extends LogicPipelineSystem {
 	private PathFinder<Routable> finder;
 	private NavigationGridManager navigationGridManager;
 	private Team pathfindTeam;
-	public boolean dirty = true;
 
 	private RouteCalculationSystem routeCalculationSystem;
 

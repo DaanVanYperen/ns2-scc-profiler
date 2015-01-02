@@ -30,6 +30,10 @@ import net.mostlyoriginal.game.system.interaction.DraggableSystem;
 import net.mostlyoriginal.game.system.interaction.MouseClickSystem;
 import net.mostlyoriginal.game.system.logic.*;
 import net.mostlyoriginal.game.system.render.*;
+import net.mostlyoriginal.game.system.render.layer.DomainSystem;
+import net.mostlyoriginal.game.system.render.layer.RoutePlotSystem;
+import net.mostlyoriginal.game.system.render.layer.TechpointPressureSystem;
+import net.mostlyoriginal.game.system.render.layer.TechpointSymmetrySystem;
 
 /**
  * @author Daan van Yperen

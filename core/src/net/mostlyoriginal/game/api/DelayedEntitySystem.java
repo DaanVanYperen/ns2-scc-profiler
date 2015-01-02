@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.system.logic;
+package net.mostlyoriginal.game.api;
 
 import com.artemis.Aspect;
 import com.artemis.Entity;
@@ -9,20 +9,20 @@ import net.mostlyoriginal.game.manager.LayerManager;
 import java.util.LinkedList;
 
 /**
- * Step through jobs one by one.
+ * Break up large tasks into atomic runnables, and chain other prerequisite systems.
  *
  * @author Daan van Yperen
  */
-public abstract class LogicPipelineSystem extends EntitySystem {
+public abstract class DelayedEntitySystem extends EntitySystem {
 
-	protected boolean dirty = true;
-	protected boolean idle = true;
+	private boolean dirty = true;
+	private boolean idle = true;
 
 	protected LayerManager layerManager;
 	private ImmutableBag<Entity> entities;
-	private LogicPipelineSystem[] prerequisites = new LogicPipelineSystem[0];
+	private DelayedEntitySystem[] prerequisites = new DelayedEntitySystem[0];
 
-	public LogicPipelineSystem(Aspect aspect)
+	public DelayedEntitySystem(Aspect aspect)
 	{
 		super(aspect);
 	}
@@ -52,7 +52,7 @@ public abstract class LogicPipelineSystem extends EntitySystem {
 	}
 
 	private boolean prerequisitesMet() {
-		for (LogicPipelineSystem prerequisite : prerequisites) {
+		for (DelayedEntitySystem prerequisite : prerequisites) {
 			// parent systems need to be done computing completely.
 			if ( prerequisite.isDirty() || !prerequisite.isIdle() )
 				return false;
@@ -85,7 +85,7 @@ public abstract class LogicPipelineSystem extends EntitySystem {
 	}
 
 	/** Job systems that need to be done processing before this system can process. */
-	public void setPrerequisiteSystems(LogicPipelineSystem ... prerequisites) {
+	public void setPrerequisiteSystems(DelayedEntitySystem... prerequisites) {
 		this.prerequisites = prerequisites;
 	}
 }

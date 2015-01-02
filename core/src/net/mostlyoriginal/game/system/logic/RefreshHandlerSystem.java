@@ -15,10 +15,10 @@ import net.mostlyoriginal.game.manager.EntityFactoryManager;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 import net.mostlyoriginal.game.system.logic.analysis.RouteCalculationSystem;
-import net.mostlyoriginal.game.system.render.DomainSystem;
-import net.mostlyoriginal.game.system.render.TechpointPressureSystem;
-import net.mostlyoriginal.game.system.render.TechpointSymmetrySystem;
-import net.mostlyoriginal.game.system.render.RoutePlotSystem;
+import net.mostlyoriginal.game.system.render.layer.DomainSystem;
+import net.mostlyoriginal.game.system.render.layer.TechpointPressureSystem;
+import net.mostlyoriginal.game.system.render.layer.TechpointSymmetrySystem;
+import net.mostlyoriginal.game.system.render.layer.RoutePlotSystem;
 
 /**
  * @author Daan van Yperen
@@ -80,13 +80,13 @@ public class RefreshHandlerSystem extends EntitySystem {
 	private void clearRoutes() {
 		// Core Dependencies
 		routeCalculationSystem.setDirty(true);
-		preferredRouteCalculationSystem.dirty=true;
+		preferredRouteCalculationSystem.setDirty(true);
 
 		// Separate view specific:
-		routePlotSystem.dirty=true;
-		techpointSymmetrySystem.dirty=true;
-		techpointPressureSystem.dirty=true;
-		domainSystem.dirty=true;
+		routePlotSystem.setDirty(true);
+		techpointSymmetrySystem.setDirty(true);
+		techpointPressureSystem.setDirty(true);
+		domainSystem.setDirty(true);
 	}
 
 	private void clearTeamLayers() {

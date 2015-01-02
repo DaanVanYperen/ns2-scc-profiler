@@ -1,15 +1,15 @@
-package net.mostlyoriginal.game.system.render;
+package net.mostlyoriginal.game.system.render.layer;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.G;
+import net.mostlyoriginal.game.api.DelayedEntitySystem;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
@@ -18,6 +18,7 @@ import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
+import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 
 import java.util.LinkedList;
 
@@ -30,8 +31,8 @@ import java.util.LinkedList;
  *
  * @author Daan van Yperen
  */
-@Wire
-public class DomainSystem extends EntitySystem {
+@Wire(injectInherited = true)
+public class DomainSystem extends DelayedEntitySystem {
 
 	public static final int ORTHO_MOVEMENT = 10;
 	public static final int DIAGO_MOVEMENT = 14;
@@ -39,10 +40,10 @@ public class DomainSystem extends EntitySystem {
 	protected LayerManager layerManager;
 	protected RenderMaskHandlerSystem renderMaskHandlerSystem;
 
-	public boolean dirty = true;
 	protected ComponentMapper<Routable> mRoutable;
 	protected ComponentMapper<TeamMember> mTeamMember;
 
+	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
 
 	public DomainSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class, Techpoint.class));
@@ -50,22 +51,16 @@ public class DomainSystem extends EntitySystem {
 
 	@Override
 	protected void initialize() {
+		setPrerequisiteSystems(preferredRouteCalculationSystem);
 	}
 
 	@Override
-	protected void processEntities(ImmutableBag<Entity> entities) {
+	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs) {
+		Layer layer = layerManager.getLayer("DOMAINS", RenderMask.Mask.TEAM_DOMAINS);
+		layerManager.clearWithMap(layer, Color.WHITE, 0.3f);
 
-		if (dirty && renderMaskHandlerSystem.getActiveMask() == RenderMask.Mask.TEAM_DOMAINS) {
-			dirty = false;
-
-			Layer layer = layerManager.getLayer("DOMAINS", RenderMask.Mask.TEAM_DOMAINS);
-			layerManager.clearWithMap(layer, Color.WHITE, 0.3f);
-
-
-
-			for (Team team : Team.values()) {
-				floodFill(layerManager.getTeamNavLayer(team), layer, entities, team);
-			}
+		for (Team team : Team.values()) {
+			floodFill(layerManager.getTeamNavLayer(team), layer, entities, team);
 		}
 	}
 
@@ -101,8 +96,8 @@ public class DomainSystem extends EntitySystem {
 		for (int i = 0, s = entities.size(); i < s; i++) {
 			final Entity e = entities.get(i);
 			final Routable routable = mRoutable.get(e);
-			if ( mTeamMember.has(e)) {
-				if ( mTeamMember.get(e).team == team ) {
+			if (mTeamMember.has(e)) {
+				if (mTeamMember.get(e).team == team) {
 					createUpdateNode(routable.getX(), routable.getY(), null, false);
 				}
 			}
@@ -120,33 +115,33 @@ public class DomainSystem extends EntitySystem {
 
 		while (!open.isEmpty()) {
 			final Node node = open.pollFirst();
-			closed[node.x + node.y * layerOut.pixmap.getWidth() ] = true;
+			closed[node.x + node.y * layerOut.pixmap.getWidth()] = true;
 
 			for (int i = 0; i < 8; i++) {
 				final int childX = node.x + xOff[i];
 				final int childY = node.y + yOff[i];
 
 				// bound check.
-				if ( childX < 0 || childY < 0 || childX >= layerOut.pixmap.getWidth() || childY >= layerOut.pixmap.getHeight() )
+				if (childX < 0 || childY < 0 || childX >= layerOut.pixmap.getWidth() || childY >= layerOut.pixmap.getHeight())
 					continue;
 
 				int rawColor = layerRaw.pixmap.getPixel(childX, layerOut.pixmap.getHeight() - childY);
-				boolean isWalkable= ((rawColor & 0x000000ff)) / 255f >= 0.5f;
+				boolean isWalkable = ((rawColor & 0x000000ff)) / 255f >= 0.5f;
 
 				// node not closed yet and location walkable? ONWARD!
-				if ( !closed[childX + childY * layerOut.pixmap.getWidth()] && isWalkable) {
+				if (!closed[childX + childY * layerOut.pixmap.getWidth()] && isWalkable) {
 
 					final boolean diagonal = xOff[i] != 0 && yOff[i] != 0;
 
-					final Node childNode = createUpdateNode(childX, childY,node, diagonal);
+					final Node childNode = createUpdateNode(childX, childY, node, diagonal);
 
 					// apply maximum distance for searches to keep things snappy.
 					if (childNode.totalCost > maxRouteLength) {
 						open.remove(childNode);
-						closed[childNode.x + childNode.y * layerOut.pixmap.getWidth() ] = true;
+						closed[childNode.x + childNode.y * layerOut.pixmap.getWidth()] = true;
 					} else {
 						// create crossbar style.
-						if ( (childX + (team==Team.MARINE ? childY : childY*7) ) % 8 < 4 ) {
+						if ((childX + (team == Team.MARINE ? childY : childY * 7)) % 8 < 4) {
 
 							float tween = childNode.totalCost / maxRouteLength;
 

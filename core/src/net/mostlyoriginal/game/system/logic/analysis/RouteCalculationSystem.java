@@ -9,11 +9,11 @@ import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.Path;
+import net.mostlyoriginal.game.api.DelayedEntitySystem;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
-import net.mostlyoriginal.game.system.logic.LogicPipelineSystem;
 import org.xguzm.pathfinding.PathFinder;
 import org.xguzm.pathfinding.finders.AStarFinder;
 import org.xguzm.pathfinding.grid.GridCell;
@@ -31,7 +31,7 @@ import java.util.List;
  * @author Daan van Yperen
  */
 @Wire(injectInherited = true)
-public class RouteCalculationSystem extends LogicPipelineSystem {
+public class RouteCalculationSystem extends DelayedEntitySystem {
 
 	protected ComponentMapper<Pos> mPos;
 	protected ComponentMapper<Routable> mRoutable;
