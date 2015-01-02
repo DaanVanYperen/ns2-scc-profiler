@@ -12,6 +12,7 @@ import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
+import net.mostlyoriginal.game.system.logic.RefreshHandlerSystem;
 import org.xguzm.pathfinding.*;
 import org.xguzm.pathfinding.finders.AStarFinder;
 
@@ -37,6 +38,7 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 	private Team pathfindTeam;
 
 	private RouteCalculationSystem routeCalculationSystem;
+	private RefreshHandlerSystem refreshHandlerSystem;
 
 
 	public PreferredRouteCalculationSystem() {
@@ -46,6 +48,11 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 	@Override
 	protected long maxDuration() {
 		return 10;
+	}
+
+	@Override
+	protected void postJobs() {
+		refreshHandlerSystem.purgeAllTransientEntities();
 	}
 
 	@Override

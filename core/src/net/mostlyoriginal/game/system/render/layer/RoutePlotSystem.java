@@ -62,8 +62,6 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 	@Override
 	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs) {
 
-		refreshHandlerSystem.purgeAllTransientEntities();
-
 		// render all secondary paths as shadows.
 		for (int i = 0, s = entities.size(); i < s; i++) {
 			final Entity e = entities.get(i);

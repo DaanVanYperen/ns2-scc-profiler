@@ -105,5 +105,7 @@ public class LayerManager extends Manager {
 				}
 			}
 		}
+
+		rawMapLayer.invalidateTexture();
 	}
 }
