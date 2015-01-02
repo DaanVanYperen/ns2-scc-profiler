@@ -8,4 +8,8 @@ import net.mostlyoriginal.game.G;
  */
 public class MapMetadata extends Component {
 	public float unitsPerPixel = G.UNITS_PER_PIXEL;
+
+	public void set(MapMetadata metadata) {
+		this.unitsPerPixel = metadata.unitsPerPixel;
+	}
 }

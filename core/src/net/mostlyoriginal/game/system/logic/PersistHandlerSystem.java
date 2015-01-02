@@ -11,12 +11,14 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.Json;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.EntityUtil;
+import net.mostlyoriginal.game.component.MapMetadata;
 import net.mostlyoriginal.game.component.Persistable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.TeamMember;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.manager.EntityFactoryManager;
 import net.mostlyoriginal.game.manager.LayerLoaderSystem;
+import net.mostlyoriginal.game.manager.MapMetadataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ public class PersistHandlerSystem extends EntitySystem {
 
 	private EntityFactoryManager entityFactoryManager;
 	private RefreshHandlerSystem refreshHandlerSystem;
+	private MapMetadataManager mapMetadataManager;
 
 	protected ComponentMapper<TeamMember> mTeamMember;
 	protected ComponentMapper<Pos> mPos;
@@ -38,6 +41,8 @@ public class PersistHandlerSystem extends EntitySystem {
 
 		public GameState() {
 		}
+
+		MapMetadata mapMetadata = new MapMetadata();
 
 		List<Element> elements = new ArrayList<Element>();
 	}
@@ -97,6 +102,7 @@ public class PersistHandlerSystem extends EntitySystem {
 	private void save() {
 
 		GameState state = new GameState();
+		state.mapMetadata.set(mapMetadataManager.getMetadata());
 
 		for (Entity entity : getActives()) {
 			if (entity != null) {
@@ -142,6 +148,12 @@ public class PersistHandlerSystem extends EntitySystem {
 				{
 					mTeamMember.get(entity).team = element.team;
 				}
+			}
+
+			// load metadata.
+			if ( state.mapMetadata != null )
+			{
+				mapMetadataManager.getMetadata().set(state.mapMetadata);
 			}
 
 			refreshHandlerSystem.restart();

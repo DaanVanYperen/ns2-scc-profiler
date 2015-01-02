@@ -119,7 +119,7 @@ public class MainScreen implements Screen {
 		world.setSystem(new NavigationGridCalculationSystem());
 
 		world.setSystem(new InputSystem());
-		world.setSystem(new DistanceHandlerSystem());
+		world.setSystem(new MilestoneHandlerSystem());
 
 		world.initialize();
 
