@@ -72,8 +72,13 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 			}
 		}
 
+		postJobs();
+	}
+
+	@Override
+	protected void postJobs() {
 		for (Team team : Team.values()) {
-			layerManager.getTeamNavLayer(team).refresh();
+			layerManager.getTeamNavLayer(team).invalidateTexture();
 		}
 	}
 

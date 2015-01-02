@@ -70,35 +70,29 @@ public class Layer extends Component {
 
 	public Texture getTexture() {
 		if (texture == null) {
-			refresh();
+			invalidateTexture();
+			texture = new Texture(pixmap);
 		}
 		return texture;
 	}
 
 	private Texture texture;
 
-	public void refresh() {
-		if (texture != null) {
-			texture.dispose();
-			texture = null;
-		}
-		texture = new Texture(pixmap);
-	}
-
 	public void dispose() {
-		if (texture != null) {
-			texture.dispose();
-			texture = null;
-		}
+		invalidateTexture();
 		pixmap.dispose();
 	}
 
 	public void clear() {
+		invalidateTexture();
+		pixmap.setColor(Color.CLEAR);
+		pixmap.fill();
+	}
+
+	public void invalidateTexture() {
 		if (texture != null) {
 			texture.dispose();
 			texture = null;
 		}
-		pixmap.setColor(Color.CLEAR);
-		pixmap.fill();
 	}
 }

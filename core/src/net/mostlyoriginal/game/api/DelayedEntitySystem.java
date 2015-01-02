@@ -22,39 +22,44 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 	private ImmutableBag<Entity> entities;
 	private DelayedEntitySystem[] prerequisites = new DelayedEntitySystem[0];
 
-	public DelayedEntitySystem(Aspect aspect)
-	{
+	public DelayedEntitySystem(Aspect aspect) {
 		super(aspect);
 	}
 
 	private LinkedList<Runnable> jobs = new LinkedList<>();
 
 	@Override
-	protected void processEntities(ImmutableBag<Entity> entities ) {
+	protected void processEntities(ImmutableBag<Entity> entities) {
 
 		if (dirty) {
-			if ( !prerequisitesMet()) return;
-
+			if (!prerequisitesMet()) return;
 			dirty = false;
+			idle = false;
 			jobs.clear();
 			collectJobs(entities, jobs);
 		}
 
 		// run a single job, if any.
-		while ( !jobs.isEmpty()) {
-			Runnable runnable = jobs.pollFirst();
-			if (runnable != null) {
-				runnable.run();
-			}
+		//while ( !jobs.isEmpty()) {
+		Runnable runnable = jobs.pollFirst();
+		if (runnable != null) {
+			runnable.run();
 		}
+		//}
 
-		idle = jobs.isEmpty();
+		if ( !idle && jobs.isEmpty() ) {
+			postJobs();
+			idle = true;
+		}
 	}
+
+	// called right after all jobs are done processing.
+	protected void postJobs() {}
 
 	private boolean prerequisitesMet() {
 		for (DelayedEntitySystem prerequisite : prerequisites) {
 			// parent systems need to be done computing completely.
-			if ( prerequisite.isDirty() || !prerequisite.isIdle() )
+			if (prerequisite.isDirty() || !prerequisite.isIdle())
 				return false;
 		}
 		return true;
@@ -62,7 +67,7 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 
 	/**
 	 * Gather jobs, perform initial jobs.
-	 *
+	 * <p/>
 	 * Called when this system is dirty and after all prerequisite systems are done processing.
 	 *
 	 * @param entities
@@ -70,7 +75,9 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 	 */
 	protected abstract void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs);
 
-	/** Requires a rerun. */
+	/**
+	 * Requires a rerun.
+	 */
 	public boolean isDirty() {
 		return dirty;
 	}
@@ -79,12 +86,16 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 		this.dirty = dirty;
 	}
 
-	/** Done with all jobs. */
+	/**
+	 * Done with all jobs.
+	 */
 	public boolean isIdle() {
 		return idle;
 	}
 
-	/** Job systems that need to be done processing before this system can process. */
+	/**
+	 * Job systems that need to be done processing before this system can process.
+	 */
 	public void setPrerequisiteSystems(DelayedEntitySystem... prerequisites) {
 		this.prerequisites = prerequisites;
 	}

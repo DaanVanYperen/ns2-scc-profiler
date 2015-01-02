@@ -68,6 +68,12 @@ public class TechpointSymmetrySystem extends DelayedEntitySystem {
 		}
 	}
 
+	@Override
+	protected void postJobs() {
+		getAlienLayer().invalidateTexture();
+		getMarineLayer().invalidateTexture();
+	}
+
 	private void plotCloseTechpoints(Entity e, Routable routable) {
 
 		Layer layerAliens = getAlienLayer();

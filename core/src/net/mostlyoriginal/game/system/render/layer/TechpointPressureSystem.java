@@ -54,7 +54,7 @@ public class TechpointPressureSystem extends DelayedEntitySystem {
 
 	@Override
 	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs) {
-		Layer layer = layerManager.getLayer("TECHPOINTS_PRESSURE", RenderMask.Mask.RT_PRESSURE);
+		Layer layer = getTechpointLayer();
 		layerManager.clearWithMap(layer, Color.WHITE, 0.3f);
 
 		for (int i = 0, s = entities.size(); i < s; i++) {
@@ -65,9 +65,19 @@ public class TechpointPressureSystem extends DelayedEntitySystem {
 		}
 	}
 
+	private Layer getTechpointLayer() {
+		return layerManager.getLayer("TECHPOINTS_PRESSURE", RenderMask.Mask.RT_PRESSURE);
+	}
+
+	@Override
+	protected void postJobs() {
+		getTechpointLayer().invalidateTexture();
+	}
+
+
 	private void plotCloseTechpoints(Entity e, Routable routable) {
 
-		Layer layer = layerManager.getLayer("TECHPOINTS_PRESSURE", RenderMask.Mask.RT_PRESSURE);
+		Layer layer = getTechpointLayer();
 
 		List<Path> combinedPaths = new ArrayList<Path>();
 

@@ -56,12 +56,21 @@ public class DomainSystem extends DelayedEntitySystem {
 
 	@Override
 	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Runnable> jobs) {
-		Layer layer = layerManager.getLayer("DOMAINS", RenderMask.Mask.TEAM_DOMAINS);
+		Layer layer = getDomainsLayer();
 		layerManager.clearWithMap(layer, Color.WHITE, 0.3f);
 
 		for (Team team : Team.values()) {
 			floodFill(layerManager.getTeamNavLayer(team), layer, entities, team);
 		}
+	}
+
+	private Layer getDomainsLayer() {
+		return layerManager.getLayer("DOMAINS", RenderMask.Mask.TEAM_DOMAINS);
+	}
+
+	@Override
+	protected void postJobs() {
+		getDomainsLayer().invalidateTexture();
 	}
 
 	public class Node {
