@@ -35,6 +35,11 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 
 	Color tmpColor = new Color();
 
+	@Override
+	protected long maxDuration() {
+		return 8;
+	}
+
 	private boolean isWalkable(int rawColor) {
 		tmpColor.set(rawColor);
 		return tmpColor.a >= 0.5f; // && tmpColor.r < 0.90f && tmpColor.g < 0.90f && tmpColor.b < 0.90f;
@@ -73,7 +78,7 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 
 		public void run() {
 
-			int remainingCycles = 100;
+			int remainingCycles = 50;
 			while ( remainingCycles-- > 0 && x < NavigationGridManager.GRID_WIDTH ) {
 				for (int y = 0; y < NavigationGridManager.GRID_HEIGHT; y++) {
 					boolean isWalkable;

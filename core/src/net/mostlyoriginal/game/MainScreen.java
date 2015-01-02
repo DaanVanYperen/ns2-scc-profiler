@@ -77,11 +77,6 @@ public class MainScreen implements Screen {
 
 		world.setSystem(new LayerLoaderSystem());
 
-		// 1. Route Calculation./
-		world.setSystem(new NavigationGridCalculationSystem());
-		world.setSystem(new RouteCalculationSystem());
-		world.setSystem(new PreferredRouteCalculationSystem());
-
 		// 2. Plotting.
 		world.setSystem(new RoutePlotSystem());
 		world.setSystem(new TechpointSymmetrySystem());
@@ -113,6 +108,13 @@ public class MainScreen implements Screen {
 
 		screenshotHandlerSystem = new ScreenshotHandlerSystem();
 		world.setSystem(screenshotHandlerSystem);
+
+		// 1. Route Calculation.
+		// we run these in reverse, so dependencies will have to cycle one frame before
+		// being called which will avoid hitching due to multiple systems processing at once.
+		world.setSystem(new PreferredRouteCalculationSystem());
+		world.setSystem(new RouteCalculationSystem());
+		world.setSystem(new NavigationGridCalculationSystem());
 
 		world.initialize();
 
