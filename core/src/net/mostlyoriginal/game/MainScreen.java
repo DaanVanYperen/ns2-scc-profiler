@@ -64,6 +64,8 @@ public class MainScreen implements Screen {
 		world.setManager(new EntityFactoryManager());
 		world.setManager(new FontManager());
 
+		world.setManager(new MapMetadataManager());
+
 		/** UTILITY - PASSIVE */
 
 		world.setSystem(new CollisionSystem());
@@ -117,6 +119,7 @@ public class MainScreen implements Screen {
 		world.setSystem(new NavigationGridCalculationSystem());
 
 		world.setSystem(new InputSystem());
+		world.setSystem(new DistanceHandlerSystem());
 
 		world.initialize();
 

@@ -15,6 +15,7 @@ import net.mostlyoriginal.game.component.buildings.ResourceNode;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.manager.MapMetadataManager;
 import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 
@@ -43,6 +44,7 @@ public class TechpointPressureSystem extends DelayedEntitySystem {
 	private RoutePlotSystem routePlotSystem;
 	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
 	private RenderMaskHandlerSystem renderMaskHandlerSystem;
+	private MapMetadataManager mapMetadataManager;
 
 
 	public TechpointPressureSystem() {
@@ -109,6 +111,8 @@ public class TechpointPressureSystem extends DelayedEntitySystem {
 			}
 		}
 
+		final float unitsPerPixel = mapMetadataManager.getMetadata().unitsPerPixel;
+
 		// sort by ESTIMATED TRAVEL TIME of the team holding the techpoint.
 		Collections.sort(combinedPaths, new Comparator<Object>()
 
@@ -122,7 +126,7 @@ public class TechpointPressureSystem extends DelayedEntitySystem {
 						TeamMember t1 = mTeamMember.get(p1.destination.get());
 						TeamMember t2 = mTeamMember.get(p2.destination.get());
 
-						return t1.team.getTravelTimeInSeconds(p1) - t2.team.getTravelTimeInSeconds(p2);
+						return t1.team.getTravelTimeInSeconds(p1, unitsPerPixel) - t2.team.getTravelTimeInSeconds(p2, unitsPerPixel);
 					}
 				}
 
@@ -149,7 +153,7 @@ public class TechpointPressureSystem extends DelayedEntitySystem {
 					if (path.team != team)
 						continue;
 
-					int travelTimeInSeconds = path.team.getTravelTimeInSeconds(path);
+					int travelTimeInSeconds = path.team.getTravelTimeInSeconds(path, unitsPerPixel);
 					if (closest == -1) closest = travelTimeInSeconds;
 
 					if (team == Team.ALIEN && alienSpeed == 0) alienSpeed = travelTimeInSeconds;
@@ -184,7 +188,8 @@ public class TechpointPressureSystem extends DelayedEntitySystem {
 					routable.getX() + 10 + (int) radius,
 					routable.getY() + 10 + (int) radius,
 					layer.pixmap,
-					new RenderMask(RenderMask.Mask.RT_PRESSURE));
+					new RenderMask(RenderMask.Mask.RT_PRESSURE),
+					null);
 		}
 	}
 }

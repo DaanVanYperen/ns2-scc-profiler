@@ -8,7 +8,6 @@ import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import net.mostlyoriginal.api.component.basic.Pos;
-import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.api.DelayedEntitySystem;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Routable;
@@ -17,6 +16,7 @@ import net.mostlyoriginal.game.component.TeamMember;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.manager.MapMetadataManager;
 import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 
@@ -39,6 +39,7 @@ public class DomainSystem extends DelayedEntitySystem {
 	public static final int MAX_SECONDS_RADIUS = 27;
 	protected LayerManager layerManager;
 	protected RenderMaskHandlerSystem renderMaskHandlerSystem;
+	protected MapMetadataManager mapMetadataManager;
 
 	protected ComponentMapper<Routable> mRoutable;
 	protected ComponentMapper<TeamMember> mTeamMember;
@@ -140,7 +141,7 @@ public class DomainSystem extends DelayedEntitySystem {
 			}
 
 			// calculate max route length, in pixels * 10.
-			maxRouteLength = calculateDistance(team, MAX_SECONDS_RADIUS);
+			maxRouteLength = calculateDistance(team, MAX_SECONDS_RADIUS, mapMetadataManager.getMetadata().unitsPerPixel);
 
 			colorNear = new Color(team.getPathColor());
 			colorFar = new Color(team.getPathColor());
@@ -149,8 +150,8 @@ public class DomainSystem extends DelayedEntitySystem {
 		}
 
 
-		private float calculateDistance(Team team, int seconds) {
-			return ((Math.round(team.getAvgSpeed() * seconds)) / G.UNITS_PER_PIXEL) * ORTHO_MOVEMENT;
+		private float calculateDistance(Team team, int seconds, float unitsPerPixel) {
+			return ((Math.round(team.getAvgSpeed() * seconds)) / unitsPerPixel) * ORTHO_MOVEMENT;
 		}
 
 		private Node createUpdateNode(int x, int y, Node parent, boolean diagonal) {

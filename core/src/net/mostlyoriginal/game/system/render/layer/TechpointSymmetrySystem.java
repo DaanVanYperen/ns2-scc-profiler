@@ -17,6 +17,7 @@ import net.mostlyoriginal.game.component.buildings.ResourceNode;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.manager.MapMetadataManager;
 import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 
@@ -47,6 +48,7 @@ public class TechpointSymmetrySystem extends DelayedEntitySystem {
 	protected RoutePlotSystem routePlotSystem;
 	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
 	private RenderMaskHandlerSystem renderMaskHandlerSystem;
+	private MapMetadataManager mapMetadataManager;
 
 	public TechpointSymmetrySystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class, ResourceNode.class));
@@ -88,6 +90,8 @@ public class TechpointSymmetrySystem extends DelayedEntitySystem {
 		Layer layerAliens = getAlienLayer();
 		Layer layerMarines = getMarineLayer();
 
+		final float unitsPerPixel = mapMetadataManager.getMetadata().unitsPerPixel;
+
 		// build a list of all paths, sorted by TRAVEL TIME. which can be different based on the team running the path.
 		for (Team team : Team.values()) {
 			float closest = -1;
@@ -95,7 +99,7 @@ public class TechpointSymmetrySystem extends DelayedEntitySystem {
 				Entity destination = path.destination.get();
 				if (mTechpoint.has(destination)) {
 
-					int travelTimeInSeconds = path.team.getTravelTimeInSeconds(path);
+					int travelTimeInSeconds = path.team.getTravelTimeInSeconds(path, unitsPerPixel);
 
 					if (closest == -1) closest = travelTimeInSeconds;
 

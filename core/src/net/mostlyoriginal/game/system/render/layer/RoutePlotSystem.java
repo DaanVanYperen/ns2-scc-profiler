@@ -15,15 +15,13 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.api.DelayedEntitySystem;
-import net.mostlyoriginal.game.component.Input;
-import net.mostlyoriginal.game.component.Layer;
-import net.mostlyoriginal.game.component.Routable;
-import net.mostlyoriginal.game.component.Team;
+import net.mostlyoriginal.game.component.*;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Label;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.manager.LayerManager;
+import net.mostlyoriginal.game.manager.MapMetadataManager;
 import net.mostlyoriginal.game.system.logic.RefreshHandlerSystem;
 import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
@@ -45,6 +43,7 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
 	private RefreshHandlerSystem refreshHandlerSystem;
 	private RenderMaskHandlerSystem renderMaskHandlerSystem;
+	private MapMetadataManager mapMetadataManager;
 
 	public RoutePlotSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class));
@@ -119,8 +118,10 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 		layer.drawPath(path, path.color, true);
 
 		if (renderLabel) {
+			int travelTime = path.team.getTravelTimeInSeconds(path, mapMetadataManager.getMetadata().unitsPerPixel);
 			addLabel(path.color, path, layer.pixmap,
-					renderMask, path.team.getTravelTimeInSeconds(path) + "");
+					renderMask, travelTime + "",
+							new DistanceIndicator(path.getPixelLength(), path.team.getAvgSpeed(), travelTime ));
 		}
 	}
 
@@ -149,7 +150,7 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 	/**
 	 * Add label somewhere halfway along the given path.
 	 */
-	private void addLabel(Color lineColor, Path path, Pixmap pixmap, RenderMask renderMask, String text) {
+	private void addLabel(Color lineColor, Path path, Pixmap pixmap, RenderMask renderMask, String text, DistanceIndicator distanceIndicator) {
 
 		int center = path.cells.size() / 2;
 		GridCell cell = path.cells.get(center);
@@ -158,13 +159,12 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 		GridCell cell2 = center + 3 < path.cells.size() ? path.cells.get(center + 3) : cell;
 
 		vTmp.set(cell.x, cell.y).sub(cell2.x, cell2.y).rotate90(-1).nor().scl(10).add(cell.x, cell.y);
-		drawBubble(lineColor, text, cell.x, cell.y, (int) vTmp.x, (int) vTmp.y, pixmap, renderMask);
+		drawBubble(lineColor, text, cell.x, cell.y, (int) vTmp.x, (int) vTmp.y, pixmap, renderMask, distanceIndicator);
 	}
 
 	/**
 	 * /** Render lined bubble in pixmap space.
-	 *
-	 * @param color
+	 *  @param color
 	 * @param text
 	 * @param x1         line origin
 	 * @param y1         line origin
@@ -172,8 +172,9 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 	 * @param y2         line end (where bubble will be)
 	 * @param pixmap     pixmap to render to.
 	 * @param renderMask render mask for label.
+	 * @param distanceIndicator
 	 */
-	public void drawBubble(Color color, String text, int x1, int y1, int x2, int y2, Pixmap pixmap, RenderMask renderMask) {
+	public void drawBubble(Color color, String text, int x1, int y1, int x2, int y2, Pixmap pixmap, RenderMask renderMask, DistanceIndicator distanceIndicator) {
 
 		pixmap.setColor(color);
 		pixmap.drawLine(
@@ -188,16 +189,19 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 		Label label = new Label(text);
 		label.scale = 2;
 		label.align = Label.Align.CENTER;
-		new EntityBuilder(world).with(
+		Entity e = new EntityBuilder(world).with(
 				new Renderable(1000),
 				new Transient(),
 				new net.mostlyoriginal.api.component.graphics.Color(1f, 1f, 1f, 1f),
 				renderMask,
-				new Input(1,2),
-				new Bounds(0,0, 11,8),
+				new Input(1, 2),
+				new Bounds(0, 0, 11, 8),
 				new Clickable(),
 				new Pos((int) (x2 * LayerManager.CELL_SIZE), (int) (y2 * LayerManager.CELL_SIZE)),
 				label)
 				.build();
+		if ( distanceIndicator != null ) {
+			e.edit().add(distanceIndicator);
+		}
 	}
 }

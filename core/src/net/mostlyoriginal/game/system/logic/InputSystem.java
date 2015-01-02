@@ -8,9 +8,11 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import net.mostlyoriginal.api.component.graphics.Invisible;
+import net.mostlyoriginal.api.event.common.EventManager;
 import net.mostlyoriginal.game.component.Input;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Label;
+import net.mostlyoriginal.game.events.EditEvent;
 
 /**
  * @author Daan van Yperen
@@ -28,6 +30,8 @@ public class InputSystem extends EntityProcessingSystem implements InputProcesso
 	private boolean escaped;
 	private Clickable clickable;
 	private Input input;
+
+	private EventManager eventManager;
 
 	public InputSystem() {
 		super(Aspect.getAspectForAll(Label.class, Clickable.class, Input.class).exclude(Invisible.class));
@@ -69,6 +73,7 @@ public class InputSystem extends EntityProcessingSystem implements InputProcesso
 					label.text = typeBuffer.toString();
 					selectedInput = null;
 					typeBuffer = new StringBuilder();
+					eventManager.dispatch(new EditEvent(e));
 				}
 			}
 		}

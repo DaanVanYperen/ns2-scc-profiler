@@ -30,6 +30,7 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 
 	@Override
 	protected void initialize() {
+
 		super.initialize();
 	}
 
