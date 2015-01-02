@@ -34,15 +34,34 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 	}
 
 	Color tmpColor = new Color();
+	public static final Color DUCT_COLOR = new Color(236/256f,153/256f,25/256f,1f);
 
 	@Override
 	protected long maxDuration() {
 		return 8;
 	}
 
-	private boolean isWalkable(int rawColor) {
+	public boolean similar(Color c1, Color c2, float tolerance)
+	{
+		return Math.abs(c1.r - c2.r) < tolerance &&
+				Math.abs(c1.g - c2.g) < tolerance &&
+				Math.abs(c1.b - c2.b) < tolerance;
+	}
+
+	private boolean isWalkable(int rawColor, Team team) {
+
 		tmpColor.set(rawColor);
-		return tmpColor.a >= 0.5f && (tmpColor.r < 1f || tmpColor.g < 1f || tmpColor.b < 1f);
+
+		// only aliens can walk over duct colors.
+		if ( similar(tmpColor, DUCT_COLOR,0.25f) ) {
+			return team == Team.ALIEN;
+		}
+
+		if ( similar(tmpColor, Color.WHITE,0.05f) ) {
+			return false;
+		}
+
+		return tmpColor.a >= 0.5f;
 	}
 
 	@Override
@@ -91,7 +110,7 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 						isWalkable = false;
 					else {
 						// blocked by map mask.
-						isWalkable = isWalkable(rawColor);
+						isWalkable = isWalkable(rawColor, team);
 					}
 
 					// generate mask based on blockades.
