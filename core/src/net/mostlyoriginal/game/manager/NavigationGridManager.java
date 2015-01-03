@@ -32,10 +32,7 @@ public class NavigationGridManager extends Manager {
 		return navGrid.get(team);
 	}
 
-	public void setNavigationGrid( Team team, NavigationGrid<GridCell> grid )
-	{
-		if (!navGrid.containsKey(team)) {
-			navGrid.put(team, grid);
-		}
+	public void setNavigationGrid(Team team, NavigationGrid<GridCell> grid) {
+		navGrid.put(team, grid);
 	}
 }

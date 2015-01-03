@@ -57,7 +57,7 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 			return team == Team.ALIEN;
 		}
 
-		if ( similar(tmpColor, Color.WHITE,0.05f) ) {
+		if ( similar(tmpColor, Color.WHITE,0.10f) ) {
 			return false;
 		}
 
@@ -69,8 +69,8 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 
 		for (Team team : Team.values()) {
 
-			layerManager.getTeamNavLayer(team).clear();
 			Layer navMask = layerManager.getTeamNavLayer(team);
+			navMask.clear();
 
 			NavigationGrid<GridCell> grid = new NavigationGrid<GridCell>(new GridCell[NavigationGridManager.GRID_WIDTH][NavigationGridManager.GRID_HEIGHT]);
 			navigationGridManager.setNavigationGrid(team, grid);

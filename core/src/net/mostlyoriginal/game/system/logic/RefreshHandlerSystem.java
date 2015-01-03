@@ -19,6 +19,7 @@ import net.mostlyoriginal.game.api.DelayedEntitySystem;
 import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.events.DeleteEvent;
 import net.mostlyoriginal.game.events.DragEvent;
+import net.mostlyoriginal.game.events.DrawEvent;
 import net.mostlyoriginal.game.events.TeamChangeEvent;
 import net.mostlyoriginal.game.manager.EntityFactoryManager;
 import net.mostlyoriginal.game.manager.LayerManager;
@@ -51,6 +52,7 @@ public class RefreshHandlerSystem extends DelayedEntitySystem {
 	private Entity refreshIndicator;
 
 	protected ComponentMapper<Angle> mAngle;
+	private float restartAfterCooldown;
 
 	public RefreshHandlerSystem() {
 		super(Aspect.getAspectForAll(Transient.class));
@@ -69,6 +71,15 @@ public class RefreshHandlerSystem extends DelayedEntitySystem {
 		Angle angle = mAngle.get(refreshIndicator);
 		angle.rotation += world.delta * -400f;
 		super.processEntities(entities);
+
+		if ( restartAfterCooldown > 0 )
+		{
+			restartAfterCooldown -= world.delta;
+			if ( restartAfterCooldown <= 0 )
+			{
+				restart();
+			}
+		}
 	}
 
 	@Override
@@ -78,17 +89,26 @@ public class RefreshHandlerSystem extends DelayedEntitySystem {
 
 	@Subscribe
 	public void listenerMoved(DragEvent event) {
-		restart();
+		delayedRestart();
 	}
 
 	@Subscribe
 	public void listenerMoved(DeleteEvent event) {
-		restart();
+		delayedRestart();
 	}
 
 	@Subscribe
 	public void listenerMoved(TeamChangeEvent event) {
-		restart();
+		delayedRestart();
+	}
+
+	@Subscribe
+	public void listenerMoved(DrawEvent event) {
+		delayedRestart();
+	}
+
+	private void delayedRestart() {
+		restartAfterCooldown = 0.2f;
 	}
 
 

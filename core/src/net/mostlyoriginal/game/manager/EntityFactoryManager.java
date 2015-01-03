@@ -17,6 +17,7 @@ import net.mostlyoriginal.game.component.buildings.ResourceNode;
 import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.*;
 import net.mostlyoriginal.game.events.DragEvent;
+import net.mostlyoriginal.game.events.DrawEvent;
 import net.mostlyoriginal.game.system.logic.ToolSystem;
 import net.mostlyoriginal.game.system.logic.analysis.NavigationGridCalculationSystem;
 
@@ -144,6 +145,10 @@ public class EntityFactoryManager extends Manager {
             public void run() {
 
                 Tool tool = new Tool(new ButtonListener() {
+
+                    float lastX = 0;
+                    float lastY = 0;
+
                     @Override
                     public void run() {
 
@@ -154,11 +159,19 @@ public class EntityFactoryManager extends Manager {
                             // don't allow placement under a certain cursor position.
                             if ( cursorPos.y <= 100 ) return;
 
+                            // avoid triggering twice for the same location.
+                            if ( lastX == cursorPos.x && lastY == cursorPos.y )
+                                return;
+
+                            lastX = cursorPos.x;
+                            lastY = cursorPos.y;
+
                             Layer raw = layerManager.getLayer("RAW", RenderMask.Mask.BASIC);
                             raw.pixmap.setColor(color);
                             raw.pixmap.fillCircle((int)cursorPos.x / NavigationGridManager.PATHING_CELL_SIZE, NavigationGridManager.GRID_HEIGHT - (int)cursorPos.y / NavigationGridManager.PATHING_CELL_SIZE, scale);
 
                             raw.invalidateTexture();
+                            em.dispatch(new DrawEvent());
                         }
                     }
 
