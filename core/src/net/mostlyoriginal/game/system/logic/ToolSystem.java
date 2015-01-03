@@ -47,9 +47,10 @@ public class ToolSystem extends EntityProcessingSystem {
 			Pos cursorPos = mPos.get(cursor);
 			Pos toolPos = mPos.get(e);
 
-			TextureRegion icon = assetSystem.get(mAnim.get(e).id).getKeyFrame(0);
-			toolPos.x = cursorPos.x - icon.getRegionWidth()/2;
-			toolPos.y = cursorPos.y - icon.getRegionHeight()/2;
+			Anim anim = mAnim.get(e);
+			TextureRegion icon = assetSystem.get(anim.id).getKeyFrame(0);
+			toolPos.x = cursorPos.x - (icon.getRegionWidth()/2 * anim.scale);
+			toolPos.y = cursorPos.y - (icon.getRegionHeight()/2 * anim.scale);
 
 			Clickable clickable = mClickable.get(e);
 			if ( Gdx.input.isButtonPressed(0) )

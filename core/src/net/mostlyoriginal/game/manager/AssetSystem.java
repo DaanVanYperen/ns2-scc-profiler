@@ -54,6 +54,11 @@ public class AssetSystem extends net.mostlyoriginal.api.manager.AbstractAssetSys
         add("tool-techpoint", 259, 2, 20,19, 1);
         add("tool-resource-node", 283, 2, 20,19, 1);
 
+        add("tool-draw-duct", 295, 41, 10, 10, 1);
+        add("tool-draw-floor",323, 41, 10, 10, 1);
+        add("tool-draw-clear", 350, 41, 10, 10, 1);
+
+
         loadSounds(new String[]{
         });
     }

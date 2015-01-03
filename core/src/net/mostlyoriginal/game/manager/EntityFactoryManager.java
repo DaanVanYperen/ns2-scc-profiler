@@ -122,11 +122,13 @@ public class EntityFactoryManager extends Manager {
 
         createInstancingButton("tool-resource-node", "resource-node", "resourceNode", 50);
         createInstancingButton("tool-techpoint", "techpoint", "techpoint", 50 + 40*1);
-        createDrawingButton("tool-resource-node", "techpoint", "techpoint", 50 + 40 * 2, 4, NavigationGridCalculationSystem.DUCT_COLOR);
-        createDrawingButton("tool-resource-node", "techpoint", "techpoint", 50 + 40 * 3, 4, NavigationGridCalculationSystem.FLOOR_COLOR);
-        createDrawingButton("tool-resource-node", "techpoint", "techpoint", 50 + 40 * 4, 4, Color.WHITE);
-        //createInstancingButton("duct", "duct", "duct", 50 + 40*2);
-        //createInstancingButton("wall", "wall", "wall", 50 + 40 * 3);
+
+        createDrawingButton("tool-draw-duct",  50 + 10 + 40 * 2, 2, NavigationGridCalculationSystem.DUCT_COLOR, 80);
+        createDrawingButton("tool-draw-floor",  50 + 10 + 40 * 3, 2, NavigationGridCalculationSystem.FLOOR_COLOR, 80);
+        createDrawingButton("tool-draw-clear",  50 + 10 + 40 * 4, 2, Color.WHITE, 80);
+        createDrawingButton("tool-draw-duct", 50 + 40 * 2, 6, NavigationGridCalculationSystem.DUCT_COLOR, 30);
+        createDrawingButton("tool-draw-floor",  50 + 40 * 3, 6, NavigationGridCalculationSystem.FLOOR_COLOR, 30);
+        createDrawingButton("tool-draw-clear", 50 + 40 * 4, 6, Color.WHITE, 30);
 
         addMaskTitle(RenderMask.Mask.BASIC, "Map overview", "Drag and place techpoints, rts, blockades and ducts.", "", "Rightclick to delete. Middleclick to cycle team on techpoints.");
         addMaskTitle(RenderMask.Mask.RT_PRESSURE, "RT head start", "highlight team that reaches RT first.", "Number signifies seconds head start.","Assign at least two techpoints to different teams.");
@@ -139,8 +141,8 @@ public class EntityFactoryManager extends Manager {
 
     LayerManager layerManager;
 
-    private void createDrawingButton(final String toolIcon, final String animId, final String entityId, int x, final int scale, final Color color) {
-        Entity button = createBasicButton(animId, x, new ButtonListener() {
+    private void createDrawingButton(final String toolIcon, int x, final int scale, final Color color, int y) {
+        Entity button = createBasicButton(toolIcon, x, new ButtonListener() {
             @Override
             public void run() {
 
@@ -182,14 +184,18 @@ public class EntityFactoryManager extends Manager {
                 });
                 tool.continuous = true;
                 toolSystem.reset();
-                new EntityBuilder(world).with(tool, new Pos(), new Renderable(1200), new Anim(toolIcon)).build();
+                Anim toolAnim = new Anim(toolIcon);
+                toolAnim.scale = scale / 2f;
+                new EntityBuilder(world).with(tool, new Pos(), new Renderable(1200), toolAnim).build();
             }
 
             @Override
             public boolean enabled() {
                 return true;
             }
-        }, 50);
+        }, y);
+
+        mAnim.get(button).scale = scale / 2f;
 
         // make only visible when rendering.
     }

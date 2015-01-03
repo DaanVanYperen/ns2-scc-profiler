@@ -146,7 +146,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 	@Override
 	protected long maxDuration() {
 		// routes to calculate each run.
-		return 10;
+		return 2;
 	}
 
 	private class SortRoutesJob implements Job {
