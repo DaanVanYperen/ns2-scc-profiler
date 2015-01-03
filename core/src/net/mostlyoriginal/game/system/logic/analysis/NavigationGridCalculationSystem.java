@@ -32,7 +32,9 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 	}
 
 	Color tmpColor = new Color();
+
 	public static final Color DUCT_COLOR = new Color(236/256f,153/256f,25/256f,1f);
+	public static final Color FLOOR_COLOR = new Color(112/256f,112/256f,112/256f,1f);
 
 	@Override
 	protected long maxDuration() {

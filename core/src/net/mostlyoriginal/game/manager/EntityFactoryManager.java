@@ -4,6 +4,7 @@ import com.artemis.*;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
 import com.artemis.utils.EntityBuilder;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapProperties;
 import net.mostlyoriginal.api.component.basic.Bounds;
@@ -17,6 +18,7 @@ import net.mostlyoriginal.game.component.buildings.Techpoint;
 import net.mostlyoriginal.game.component.ui.*;
 import net.mostlyoriginal.game.events.DragEvent;
 import net.mostlyoriginal.game.system.logic.ToolSystem;
+import net.mostlyoriginal.game.system.logic.analysis.NavigationGridCalculationSystem;
 
 import java.util.EnumSet;
 
@@ -119,6 +121,9 @@ public class EntityFactoryManager extends Manager {
 
         createInstancingButton("tool-resource-node", "resource-node", "resourceNode", 50);
         createInstancingButton("tool-techpoint", "techpoint", "techpoint", 50 + 40*1);
+        createDrawingButton("tool-resource-node", "techpoint", "techpoint", 50 + 40 * 2, 4, NavigationGridCalculationSystem.DUCT_COLOR);
+        createDrawingButton("tool-resource-node", "techpoint", "techpoint", 50 + 40 * 3, 4, NavigationGridCalculationSystem.FLOOR_COLOR);
+        createDrawingButton("tool-resource-node", "techpoint", "techpoint", 50 + 40 * 4, 4, Color.WHITE);
         //createInstancingButton("duct", "duct", "duct", 50 + 40*2);
         //createInstancingButton("wall", "wall", "wall", 50 + 40 * 3);
 
@@ -129,6 +134,51 @@ public class EntityFactoryManager extends Manager {
         addMaskTitle(RenderMask.Mask.PATHFIND_ALIEN, "Alien - all routes", "Travel time in seconds for aliens.", "", "");
         addMaskTitle(RenderMask.Mask.PATHFIND_MARINE, "Marine - all routes", "Travel time in seconds for marines.", "", "");
         addMaskTitle(RenderMask.Mask.TEAM_DOMAINS, "Presence", "Estimated presence of each team, strong to weak.", "Overlap indicates high encounter chance.", "");
+    }
+
+    LayerManager layerManager;
+
+    private void createDrawingButton(final String toolIcon, final String animId, final String entityId, int x, final int scale, final Color color) {
+        Entity button = createBasicButton(animId, x, new ButtonListener() {
+            @Override
+            public void run() {
+
+                Tool tool = new Tool(new ButtonListener() {
+                    @Override
+                    public void run() {
+
+                        final Entity cursor = tagManager.getEntity("cursor");
+                        if ( cursor != null ) {
+                            Pos cursorPos = mPos.get(cursor);
+
+                            // don't allow placement under a certain cursor position.
+                            if ( cursorPos.y <= 100 ) return;
+
+                            Layer raw = layerManager.getLayer("RAW", RenderMask.Mask.BASIC);
+                            raw.pixmap.setColor(color);
+                            raw.pixmap.fillCircle((int)cursorPos.x / NavigationGridManager.PATHING_CELL_SIZE, NavigationGridManager.GRID_HEIGHT - (int)cursorPos.y / NavigationGridManager.PATHING_CELL_SIZE, scale);
+
+                            raw.invalidateTexture();
+                        }
+                    }
+
+                    @Override
+                    public boolean enabled() {
+                        return true;
+                    }
+                });
+                tool.continuous = true;
+                toolSystem.reset();
+                new EntityBuilder(world).with(tool, new Pos(), new Renderable(1200), new Anim(toolIcon)).build();
+            }
+
+            @Override
+            public boolean enabled() {
+                return true;
+            }
+        }, 50);
+
+        // make only visible when rendering.
     }
 
     ToolSystem toolSystem;
