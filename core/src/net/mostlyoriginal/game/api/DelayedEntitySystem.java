@@ -35,10 +35,9 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 
 	/**
 	 * Maximum duration in which to start new jobs.
-	 *
+	 * <p/>
 	 * Start new jobs within first job start time + maxDuration milliseconds.
 	 * Not ideal, since new jobs might run far beyond the max duration, but it suffices.
-	 *
 	 */
 	protected long maxDuration() {
 		return 0;
@@ -55,11 +54,11 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 			collectJobs(entities, jobs);
 		}
 
+		// run one or multiple times, until allotted time runs out.
 		long start = TimeUtils.millis();
 		long now = start;
 
-		// run one or multiple times, until allotted time runs out.
-		while ( now <= start + maxDuration() ) {
+		while (now <= start + maxDuration()) {
 
 			Job runnable = jobs.peekFirst();
 			if (runnable != null) {
@@ -69,9 +68,11 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 				}
 			}
 
-			if (!idle && jobs.isEmpty()) {
-				postJobs();
-				idle = true;
+			if (jobs.isEmpty()) {
+				if ( !idle ) {
+					postJobs();
+					idle = true;
+				}
 				break;
 			}
 
@@ -80,7 +81,8 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 	}
 
 	// called right after all jobs are done processing.
-	protected void postJobs() {}
+	protected void postJobs() {
+	}
 
 	protected boolean prerequisitesMet() {
 		for (DelayedEntitySystem prerequisite : prerequisites) {
@@ -95,7 +97,8 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 	 * Gather jobs, perform initial jobs.
 	 * <p/>
 	 * Called when this system is dirty and after all prerequisite systems are done processing.
-	 *  @param entities
+	 *
+	 * @param entities
 	 * @param jobs
 	 */
 	protected abstract void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs);
