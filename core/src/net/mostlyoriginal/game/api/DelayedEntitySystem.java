@@ -60,7 +60,7 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 
 		while (now <= start + maxDuration()) {
 
-			Job runnable = jobs.peekFirst();
+			Job runnable = !jobs.isEmpty() ? jobs.get(0) : null;
 			if (runnable != null) {
 				runnable.run();
 				if (runnable.isCompleted()) {
