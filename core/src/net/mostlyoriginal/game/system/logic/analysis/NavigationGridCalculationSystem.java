@@ -38,7 +38,7 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 
 	@Override
 	protected long maxDuration() {
-		return 8;
+		return 10;
 	}
 
 	public boolean similar(Color c1, Color c2, float tolerance)

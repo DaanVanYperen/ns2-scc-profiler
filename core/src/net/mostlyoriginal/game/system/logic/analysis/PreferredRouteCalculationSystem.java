@@ -47,7 +47,7 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 
 	@Override
 	protected long maxDuration() {
-		return 8;
+		return 10;
 	}
 
 	@Override
