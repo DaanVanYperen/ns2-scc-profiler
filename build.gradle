@@ -60,7 +60,7 @@ project(":html") {
     dependencies {
         compile project(":core")
 
-        compile "com.github.xaguzman:pathfinding:0.2.4-SNAPSHOT:sources"
+        compile "com.github.xaguzman:pathfinding:0.2.4:sources"
 
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
@@ -96,7 +96,7 @@ project(":core") {
         compile "net.mostlyoriginal.artemis-odb:contrib-components-libgdx:$artemisContribVersion"
         compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion"
 
-        compile "com.github.xaguzman:pathfinding:0.2.4-SNAPSHOT"
+        compile "com.github.xaguzman:pathfinding:0.2.4"
     }
 }
 

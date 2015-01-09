@@ -31,6 +31,7 @@ public class MouseClickSystem extends EntityProcessingSystem {
     private boolean rightAlreadyDown;
     private boolean middleAlreadyDown;
 
+    @SuppressWarnings("unchecked")
     public MouseClickSystem() {
         super(Aspect.getAspectForAll(Clickable.class, Bounds.class));
     }

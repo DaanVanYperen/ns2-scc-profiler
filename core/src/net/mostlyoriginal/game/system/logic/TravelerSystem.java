@@ -35,6 +35,7 @@ public class TravelerSystem extends EntityProcessingSystem {
 	protected ComponentMapper<Bounds> mBounds;
 	private static Vector2 vTmp = new Vector2();
 
+	@SuppressWarnings("unchecked")
 	public TravelerSystem() {
 		super(Aspect.getAspectForAll(Traveler.class, Pos.class));
 	}

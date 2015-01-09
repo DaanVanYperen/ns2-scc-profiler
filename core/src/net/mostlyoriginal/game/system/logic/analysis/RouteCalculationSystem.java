@@ -41,6 +41,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 	private NavigationGridCalculationSystem navigationGridCalculationSystem;
 
 
+	@SuppressWarnings("unchecked")
 	public RouteCalculationSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class));
 	}

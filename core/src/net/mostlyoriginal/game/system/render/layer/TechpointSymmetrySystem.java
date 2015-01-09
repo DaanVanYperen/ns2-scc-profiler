@@ -50,6 +50,7 @@ public class TechpointSymmetrySystem extends DelayedEntitySystem {
 	private RenderMaskHandlerSystem renderMaskHandlerSystem;
 	private MapMetadataManager mapMetadataManager;
 
+	@SuppressWarnings("unchecked")
 	public TechpointSymmetrySystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class, ResourceNode.class));
 	}

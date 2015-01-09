@@ -47,6 +47,7 @@ public class TechpointPressureSystem extends DelayedEntitySystem {
 	private MapMetadataManager mapMetadataManager;
 
 
+	@SuppressWarnings("unchecked")
 	public TechpointPressureSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class, ResourceNode.class));
 	}

@@ -38,6 +38,7 @@ public class DraggableSystem extends EntityProcessingSystem {
 
 	private EventManager em;
 
+	@SuppressWarnings("unchecked")
 	public DraggableSystem() {
 		super(Aspect.getAspectForAll(Pos.class, Clickable.class, Draggable.class));
 	}

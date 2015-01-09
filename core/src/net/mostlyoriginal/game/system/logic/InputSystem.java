@@ -33,6 +33,7 @@ public class InputSystem extends EntityProcessingSystem implements InputProcesso
 
 	private EventManager eventManager;
 
+	@SuppressWarnings("unchecked")
 	public InputSystem() {
 		super(Aspect.getAspectForAll(Label.class, Clickable.class, Input.class).exclude(Invisible.class));
 	}

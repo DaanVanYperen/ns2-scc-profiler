@@ -29,6 +29,7 @@ public class ToolSystem extends EntityProcessingSystem {
 	private boolean buttonWasDown=true;
 	private AssetSystem assetSystem;
 
+	@SuppressWarnings("unchecked")
 	public ToolSystem() {
 		super(Aspect.getAspectForAll(Tool.class,Pos.class, Anim.class));
 	}

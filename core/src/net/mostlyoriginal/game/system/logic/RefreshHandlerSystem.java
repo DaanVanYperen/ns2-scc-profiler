@@ -54,6 +54,7 @@ public class RefreshHandlerSystem extends DelayedEntitySystem {
 	protected ComponentMapper<Angle> mAngle;
 	private float restartAfterCooldown;
 
+	@SuppressWarnings("unchecked")
 	public RefreshHandlerSystem() {
 		super(Aspect.getAspectForAll(Transient.class));
 	}

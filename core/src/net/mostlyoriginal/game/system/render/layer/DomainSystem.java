@@ -46,6 +46,7 @@ public class DomainSystem extends DelayedEntitySystem {
 
 	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
 
+	@SuppressWarnings("unchecked")
 	public DomainSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class, Techpoint.class));
 	}
@@ -181,7 +182,7 @@ public class DomainSystem extends DelayedEntitySystem {
 
 			int remainingCycles = 1000;
 			while ( (remainingCycles-- > 0) && !open.isEmpty()) {
-				final Node node = open.pollFirst();
+				final Node node = !open.isEmpty() ? open.get(0) : null;
 				closed[node.x + node.y * layerOut.pixmap.getWidth()] = true;
 
 				for (int i = 0; i < 8; i++) {

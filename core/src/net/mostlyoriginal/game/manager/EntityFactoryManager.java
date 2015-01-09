@@ -53,6 +53,7 @@ public class EntityFactoryManager extends Manager {
 
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void initialize() {
         super.initialize();
 

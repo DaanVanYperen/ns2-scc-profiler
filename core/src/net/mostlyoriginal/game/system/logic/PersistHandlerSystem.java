@@ -8,11 +8,10 @@ import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.Json;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.EntityUtil;
+import net.mostlyoriginal.game.api.ScreenshotHelper;
 import net.mostlyoriginal.game.component.*;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.RenderMask;
@@ -21,8 +20,6 @@ import net.mostlyoriginal.game.manager.LayerLoaderSystem;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.MapMetadataManager;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +37,7 @@ public class PersistHandlerSystem extends EntitySystem {
 	protected ComponentMapper<Pos> mPos;
 	protected ComponentMapper<Persistable> mPersistable;
 
-	private static final class GameState {
+	public static final class GameState {
 
 
 		public GameState() {
@@ -71,6 +68,7 @@ public class PersistHandlerSystem extends EntitySystem {
 	LayerLoaderSystem layerLoaderSystem;
 	LayerManager layerManager;
 
+	@SuppressWarnings("unchecked")
 	public PersistHandlerSystem() {
 		super(Aspect.getAspectForAll(Persistable.class));
 	}
@@ -110,7 +108,7 @@ public class PersistHandlerSystem extends EntitySystem {
 		GameState state = new GameState();
 		state.mapMetadata.set(mapMetadataManager.getMetadata());
 
-		saveMapTexture(state);
+		new ScreenshotHelper().saveMapTexture(state, getRawLayer());
 
 		for (Entity entity : getActives()) {
 			if (entity != null) {
@@ -139,24 +137,7 @@ public class PersistHandlerSystem extends EntitySystem {
 		prefs.flush();
 	}
 
-	private void saveMapTexture(GameState state) {
-		Pixmap pixmap = getRawLayer().pixmap;
-		try {
-			PixmapIO.PNG writer = new PixmapIO.PNG((int)(pixmap.getWidth() * pixmap.getHeight() * 1.5f)); // Guess at deflated size.
-			try {
-				writer.setFlipY(false);
-				ByteArrayOutputStream pngStream = new ByteArrayOutputStream();
-				writer.write(pngStream, pixmap);
-				state.layer = pngStream.toByteArray();
-			} finally {
-				writer.dispose();
-			}
-		} catch (IOException ex) {
-			throw new RuntimeException("Could not save map as texture.");
-		}
-	}
-
-	private Layer getRawLayer() {
+	public Layer getRawLayer() {
 		return layerManager.getLayer("RAW", RenderMask.Mask.BASIC);
 	}
 
@@ -174,7 +155,7 @@ public class PersistHandlerSystem extends EntitySystem {
 			Json json = new Json();
 			GameState state = json.fromJson(GameState.class, msg);
 
-			loadMapTexture(state);
+			new ScreenshotHelper().loadMapTexture(state, getRawLayer());
 
 			for (Element element : state.elements) {
 				Entity entity = entityFactoryManager.createEntity(element.id, element.x, element.y, null);
@@ -192,19 +173,6 @@ public class PersistHandlerSystem extends EntitySystem {
 			}
 
 			refreshHandlerSystem.restart();
-		}
-	}
-
-	private void loadMapTexture(GameState state) {
-		if ( state.layer != null )
-		{
-			Layer layer = getRawLayer();
-			if ( layer.pixmap != null ) {
-				layer.pixmap.dispose();
-				layer.pixmap=null;
-			}
-			layer.pixmap = new Pixmap(state.layer,0, state.layer.length);
-			layer.invalidateTexture();
 		}
 	}
 

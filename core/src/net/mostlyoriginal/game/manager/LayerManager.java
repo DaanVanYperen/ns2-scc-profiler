@@ -9,7 +9,6 @@ import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.ui.RenderMask;
-import net.mostlyoriginal.game.system.BlockadeSystem;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -32,6 +31,7 @@ public class LayerManager extends Manager {
 	private ComponentMapper<RenderMask> mRenderMask;
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void initialize() {
 		layerArchetype = new ArchetypeBuilder().add(Pos.class, Layer.class, Renderable.class, RenderMask.class).build(world);
 	}

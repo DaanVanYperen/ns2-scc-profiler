@@ -20,6 +20,7 @@ public class DeletableSystem extends EntityProcessingSystem {
 	protected ComponentMapper<Clickable> mClickable;
 	protected EventManager em;
 
+	@SuppressWarnings("unchecked")
 	public DeletableSystem() {
 		super(Aspect.getAspectForAll(Pos.class, Clickable.class, Deletable.class));
 	}

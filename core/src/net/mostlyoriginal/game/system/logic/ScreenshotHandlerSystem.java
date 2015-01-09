@@ -5,12 +5,12 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.utils.ScreenUtils;
 import net.mostlyoriginal.game.G;
+import net.mostlyoriginal.game.api.ScreenshotHelper;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.manager.EntityFactoryManager;
@@ -30,7 +30,7 @@ public class ScreenshotHandlerSystem extends EntitySystem {
 	private FrameBuffer fbo;
 	private LayerLoaderSystem layerLoaderSystem;
 
-
+	@SuppressWarnings("unchecked")
 	public ScreenshotHandlerSystem() {
 		super(Aspect.getAspectForAll(Transient.class));
 	}
@@ -60,18 +60,9 @@ public class ScreenshotHandlerSystem extends EntitySystem {
 		if (screenshot && fbo != null ) {
 			screenshot = false;
 			int counter=0;
-			try {
-				FileHandle fh;
-				do {
-					fh = new FileHandle(layerLoaderSystem.mapName + counter++ + ".png");
-				} while (fh.exists());
-				byte[] frameBufferPixels = ScreenUtils.getFrameBufferPixels(0, 0, G.CANVAS_WIDTH, G.CANVAS_HEIGHT, true);
-				Pixmap pixmap = new Pixmap(G.CANVAS_WIDTH, G.CANVAS_HEIGHT, Pixmap.Format.RGBA8888);
-				pixmap.getPixels().put(frameBufferPixels);
-				PixmapIO.writePNG(fh, pixmap);
-				pixmap.dispose();
-			} catch (Exception e) {
-			}
+			FileHandle local = Gdx.files.local(layerLoaderSystem.mapName + counter++ + ".png");
+
+			new ScreenshotHelper().screenshot(local);
 
 			fbo.end();
 			fbo.dispose();

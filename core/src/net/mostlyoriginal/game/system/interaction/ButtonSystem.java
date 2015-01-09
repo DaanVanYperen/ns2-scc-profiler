@@ -36,6 +36,7 @@ public class ButtonSystem extends EntityProcessingSystem {
     public float globalButtonCooldown = 0;
     private AssetSystem assetSystem;
 
+    @SuppressWarnings("unchecked")
     public ButtonSystem() {
         super(Aspect.getAspectForAll(Button.class, Clickable.class, Bounds.class).one(Anim.class, Label.class));
     }

@@ -26,6 +26,7 @@ public class LayerRenderSystem extends DeferredEntityProcessingSystem {
 	private SpriteBatch batch;
 	private CameraSystem cameraSystem;
 
+	@SuppressWarnings("unchecked")
 	public LayerRenderSystem(EntityProcessPrincipal principal) {
 		super(Aspect.getAspectForAll(Pos.class, Layer.class).exclude(Invisible.class), principal);
 	}

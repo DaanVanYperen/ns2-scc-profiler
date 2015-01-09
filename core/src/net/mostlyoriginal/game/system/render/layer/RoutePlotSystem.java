@@ -45,6 +45,7 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 	private RenderMaskHandlerSystem renderMaskHandlerSystem;
 	private MapMetadataManager mapMetadataManager;
 
+	@SuppressWarnings("unchecked")
 	public RoutePlotSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class));
 	}

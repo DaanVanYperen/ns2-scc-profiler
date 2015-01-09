@@ -38,6 +38,7 @@ public class LabelRenderSystem extends DeferredEntityProcessingSystem {
 
     protected SpriteBatch batch;
 
+    @SuppressWarnings("unchecked")
     public LabelRenderSystem(EntityProcessPrincipal principal) {
         super(Aspect.getAspectForAll(Pos.class, Label.class, Renderable.class).exclude(Invisible.class), principal);
         batch = new SpriteBatch(1000);

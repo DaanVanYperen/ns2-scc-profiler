@@ -25,6 +25,7 @@ public class TeamChangingSystem extends EntityProcessingSystem {
 	protected ComponentMapper<Anim> mAnim;
 	public EventManager em;
 
+	@SuppressWarnings("unchecked")
 	public TeamChangingSystem() {
 		super(Aspect.getAspectForAll(TeamMember.class, Clickable.class, Anim.class));
 	}

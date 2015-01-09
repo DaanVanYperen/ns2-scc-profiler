@@ -41,6 +41,7 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 	private RefreshHandlerSystem refreshHandlerSystem;
 
 
+	@SuppressWarnings("unchecked")
 	public PreferredRouteCalculationSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class));
 	}
@@ -192,6 +193,11 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 		@Override
 		public boolean isWalkable(Routable node) {
 			return node.isWalkable();
+		}
+
+		@Override
+		public boolean lineOfSight(NavigationNode from, NavigationNode to) {
+			return true;
 		}
 	}
 

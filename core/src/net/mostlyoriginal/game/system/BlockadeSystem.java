@@ -29,6 +29,7 @@ public class BlockadeSystem extends EntitySystem {
 	 *
 	 * @param aspect to match against entities
 	 */
+	@SuppressWarnings("unchecked")
 	public BlockadeSystem() {
 		super(Aspect.getAspectForAll(Bounds.class, Pos.class, Blockade.class));
 	}

@@ -24,6 +24,7 @@ public class RenderMaskHandlerSystem extends EntityProcessingSystem {
 	protected RenderMask.Mask activeMask = RenderMask.Mask.TEAM_DOMAINS;
 	private EntityFactoryManager entityFactoryManager;
 
+	@SuppressWarnings("unchecked")
 	public RenderMaskHandlerSystem() {
 		super(Aspect.getAspectForAll(RenderMask.class));
 	}
