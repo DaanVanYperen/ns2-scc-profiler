@@ -26,7 +26,7 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 	private boolean processed;
 
 	public String mapName = "ns2_caged_v3";
-	public String mapFile = mapName + ".tga";
+	public String mapFile = mapName + ".png";
 
 	@Override
 	protected void initialize() {
@@ -35,7 +35,7 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 	}
 
 	public void load() {
-		layerManager.getLayer("RAW", RenderMask.Mask.BASIC).drawPixmapToFit(new Pixmap(Gdx.files.internal(mapFile)));
+		layerManager.getLayer("RAW", RenderMask.Mask.BASIC).drawPixmapToFit(new Pixmap(Gdx.files.internal("data/"+mapFile)));
 
 		/*
 
