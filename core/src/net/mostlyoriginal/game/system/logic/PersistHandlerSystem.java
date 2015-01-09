@@ -20,9 +20,6 @@ import net.mostlyoriginal.game.manager.LayerLoaderSystem;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.MapMetadataManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Daan van Yperen
  */
@@ -36,34 +33,6 @@ public class PersistHandlerSystem extends EntitySystem {
 	protected ComponentMapper<TeamMember> mTeamMember;
 	protected ComponentMapper<Pos> mPos;
 	protected ComponentMapper<Persistable> mPersistable;
-
-	public static final class GameState {
-
-
-		public GameState() {
-		}
-
-		MapMetadata mapMetadata = new MapMetadata();
-		public byte[] layer;
-
-		List<Element> elements = new ArrayList<Element>();
-	}
-
-	private static final class Element {
-		public String id;
-		public int x;
-		public int y;
-		public Team team;
-
-		public Element() {
-		}
-
-		public Element(String id, int x, int y) {
-			this.id = id;
-			this.x = x;
-			this.y = y;
-		}
-	}
 
 	LayerLoaderSystem layerLoaderSystem;
 	LayerManager layerManager;
@@ -120,8 +89,6 @@ public class PersistHandlerSystem extends EntitySystem {
 				{
 					element.team=mTeamMember.get(entity).team;
 				}
-
-
 
 				state.elements.add(element);
 			}

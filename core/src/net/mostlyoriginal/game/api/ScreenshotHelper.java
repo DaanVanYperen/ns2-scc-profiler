@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.ScreenUtils;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.Layer;
-import net.mostlyoriginal.game.system.logic.PersistHandlerSystem;
+import net.mostlyoriginal.game.system.logic.GameState;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class ScreenshotHelper {
 		}
 	}
 
-	public void loadMapTexture(PersistHandlerSystem.GameState state, Layer layer) {
+	public void loadMapTexture(GameState state, Layer layer) {
 		if ( state.layer != null )
 		{
 			if ( layer.pixmap != null ) {
@@ -43,7 +43,7 @@ public class ScreenshotHelper {
 		}
 	}
 
-	public void saveMapTexture(PersistHandlerSystem.GameState state, Layer layer) {
+	public void saveMapTexture(GameState state, Layer layer) {
 		Pixmap pixmap = layer.pixmap;
 		try {
 			PixmapIO.PNG writer = new PixmapIO.PNG((int)(pixmap.getWidth() * pixmap.getHeight() * 1.5f)); // Guess at deflated size.

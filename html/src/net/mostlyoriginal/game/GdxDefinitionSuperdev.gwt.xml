@@ -24,6 +24,10 @@
 
     <!-- Any classes that require reflection on the libgdx side should use this -->
     <extend-configuration-property name="gdx.reflect.include" value="net.mostlyoriginal.api.step" />
+    <extend-configuration-property name="gdx.reflect.include" value="net.mostlyoriginal.game.system.logic" />
+    <extend-configuration-property name="gdx.reflect.include" value="net.mostlyoriginal.game.component" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.artemis.Component" />
+
 
 	<add-linker name="xsiframe"/>
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
