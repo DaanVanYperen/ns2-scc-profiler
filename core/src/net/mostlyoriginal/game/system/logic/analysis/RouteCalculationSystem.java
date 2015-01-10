@@ -9,13 +9,13 @@ import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.Path;
+import net.mostlyoriginal.game.api.AStarFinderGdx;
 import net.mostlyoriginal.game.api.DelayedEntitySystem;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
 import org.xguzm.pathfinding.PathFinder;
-import org.xguzm.pathfinding.finders.AStarFinder;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
@@ -54,7 +54,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 		//create a finder either using the default options
 		GridFinderOptions opt = new GridFinderOptions();
 		opt.dontCrossCorners=false;
-		finder = new AStarFinder<>(GridCell.class, opt);
+		finder = new AStarFinderGdx<>(GridCell.class, opt);
 	}
 
 	@Override
@@ -147,7 +147,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 	@Override
 	protected long maxDuration() {
 		// routes to calculate each run.
-		return 2;
+		return 0;
 	}
 
 	private class SortRoutesJob implements Job {

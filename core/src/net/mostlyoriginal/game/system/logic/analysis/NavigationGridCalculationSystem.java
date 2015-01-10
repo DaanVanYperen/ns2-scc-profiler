@@ -38,7 +38,7 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 
 	@Override
 	protected long maxDuration() {
-		return 2;
+		return 0;
 	}
 
 	public boolean similar(Color c1, Color c2, float tolerance)
@@ -72,7 +72,7 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 			Layer navMask = layerManager.getTeamNavLayer(team);
 			navMask.clear();
 
-			NavigationGrid<GridCell> grid = new NavigationGrid<GridCell>(new GridCell[NavigationGridManager.GRID_WIDTH][NavigationGridManager.GRID_HEIGHT]);
+			NavigationGrid<GridCell> grid = new NavigationGridGdx<GridCell>(new GridCell[NavigationGridManager.GRID_WIDTH][NavigationGridManager.GRID_HEIGHT]);
 			navigationGridManager.setNavigationGrid(team, grid);
 
 			jobs.add(new RefreshNavigationGrid(team, navMask, grid));
@@ -96,6 +96,7 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 		}
 
 		public void run() {
+
 
 			int remainingCycles = 50;
 			while ( remainingCycles-- > 0 && x < NavigationGridManager.GRID_WIDTH ) {

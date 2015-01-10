@@ -84,7 +84,7 @@ public class Layer extends Component {
 	}
 
 	public void clear() {
-		pixmap.setColor(Color.CLEAR);
+		pixmap.setColor(Color.WHITE);
 		pixmap.fill();
 	}
 
