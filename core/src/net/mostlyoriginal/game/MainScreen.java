@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.MathUtils;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
-import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.api.component.mouse.MouseCursor;
 import net.mostlyoriginal.api.event.common.EventManager;
@@ -123,7 +122,7 @@ public class MainScreen implements Screen {
 
 		world.initialize();
 
-		new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(0, 0, 11, 12), new Anim("cursor"), new Renderable(10000)).tag("cursor").build();
+		new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(0, 0, 11, 12), new Renderable(10000)).tag("cursor").build();
 	}
 
 	@Override
