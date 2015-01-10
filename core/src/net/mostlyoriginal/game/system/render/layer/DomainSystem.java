@@ -181,8 +181,10 @@ public class DomainSystem extends DelayedEntitySystem {
 		public void run() {
 
 			int remainingCycles = 1000;
-			while ( (remainingCycles-- > 0) && !open.isEmpty()) {
-				final Node node = !open.isEmpty() ? open.get(0) : null;
+			while ((remainingCycles-- > 0) && !open.isEmpty()) {
+				final Node node = open.get(0);
+				open.removeFirst();
+
 				closed[node.x + node.y * layerOut.pixmap.getWidth()] = true;
 
 				for (int i = 0; i < 8; i++) {
@@ -194,7 +196,7 @@ public class DomainSystem extends DelayedEntitySystem {
 						continue;
 
 					int rawColor = layerRaw.pixmap.getPixel(childX, layerOut.pixmap.getHeight() - childY);
-					boolean isWalkable = ((rawColor & 0x000000ff)) / 255f >= 0.5f;
+					boolean isWalkable = ((rawColor & 0x000000ff)) / 255f >= 0.5f && ((rawColor != 0xffffffff));
 
 					// node not closed yet and location walkable? ONWARD!
 					if (!closed[childX + childY * layerOut.pixmap.getWidth()] && isWalkable) {
@@ -226,7 +228,7 @@ public class DomainSystem extends DelayedEntitySystem {
 				}
 			}
 
-			getDomainsLayer().invalidateTexture();
+			layerOut.invalidateTexture();
 		}
 
 		@Override

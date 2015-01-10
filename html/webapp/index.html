@@ -20,13 +20,18 @@
                 evt.stopPropagation();
                 evt.target.style.cursor = 'default';
               }
-              
+
               function handleMouseUp(evt) {
-                evt.preventDefault();
-                evt.stopPropagation();
-                evt.target.style.cursor = '';
+                  evt.preventDefault();
+                  evt.stopPropagation();
+                  evt.target.style.cursor = '';
+              }
+              function handleContextMenu(evt) {
+                  evt.preventDefault();
+                  evt.stopPropagation();
               }
               document.getElementById('embed-html').addEventListener('mousedown', handleMouseDown, false);
               document.getElementById('embed-html').addEventListener('mouseup', handleMouseUp, false);
+              document.getElementById('embed-html').addEventListener('contextmenu', handleContextMenu, false);
        </script>
 </html>

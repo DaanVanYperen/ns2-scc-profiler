@@ -69,7 +69,7 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 			}
 
 			if (jobs.isEmpty()) {
-				if ( !idle ) {
+				if (!idle) {
 					postJobs();
 					idle = true;
 				}

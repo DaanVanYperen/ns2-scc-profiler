@@ -148,7 +148,7 @@ public class InputSystem extends EntityProcessingSystem implements InputProcesso
 		if (button == 0) {
 			leftClicked = true;
 		}
-		return false;
+		return true;
 	}
 
 	@Override
