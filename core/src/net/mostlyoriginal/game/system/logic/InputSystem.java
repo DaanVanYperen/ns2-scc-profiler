@@ -33,6 +33,10 @@ public class InputSystem extends EntityProcessingSystem implements InputProcesso
 
 	private EventManager eventManager;
 
+	public boolean rightClicked;
+	public boolean leftClicked;
+	public boolean middleClicked;
+
 	@SuppressWarnings("unchecked")
 	public InputSystem() {
 		super(Aspect.getAspectForAll(Label.class, Clickable.class, Input.class).exclude(Invisible.class));
@@ -70,7 +74,7 @@ public class InputSystem extends EntityProcessingSystem implements InputProcesso
 			// apply changes.
 			if (entered) {
 				entered = false;
-				if (typeBuffer.length() >= input.minLength ) {
+				if (typeBuffer.length() >= input.minLength) {
 					label.text = typeBuffer.toString();
 					selectedInput = null;
 					typeBuffer = new StringBuilder();
@@ -124,7 +128,7 @@ public class InputSystem extends EntityProcessingSystem implements InputProcesso
 				escaped = true;
 			} else if (character >= ' ' || character <= '~') {
 				// hack hack hack
-				if ( typeBuffer.length() < input.maxLength && input.allowedCharacters.contains(character+"") ) {
+				if (typeBuffer.length() < input.maxLength && input.allowedCharacters.contains(character + "")) {
 					typeBuffer.append(character);
 				}
 			}
@@ -133,7 +137,17 @@ public class InputSystem extends EntityProcessingSystem implements InputProcesso
 	}
 
 	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+	public boolean touchDown(int screenX, int screenY, int pointer, int button)
+	{
+		if (button == 1) {
+			rightClicked = true;
+		}
+		if (button == 2) {
+			middleClicked = true;
+		}
+		if (button == 0) {
+			leftClicked = true;
+		}
 		return false;
 	}
 

@@ -6,7 +6,6 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
@@ -14,6 +13,7 @@ import net.mostlyoriginal.api.utils.EntityUtil;
 import net.mostlyoriginal.game.component.Tool;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.manager.AssetSystem;
+import net.mostlyoriginal.game.system.interaction.MouseClickSystem;
 
 /**
  * @author Daan van Yperen
@@ -28,6 +28,7 @@ public class ToolSystem extends EntityProcessingSystem {
 	private TagManager tagManager;
 	private boolean buttonWasDown=true;
 	private AssetSystem assetSystem;
+	private MouseClickSystem mouseClickSystem;
 
 	@SuppressWarnings("unchecked")
 	public ToolSystem() {
@@ -37,7 +38,7 @@ public class ToolSystem extends EntityProcessingSystem {
 	@Override
 	protected void process(Entity e) {
 
-		if ( Gdx.input.isButtonPressed(1) )
+		if ( mouseClickSystem.rightMouseTapped )
 		{
 			reset();
 			return;
@@ -54,7 +55,7 @@ public class ToolSystem extends EntityProcessingSystem {
 			toolPos.y = cursorPos.y - (icon.getRegionHeight()/2 * anim.scale);
 
 			Clickable clickable = mClickable.get(e);
-			if ( Gdx.input.isButtonPressed(0) )
+			if ( mouseClickSystem.leftMouseTapped  )
 			{
 				Tool tool = mTool.get(e);
 				if ( tool.listener.enabled() && (tool.continuous || !buttonWasDown) ) {

@@ -32,9 +32,6 @@ public class DraggableSystem extends EntityProcessingSystem {
 	private CameraSystem cameraSystem;
 
 	private boolean leftMousePressed = false;
-	private boolean rightMousePressed = false;
-	private boolean leftWasDown = false;
-	private boolean rightWasDown = false;
 
 	private EventManager em;
 

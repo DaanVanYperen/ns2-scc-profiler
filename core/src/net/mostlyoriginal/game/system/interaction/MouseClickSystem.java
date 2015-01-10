@@ -6,11 +6,10 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.system.physics.CollisionSystem;
 import net.mostlyoriginal.game.component.ui.Clickable;
+import net.mostlyoriginal.game.system.logic.InputSystem;
 
 /**
  * Track mouse over clickables. will indicate hover or clicked.
@@ -22,10 +21,12 @@ public class MouseClickSystem extends EntityProcessingSystem {
 
     CollisionSystem system;
     TagManager tagManager;
+    
+    InputSystem inputSystem;
 
     protected ComponentMapper<Clickable> mClickable;
-    private boolean leftMouseTapped;
-    private boolean rightMouseTapped;
+    public boolean leftMouseTapped;
+    public boolean rightMouseTapped;
     private boolean middleMouseTapped;
     private boolean leftAlreadyDown;
     private boolean rightAlreadyDown;
@@ -40,18 +41,20 @@ public class MouseClickSystem extends EntityProcessingSystem {
     protected void begin() {
         super.begin();
 
-        leftMouseTapped = Gdx.input.isButtonPressed(Input.Buttons.LEFT) && !leftAlreadyDown;
-        rightMouseTapped = Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && !rightAlreadyDown;
-        middleMouseTapped = Gdx.input.isButtonPressed(Input.Buttons.MIDDLE) && !middleAlreadyDown;
+        leftMouseTapped = inputSystem.leftClicked && !leftAlreadyDown;
+        rightMouseTapped = inputSystem.rightClicked && !rightAlreadyDown;
+        middleMouseTapped = inputSystem.middleClicked && !middleAlreadyDown;
     }
 
     @Override
     protected void end() {
         super.end();
 
-        leftAlreadyDown = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
-        rightAlreadyDown = Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
-        middleAlreadyDown = Gdx.input.isButtonPressed(Input.Buttons.MIDDLE);
+        leftAlreadyDown  = inputSystem.leftClicked;
+        rightAlreadyDown = inputSystem.rightClicked;
+        middleAlreadyDown= inputSystem.middleClicked;
+
+        inputSystem.middleClicked = inputSystem.leftClicked = inputSystem.rightClicked = false;
     }
 
     @Override
