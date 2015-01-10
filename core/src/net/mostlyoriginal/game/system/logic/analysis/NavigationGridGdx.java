@@ -18,6 +18,7 @@ public class NavigationGridGdx<T extends NavigationGridGraphNode> extends Naviga
 		super(gridCells);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Array getNeighborsAsArray(GridCell node, PathFinderOptions opt) {
 		GridFinderOptions options = (GridFinderOptions) opt;
 		boolean allowDiagonal = options.allowDiagonal;

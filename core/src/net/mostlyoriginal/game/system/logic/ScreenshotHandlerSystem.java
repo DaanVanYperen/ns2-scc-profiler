@@ -5,11 +5,6 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.api.ScreenshotHelper;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Transient;
@@ -26,9 +21,10 @@ public class ScreenshotHandlerSystem extends EntitySystem {
 	EntityFactoryManager entityFactoryManager;
 	private int counter;
 	private LayerManager layerManager;
-	public boolean screenshot = false;
-	private FrameBuffer fbo;
+	public boolean beginScreenshot = false;
+	public boolean screenshotting = false;
 	private LayerLoaderSystem layerLoaderSystem;
+	private ScreenshotHelper screenshotHelper = new ScreenshotHelper();
 
 	@SuppressWarnings("unchecked")
 	public ScreenshotHandlerSystem() {
@@ -46,7 +42,7 @@ public class ScreenshotHandlerSystem extends EntitySystem {
 		entityFactoryManager.createBasicButton("screenshot", 50 + 40 * 6, new ButtonListener() {
 			@Override
 			public void run() {
-				screenshot = true;
+				beginScreenshot = true;
 			}
 
 			@Override
@@ -57,25 +53,18 @@ public class ScreenshotHandlerSystem extends EntitySystem {
 	}
 
 	public void afterRender() {
-		if (screenshot && fbo != null ) {
-			screenshot = false;
-			int counter=0;
-			FileHandle local = Gdx.files.local(layerLoaderSystem.mapName + counter++ + ".png");
-
-			new ScreenshotHelper().screenshot(local);
-
-			fbo.end();
-			fbo.dispose();
-			fbo = null;
+		if (screenshotting) {
+			screenshotting = false;
+			String filename = layerLoaderSystem.mapName + counter++ + ".png";
+			screenshotHelper.screenshot(filename);
 		}
-
 	}
 
 	public void beforeRender() {
-		if (screenshot) {
-			fbo = new FrameBuffer(Pixmap.Format.RGB888, G.CANVAS_WIDTH, G.CANVAS_HEIGHT, false);
-			fbo.begin();
+		if (beginScreenshot)  {
+			beginScreenshot=false;
+			screenshotting=true;
+			screenshotHelper.beforeScreenshotFrame();
 		}
-
 	}
 }

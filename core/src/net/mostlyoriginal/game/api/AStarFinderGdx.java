@@ -42,6 +42,7 @@ public class AStarFinderGdx<T extends GridCell> implements PathFinder<T> {
 
 	Array<T> neighbors = new Array<T>();
 
+	@SuppressWarnings("unchecked")
 	public List<T> findPath(T startNode, T endNode, NavigationGraph<T> graph) {
 
 		if (jobId == Integer.MAX_VALUE)
