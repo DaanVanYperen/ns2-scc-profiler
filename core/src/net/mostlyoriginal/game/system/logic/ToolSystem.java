@@ -6,6 +6,8 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Anim;
@@ -29,6 +31,7 @@ public class ToolSystem extends EntityProcessingSystem {
 	private boolean buttonWasDown=true;
 	private AssetSystem assetSystem;
 	private MouseClickSystem mouseClickSystem;
+	private InputSystem inputSystem;
 
 	@SuppressWarnings("unchecked")
 	public ToolSystem() {
@@ -55,7 +58,7 @@ public class ToolSystem extends EntityProcessingSystem {
 			toolPos.y = cursorPos.y - (icon.getRegionHeight()/2 * anim.scale);
 
 			Clickable clickable = mClickable.get(e);
-			if ( mouseClickSystem.leftMouseTapped  )
+			if ( Gdx.input.isButtonPressed(Input.Buttons.LEFT) )
 			{
 				Tool tool = mTool.get(e);
 				if ( tool.listener.enabled() && (tool.continuous || !buttonWasDown) ) {
