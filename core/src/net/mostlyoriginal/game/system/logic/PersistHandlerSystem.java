@@ -109,7 +109,7 @@ public class PersistHandlerSystem extends EntitySystem {
 	}
 
 	private Preferences getPrefs() {
-		return Gdx.app.getPreferences(layerLoaderSystem.mapFile);
+		return Gdx.app.getPreferences(layerLoaderSystem.mapName);
 	}
 
 	private void load() {

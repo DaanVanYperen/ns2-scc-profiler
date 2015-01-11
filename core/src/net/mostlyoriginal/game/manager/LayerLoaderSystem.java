@@ -43,9 +43,9 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 
 	public void load() {
 		if (!loading && GWT.isClient()) {
-			loading=true;
 			String mapParameter = Window.Location.getParameter("map");
 			if (mapParameter != null && !mapParameter.isEmpty()) {
+				loading=true;
 				mapName = mapParameter;
 				mapFile = null;
 				final Image img = new Image("img.php?mode=native&url=" + mapParameter);
