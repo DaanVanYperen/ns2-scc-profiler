@@ -13,6 +13,7 @@ import net.mostlyoriginal.game.api.AStarFinderGdx;
 import net.mostlyoriginal.game.api.DelayedEntitySystem;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
+import net.mostlyoriginal.game.manager.LayerLoaderSystem;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
 import org.xguzm.pathfinding.PathFinder;
@@ -39,11 +40,17 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 	private PathFinder<GridCell> finder;
 	private NavigationGridManager navigationGridManager;
 	private NavigationGridCalculationSystem navigationGridCalculationSystem;
+	private LayerLoaderSystem layerLoaderSystem;
 
 
 	@SuppressWarnings("unchecked")
 	public RouteCalculationSystem() {
 		super(Aspect.getAspectForAll(Routable.class, Pos.class));
+	}
+
+	@Override
+	protected boolean prerequisitesMet() {
+		return super.prerequisitesMet() && layerLoaderSystem.processed;
 	}
 
 	@Override

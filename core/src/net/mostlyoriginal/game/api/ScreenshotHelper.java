@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.google.gwt.dom.client.ImageElement;
 import net.mostlyoriginal.game.G;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.system.logic.GameState;
@@ -73,5 +74,9 @@ public class ScreenshotHelper {
 	public void beforeScreenshotFrame() {
 		fbo = new FrameBuffer(Pixmap.Format.RGBA8888, G.CANVAS_WIDTH, G.CANVAS_HEIGHT, false);
 		fbo.begin();
+	}
+
+	public Pixmap asPixmap(ImageElement imgElement) {
+		return null;
 	}
 }

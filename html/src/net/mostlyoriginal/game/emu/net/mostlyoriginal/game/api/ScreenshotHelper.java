@@ -7,7 +7,9 @@ package net.mostlyoriginal.game.api;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.google.gwt.dom.client.CanvasElement;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.user.client.Window;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.system.logic.GameState;
@@ -35,4 +37,7 @@ public class ScreenshotHelper {
 
 	}
 
+	public Pixmap asPixmap(ImageElement imgElement) {
+		return new Pixmap(imgElement);
+	}
 }
