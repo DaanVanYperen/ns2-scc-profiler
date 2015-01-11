@@ -7,26 +7,27 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * A generic implementation of A* that works on any {@link org.xguzm.pathfinding.NavigationGraph} instance.
  *
- * @author Xavier Guzman
- *
  * @param <T> a class implementing {@link org.xguzm.pathfinding.NavigationNode}
+ * @author Xavier Guzman
  */
 public class AStarFinderGdx<T extends GridCell> implements PathFinder<T> {
 
 	private PathFinderOptions defaultOptions;
-	BHeap<T> openList;
+	PriorityQueue<T> openList;
 	public int jobId;
 
+
 	public AStarFinderGdx(Class<T> clazz, PathFinderOptions opt) {
-		this.defaultOptions = opt ;
-		openList = new BHeap<T>(new Comparator<T>() {
+		this.defaultOptions = opt;
+		openList = new PriorityQueue<T>(20, new Comparator<T>() {
 			@Override
 			public int compare(T o1, T o2) {
-				if (o1 == null || o2 == null){
+				if (o1 == null || o2 == null) {
 					if (o1 == o2)
 						return 0;
 					if (o1 == null)
@@ -35,12 +36,10 @@ public class AStarFinderGdx<T extends GridCell> implements PathFinder<T> {
 						return 1;
 
 				}
-				return (int)(o1.getF() - o2.getF());
+				return (int) (o1.getF() - o2.getF());
 			}
 		});
 	}
-
-	Array<T> neighbors = new Array<T>();
 
 	@SuppressWarnings("unchecked")
 	public List<T> findPath(T startNode, T endNode, NavigationGraph<T> graph) {
@@ -51,7 +50,7 @@ public class AStarFinderGdx<T extends GridCell> implements PathFinder<T> {
 
 		T node, neighbor;
 
-		float ng;
+		float newG;
 
 		startNode.setG(0);
 		startNode.setF(0);
@@ -60,12 +59,12 @@ public class AStarFinderGdx<T extends GridCell> implements PathFinder<T> {
 		openList.clear();
 		openList.add(startNode);
 		startNode.setParent(null);
-		startNode.setOpenedOnJob( job );
+		startNode.setOpenedOnJob(job);
 
-		while (openList.size > 0) {
+		while (!openList.isEmpty()) {
 
 			// pop the position of node which has the minimum 'f' value.
-			node = openList.pop();
+			node = openList.poll();
 			node.setClosedOnJob(job);
 
 
@@ -75,8 +74,7 @@ public class AStarFinderGdx<T extends GridCell> implements PathFinder<T> {
 			}
 
 			// get neighbors of the current node
-			neighbors.clear();
-			neighbors.addAll(((NavigationGridGdx) graph).getNeighborsAsArray((GridCell) node, defaultOptions));
+			Array<T> neighbors = ((NavigationGridGdx) graph).getNeighborsAsArray((GridCell) node, defaultOptions);
 			for (int i = 0, l = neighbors.size; i < l; ++i) {
 				neighbor = neighbors.get(i);
 
@@ -85,15 +83,14 @@ public class AStarFinderGdx<T extends GridCell> implements PathFinder<T> {
 				}
 
 				// get the distance between current node and the neighbor and calculate the next g score
-				ng = node.getG() + (node.x == neighbor.x || node.y == neighbor.y  ?  1f : 1.4f);
+				newG = node.getG() + (node.x == neighbor.x || node.y == neighbor.y ? 1f : 1.414f);
 
 				// check if the neighbor has not been inspected yet, or can be reached with smaller cost from the current node
-				if (neighbor.getOpenedOnJob() != job || ng < neighbor.getG()) {
-					float prevf = neighbor.getF();
-					neighbor.setG(ng);
+				if (neighbor.getOpenedOnJob() != job || newG < neighbor.getG()) {
 
+					neighbor.setG(newG);
 					neighbor.setH(defaultOptions.heuristic.calculate(neighbor, endNode));
-					neighbor.setF( neighbor.getG() + neighbor.getH());
+					neighbor.setF(neighbor.getG() + neighbor.getH());
 					neighbor.setParent(node);
 
 					if (neighbor.getOpenedOnJob() != job) {
@@ -102,7 +99,8 @@ public class AStarFinderGdx<T extends GridCell> implements PathFinder<T> {
 					} else {
 						// the neighbor can be reached with smaller cost.
 						// Since its f value has been updated, we have to update its position in the open list
-						openList.updateNode(neighbor, neighbor.getF() - prevf);
+						openList.remove(neighbor);
+						openList.add(neighbor);
 					}
 				}
 			}

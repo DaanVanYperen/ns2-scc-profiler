@@ -20,6 +20,7 @@ import org.xguzm.pathfinding.PathFinder;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
+import org.xguzm.pathfinding.grid.heuristics.EuclideanDistance;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,6 +61,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 
 		//create a finder either using the default options
 		GridFinderOptions opt = new GridFinderOptions();
+		opt.heuristic = new EuclideanDistance();
 		opt.dontCrossCorners=false;
 		finder = new AStarFinderGdx<>(GridCell.class, opt);
 	}

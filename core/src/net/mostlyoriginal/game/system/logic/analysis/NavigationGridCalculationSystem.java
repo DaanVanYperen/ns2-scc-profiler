@@ -38,7 +38,7 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 
 	@Override
 	protected long maxDuration() {
-		return 0;
+		return 4;
 	}
 
 	public boolean similar(Color c1, Color c2, float tolerance)
@@ -97,9 +97,7 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 
 		public void run() {
 
-
-			int remainingCycles = 50;
-			while ( remainingCycles-- > 0 && x < NavigationGridManager.GRID_WIDTH ) {
+			if ( x < NavigationGridManager.GRID_WIDTH ) {
 				for (int y = 0; y < NavigationGridManager.GRID_HEIGHT; y++) {
 					boolean isWalkable;
 					int rawColor = rawMapLayer.pixmap.getPixel(x, rawMapLayer.pixmap.getHeight() - y);
