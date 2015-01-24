@@ -5,27 +5,26 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
+import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.Path;
-import net.mostlyoriginal.game.api.AStarFinderGdx;
 import net.mostlyoriginal.game.api.DelayedEntitySystem;
+import net.mostlyoriginal.game.api.pathfinding.GridGraph;
+import net.mostlyoriginal.game.api.pathfinding.GridNode;
+import net.mostlyoriginal.game.api.pathfinding.GridNodeEuclideanHeuristic;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.manager.LayerLoaderSystem;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
-import org.xguzm.pathfinding.PathFinder;
 import org.xguzm.pathfinding.grid.GridCell;
-import org.xguzm.pathfinding.grid.NavigationGrid;
-import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
-import org.xguzm.pathfinding.grid.heuristics.EuclideanDistance;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Resolve routes between all nodes.
@@ -38,7 +37,6 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 	protected ComponentMapper<Pos> mPos;
 	protected ComponentMapper<Routable> mRoutable;
 	protected ComponentMapper<Bounds> mBounds;
-	private PathFinder<GridCell> finder;
 	private NavigationGridManager navigationGridManager;
 	private NavigationGridCalculationSystem navigationGridCalculationSystem;
 	private LayerLoaderSystem layerLoaderSystem;
@@ -60,10 +58,6 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 		setPrerequisiteSystems(navigationGridCalculationSystem);
 
 		//create a finder either using the default options
-		GridFinderOptions opt = new GridFinderOptions();
-		opt.heuristic = new EuclideanDistance();
-		opt.dontCrossCorners=false;
-		finder = new AStarFinderGdx<>(GridCell.class, opt);
 	}
 
 	@Override
@@ -93,16 +87,19 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 	/** Job to resolve route between two entities. */
 	private class resolveRouteJob implements Job {
 
-		private final NavigationGrid<GridCell> grid;
+		private GridGraph graph;
 		private final Entity a;
 		private final Entity b;
 		private final Team team;
+		private final IndexedAStarPathFinder<GridNode> finder;
 
-		public resolveRouteJob(NavigationGrid<GridCell> grid, Entity a, Entity b, Team team) {
-			this.grid = grid;
+		public resolveRouteJob(GridGraph graph, Entity a, Entity b, Team team) {
+			this.graph = graph;
 			this.a = a;
 			this.b = b;
 			this.team = team;
+
+			finder = new IndexedAStarPathFinder<GridNode>(graph);
 		}
 
 		@Override
@@ -120,24 +117,27 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 
 			int aX = (int) (posA.x + boundsA.cx()) / LayerManager.CELL_SIZE;
 			int aY = (int) (posA.y + boundsA.cy()) / LayerManager.CELL_SIZE;
-			final GridCell cellA = grid.getCell(aX, aY);
+			final GridNode cellA = graph.get(aX, aY);
 
 			int bX = (int) (posB.x + boundsB.cx()) / LayerManager.CELL_SIZE;
 			int bY = (int) (posB.y + boundsB.cy()) / LayerManager.CELL_SIZE;
-			final GridCell cellB = grid.getCell(bX, bY);
+			final GridNode cellB = graph.get(bX, bY);
 
 			mRoutable.get(a).setX(aX);
 			mRoutable.get(a).setY(aY);
 			mRoutable.get(b).setX(bX);
 			mRoutable.get(b).setY(bY);
 
-			final List<GridCell> rawPath = finder.findPath(cellA,cellB,grid);
-			if (rawPath != null) {
-				final LinkedList<GridCell> cells = new LinkedList<>(rawPath);
-				cells.addFirst(new GridCell(aX, aY));
+			DefaultGraphPath path = new DefaultGraphPath();
+			if (finder.searchNodePath(cellA, cellB, new GridNodeEuclideanHeuristic(), path) )  {
+
+				// @TODO replace legacy usage of GridCell.
+				final LinkedList<GridCell> cells = new LinkedList<>();
+				for (Object node : path.nodes) {
+					cells.add(new GridCell(((GridNode)node).x, ((GridNode)node).y));
+				}
 
 				final Path toDestination = new Path(new SafeEntityReference(b), cells, team, false);
-
 				ArrayList<GridCell> reversedCells = new ArrayList<GridCell>(cells);
 				Collections.reverse(reversedCells);
 				final Path toSource = new Path(new SafeEntityReference(a),reversedCells, team, true);
@@ -150,6 +150,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 		public boolean isCompleted() {
 			return true;
 		}
+
 	}
 
 
@@ -178,4 +179,5 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 			return true;
 		}
 	}
+
 }

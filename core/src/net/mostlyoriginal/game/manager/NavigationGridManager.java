@@ -2,9 +2,8 @@ package net.mostlyoriginal.game.manager;
 
 import com.artemis.Manager;
 import com.artemis.annotations.Wire;
+import net.mostlyoriginal.game.api.pathfinding.GridGraph;
 import net.mostlyoriginal.game.component.Team;
-import org.xguzm.pathfinding.grid.GridCell;
-import org.xguzm.pathfinding.grid.NavigationGrid;
 
 import java.util.HashMap;
 
@@ -20,7 +19,7 @@ public class NavigationGridManager extends Manager {
 
 	private LayerManager layerManager;
 
-	private HashMap<Team, NavigationGrid<GridCell>> navGrid = new HashMap<>();
+	private HashMap<Team, GridGraph> navGrid = new HashMap<>();
 
 	/**
 	 * Get raw navigation grid for team.
@@ -28,11 +27,11 @@ public class NavigationGridManager extends Manager {
 	 * @param team
 	 * @return
 	 */
-	public NavigationGrid<GridCell> getNavigationGrid(Team team) {
+	public GridGraph getNavigationGrid(Team team) {
 		return navGrid.get(team);
 	}
 
-	public void setNavigationGrid(Team team, NavigationGrid<GridCell> grid) {
+	public void setNavigationGrid(Team team, GridGraph grid) {
 		navGrid.put(team, grid);
 	}
 }

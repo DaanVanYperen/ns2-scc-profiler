@@ -38,8 +38,8 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 	public boolean processed;
 	private boolean loading=false;
 
-	public String mapName = "ns2_caged_v3";
-	public String mapFile = "data/"+ mapName + ".png";
+	public String mapName = "ns2_nyx";
+	public String mapFile = "data/"+ mapName + ".tga";
 
 	public void load() {
 		if (!loading && GWT.isClient()) {

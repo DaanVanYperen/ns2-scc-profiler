@@ -6,13 +6,13 @@ import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.Color;
 import net.mostlyoriginal.game.api.DelayedEntitySystem;
+import net.mostlyoriginal.game.api.pathfinding.GridGraph;
+import net.mostlyoriginal.game.api.pathfinding.GridNode;
 import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
-import org.xguzm.pathfinding.grid.GridCell;
-import org.xguzm.pathfinding.grid.NavigationGrid;
 
 import java.util.LinkedList;
 
@@ -72,10 +72,10 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 			Layer navMask = layerManager.getTeamNavLayer(team);
 			navMask.clear();
 
-			NavigationGrid<GridCell> grid = new NavigationGridGdx<GridCell>(new GridCell[NavigationGridManager.GRID_WIDTH][NavigationGridManager.GRID_HEIGHT]);
-			navigationGridManager.setNavigationGrid(team, grid);
+			GridGraph graph = new GridGraph(NavigationGridManager.GRID_WIDTH, NavigationGridManager.GRID_HEIGHT);
+			navigationGridManager.setNavigationGrid(team, graph);
 
-			jobs.add(new RefreshNavigationGrid(team, navMask, grid));
+			jobs.add(new RefreshNavigationGrid(team, navMask, graph));
 		}
 	}
 
@@ -84,15 +84,17 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 		private Team team;
 		private final Layer navMask;
 		private final Layer rawMapLayer;
-		private final NavigationGrid<GridCell> grid;
+		private final GridGraph graph;
+		private int index;
 
-		public RefreshNavigationGrid(Team team, Layer navMask, NavigationGrid<GridCell> grid) {
+		public RefreshNavigationGrid(Team team, Layer navMask, GridGraph graph) {
 			this.team = team;
 			this.navMask = navMask;
 			this.rawMapLayer = layerManager.getLayer("RAW", RenderMask.Mask.BASIC);
-			this.grid = grid;
+			this.graph = graph;
 
 			this.x = 0;
+			this.index=0;
 		}
 
 		public void run() {
@@ -119,10 +121,16 @@ public class NavigationGridCalculationSystem extends DelayedEntitySystem {
 						tmpCol.a = (tmpCol.a * transparency + team.getBackgroundColor().a * (1 - transparency));
 						navMask.drawPixel(x, navMask.pixmap.getHeight() - y, tmpCol);
 					}
-					grid.setCell(x, y, new GridCell(x, y, isWalkable));
+
+					graph.set(x, y, isWalkable ? new GridNode(graph, x, y, index++) : null);
 				}
 
 				x++;
+
+				if ( isCompleted() )
+				{
+					graph.bakeNeighbours();
+				}
 			}
 		}
 
