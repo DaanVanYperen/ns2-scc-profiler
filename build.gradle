@@ -21,10 +21,11 @@ allprojects {
 
     ext {
         appName = 'NS2 YardStick'
-        gdxVersion = '1.5.0'
+        gdxVersion = '1.5.3'
         artemisVersion = '0.8.1'
         roboVMVersion = '0.0.11'
         artemisContribVersion = '0.8.1-SNAPSHOT'
+        aiVersion = '1.4.0'
     }
 
     repositories {
@@ -65,6 +66,7 @@ project(":html") {
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+        compile "com.badlogicgames.gdx:gdx-ai:$aiVersion:sources"
 
         // Support for artemis-odb
         compile "net.onedaybeard.artemis:artemis-odb-gwt:$artemisVersion"
@@ -75,7 +77,6 @@ project(":html") {
         compile "net.mostlyoriginal.artemis-odb:contrib-components:$artemisContribVersion:sources"
         compile "net.mostlyoriginal.artemis-odb:contrib-components-libgdx:$artemisContribVersion:sources"
         compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion:sources"
-
     }
 }
 
@@ -86,6 +87,7 @@ project(":core") {
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
 
         // Support for artemis-odb
         compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
