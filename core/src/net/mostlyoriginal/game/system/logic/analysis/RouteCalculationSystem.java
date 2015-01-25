@@ -115,7 +115,11 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 
 				if (request == null) {
 
-					if (!a.isActive() || !b.isActive()) return;
+					if (!a.isActive() || !b.isActive())
+					{
+						finished=true;
+						return;
+					}
 
 					// offset to center on the image, and convert to pathing space.
 					// @todo cleanup the space difference.
@@ -137,6 +141,12 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 					mRoutable.get(a).setY(aY);
 					mRoutable.get(b).setX(bX);
 					mRoutable.get(b).setY(bY);
+					
+					if ( cellA == null || cellB == null )
+					{
+						finished=true;
+						return;
+					}
 
 					request = new PathFinderRequest<GridNode>(cellA, cellB, new GridNodeEuclideanHeuristic(), new DefaultGraphPath<GridNode>(128));
 					request.changeStatus(PathFinderRequest.SEARCH_INITIALIZED);
