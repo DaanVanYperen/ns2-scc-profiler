@@ -1,46 +1,23 @@
-libgdx-artemis-quickstart
-=========================
+ns2-scc-profiler
+================
 
-Quickstart for desktop and html libgdx artemis-odb based jam games.
+Generates distance based metrics for natural selection 2 maps.
 
-Contains a very basic game that demos some typical systems and components.
+![](https://i.imgur.com/uH1lnfs.png)
 
-[Play Slumber here](http://www.mostlyoriginal.net/play-slumber/)
+[Try it online](http://www.mostlyoriginal.net/games/ns2-scc-profiler/)
 
-### When to use this
+### Graphs
 
-If you want artemis-odb with LibGDX's new gradle setup, or you need
-some quick ideas for an entry level component/system setup, a fork
-will get you up and running quickly.
+- All routes: shortest routes between all points of interest,
+- RT run times: runtime in seconds to all RTs from each node for both teams.
+- RT head start: which team will be able to reach RTs fastest and by how many seconds based on what techpoints they own,
+- Presence: what area they can cover effectively depending on the techpoints they own, and where battlefronts might end up.
 
-I use this as my launchpad for jam games. You are welcome to use
-it for whatever you need. I might separate the component/systems
-into a library later, no guarantees. ;)
+### About the code
+
+A quick prototype, so don't expect highly reusable code.
 
 ### Library Versions
 
-LibGDX 1.5.0 and Artemis-ODB 0.8.1
-(LibGDX version can be changed in /build.gradle)
-
-Tested for desktop:dist and html:dist targets. Others targets might function too. ;)
-
-### Organization
-
-net.mostlyoriginal.api contains all generic example components/systems.
-net.mostlyoriginal.game contains an example game.
-
-- Entrypoint for your game is ```net.mostlyoriginal.game.MyGame```
-- Configure and add systems in ```net.mostlyoriginal.game.MainScreen```
-- Resolution can be changed in G.java
-
-### Special note on Reflection
-
-GWT lacks reflection so the build process creates a reflection cache. To use
-```@Wire``` make sure your components, managers and systems are placed under
-the premade component, manager and system packages.
-
-Artemis does not share libgdx's reflection cache, so if you get gwt reflection
-related errors you might need to add classes to Libgdx's cache manually.
-Artemis reflection cache errors are prefixed with artemis-odb.
-
-```
+LibGDX 1.5.3, LibGDX-AI 1.4.1-SNAPSHOT (pathfinding), and Artemis-ODB 0.8.1
