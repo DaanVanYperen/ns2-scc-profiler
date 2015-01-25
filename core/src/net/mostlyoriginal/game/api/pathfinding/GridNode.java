@@ -45,7 +45,7 @@ public class GridNode implements IndexedNode<GridNode> {
 						xx < graph.width &&
 						yy < graph.height && graph.nodes[yy][xx] != null)
 					neighbours.add(new GridConnection<GridNode>(this, graph.nodes[yy][xx],
-							xOff[dir] == 0 || yOff[dir] == 0 ? 1f : 1.414f));
+							(xOff[dir] == 0 || yOff[dir] == 0 ? 1f : 1.414f) * 10f));
 			}
 		}
 

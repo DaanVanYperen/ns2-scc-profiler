@@ -138,7 +138,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 					mRoutable.get(b).setX(bX);
 					mRoutable.get(b).setY(bY);
 
-					request = new PathFinderRequest<GridNode>(cellA, cellB, new GridNodeEuclideanHeuristic(), new DefaultGraphPath<GridNode>(128));
+					request = new PathFinderRequest<GridNode>(cellA, cellB, new GridNodeEuclideanHeuristic(), new DefaultGraphPath<GridNode>(800));
 					request.changeStatus(PathFinderRequest.SEARCH_INITIALIZED);
 				}
 
@@ -163,6 +163,8 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 						request = null;
 					}
 				}
+
+				if ( request != null ) request.statusChanged = false;
 			}
 		}
 
