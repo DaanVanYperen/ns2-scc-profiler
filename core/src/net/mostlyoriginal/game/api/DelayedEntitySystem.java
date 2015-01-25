@@ -4,6 +4,7 @@ import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.TimeUtils;
 import net.mostlyoriginal.game.manager.LayerManager;
 
@@ -65,6 +66,11 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 				runnable.run();
 				if (runnable.isCompleted()) {
 					jobs.removeFirst();
+				}
+
+				long duration = TimeUtils.millis() - now;
+				if ( duration > maxDuration() ) {
+					Gdx.app.log("Performance", "Slice of " + runnable.getClass().getSimpleName() + " took " + duration + "ms");
 				}
 			}
 

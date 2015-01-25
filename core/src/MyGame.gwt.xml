@@ -4,5 +4,6 @@
     <source path="net/mostlyoriginal/game" />
     <source path="net/mostlyoriginal/api" />
     <source path="org/xguzm" />
+    <source path="com/badlogic/gdx/ai" />
     <extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.maps.tiled.TiledMapTileLayer" />
 </module>

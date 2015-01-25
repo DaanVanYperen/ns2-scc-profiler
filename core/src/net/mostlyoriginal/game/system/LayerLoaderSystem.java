@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.manager;
+package net.mostlyoriginal.game.system;
 
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
@@ -18,6 +18,8 @@ import net.mostlyoriginal.game.component.Layer;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Traveler;
 import net.mostlyoriginal.game.component.ui.RenderMask;
+import net.mostlyoriginal.game.manager.EntityFactoryManager;
+import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.system.logic.RefreshHandlerSystem;
 
 /**
@@ -31,15 +33,13 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 	private EntityFactoryManager entityFactoryManager;
 	private LayerManager layerManager;
 
-	public RefreshHandlerSystem refreshHandlerSystem;
-
 	protected ComponentMapper<Traveler> mTraveler;
 	protected ComponentMapper<Routable> mRoutable;
 	public boolean processed;
 	private boolean loading=false;
 
-	public String mapName = "ns2_nyx";
-	public String mapFile = "data/"+ mapName + ".tga";
+	public String mapName = "ns2_caged_v3";
+	public String mapFile = "data/"+ mapName + ".png";
 
 	public void load() {
 		if (!loading && GWT.isClient()) {
@@ -67,7 +67,8 @@ public class LayerLoaderSystem extends VoidEntitySystem {
 									layer.invalidateTexture();
 									pixmap.dispose();
 									processed = true;
-									refreshHandlerSystem.restart();
+
+									world.getSystem(RefreshHandlerSystem.class).restart();
 								}
 							}
 						});

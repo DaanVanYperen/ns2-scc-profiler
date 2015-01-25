@@ -9,7 +9,7 @@ import net.mostlyoriginal.game.api.ScreenshotHelper;
 import net.mostlyoriginal.game.component.ui.ButtonListener;
 import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.manager.EntityFactoryManager;
-import net.mostlyoriginal.game.manager.LayerLoaderSystem;
+import net.mostlyoriginal.game.system.LayerLoaderSystem;
 import net.mostlyoriginal.game.manager.LayerManager;
 
 /**

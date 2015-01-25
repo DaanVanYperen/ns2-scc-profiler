@@ -17,7 +17,7 @@ import net.mostlyoriginal.game.api.pathfinding.GridNode;
 import net.mostlyoriginal.game.api.pathfinding.GridNodeEuclideanHeuristic;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
-import net.mostlyoriginal.game.manager.LayerLoaderSystem;
+import net.mostlyoriginal.game.system.LayerLoaderSystem;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
 import org.xguzm.pathfinding.grid.GridCell;
@@ -128,7 +128,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 			mRoutable.get(b).setX(bX);
 			mRoutable.get(b).setY(bY);
 
-			DefaultGraphPath path = new DefaultGraphPath();
+			DefaultGraphPath<GridNode> path = new DefaultGraphPath<>(128);
 			if (finder.searchNodePath(cellA, cellB, new GridNodeEuclideanHeuristic(), path) )  {
 
 				// @TODO replace legacy usage of GridCell.

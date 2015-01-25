@@ -22,7 +22,6 @@ import net.mostlyoriginal.game.component.ui.RenderMask;
 import net.mostlyoriginal.game.component.ui.Transient;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.MapMetadataManager;
-import net.mostlyoriginal.game.system.logic.RefreshHandlerSystem;
 import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
 import org.xguzm.pathfinding.grid.GridCell;
@@ -41,7 +40,6 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 	protected ComponentMapper<Routable> mRoutable;
 
 	private PreferredRouteCalculationSystem preferredRouteCalculationSystem;
-	private RefreshHandlerSystem refreshHandlerSystem;
 	private RenderMaskHandlerSystem renderMaskHandlerSystem;
 	private MapMetadataManager mapMetadataManager;
 
