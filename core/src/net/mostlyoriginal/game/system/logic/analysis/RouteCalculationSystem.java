@@ -92,6 +92,8 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 	 */
 	private class resolveRouteJob implements Job {
 
+		public static final int MAX_RUNTIME_MS = 1000 / 60;
+
 		private IndexedAStarPathFinder<GridNode> finder;
 		private GridGraph graph;
 		private final Entity a;
@@ -141,7 +143,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 					mRoutable.get(a).setY(aY);
 					mRoutable.get(b).setX(bX);
 					mRoutable.get(b).setY(bY);
-					
+
 					if ( cellA == null || cellB == null )
 					{
 						finished=true;
@@ -153,7 +155,7 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 				}
 
 				// Allow spending 25 ms (approx 40 times per second)
-				if ( finder.search(request, TimeUtils.millisToNanos(25))) {
+				if ( finder.search(request, TimeUtils.millisToNanos(MAX_RUNTIME_MS))) {
 					finished = true;
 					if (request.pathFound) {
 
