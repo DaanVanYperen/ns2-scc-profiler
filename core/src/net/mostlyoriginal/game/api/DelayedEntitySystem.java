@@ -70,7 +70,7 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 
 				long duration = TimeUtils.millis() - now;
 				if ( duration > maxDuration() ) {
-					Gdx.app.log("Performance", "Slice of " + runnable.getClass().getSimpleName() + " took " + duration + "ms");
+					Gdx.app.debug("Performance", "Slice of " + runnable.getClass().getSimpleName() + " took " + duration + "ms");
 				}
 			}
 
