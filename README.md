@@ -1,11 +1,9 @@
 ns2-scc-profiler
 ================
 
-Generates distance based metrics for natural selection 2 maps.
+Generates distance based metrics for natural selection 2 maps. [Try it online](http://www.mostlyoriginal.net/games/ns2-scc-profiler/)
 
 ![](https://i.imgur.com/uH1lnfs.png)
-
-[Try it online](http://www.mostlyoriginal.net/games/ns2-scc-profiler/)
 
 ### Graphs
 
