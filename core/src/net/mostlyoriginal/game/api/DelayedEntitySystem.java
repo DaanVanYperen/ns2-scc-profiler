@@ -66,10 +66,11 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 				runnable.run();
 				if (runnable.isCompleted()) {
 					jobs.removeFirst();
+					Gdx.app.debug("Performance", "Finished " + runnable.getClass().getSimpleName() + " remaining system jobs: " + jobs.size());
 				}
 
 				long duration = TimeUtils.millis() - now;
-				if ( duration > maxDuration() ) {
+				if ( duration > maxDuration() && duration > 25 ) {
 					Gdx.app.debug("Performance", "Slice of " + runnable.getClass().getSimpleName() + " took " + duration + "ms");
 				}
 			}
