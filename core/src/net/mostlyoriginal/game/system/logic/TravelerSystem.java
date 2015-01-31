@@ -10,12 +10,12 @@ import com.badlogic.gdx.math.Vector2;
 import net.mostlyoriginal.api.component.basic.Bounds;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.Path;
+import net.mostlyoriginal.game.api.pathfinding.grid.GridNode;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.component.TeamMember;
 import net.mostlyoriginal.game.component.Traveler;
 import net.mostlyoriginal.game.manager.LayerManager;
-import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,17 +69,17 @@ public class TravelerSystem extends EntityProcessingSystem {
 
 			float distance = 0;
 			float length = 0;
-			List<GridCell> cells = traveler.path.cells;
+			List<GridNode> cells = traveler.path.cells;
 			for (int i = 1; i < cells.size(); i++) {
-				GridCell c1 = cells.get(i-1);
-				GridCell c2 = cells.get(i);
+				GridNode c1 = cells.get(i-1);
+				GridNode c2 = cells.get(i);
 				length += vTmp.set(c1.x, c1.y).sub(c2.x, c2.y).len();
 
 				if ( length >= traveler.distanceTraveled )
 				{
 					// put at approximate location on path.
-					pos.x = c1.getX() * LayerManager.CELL_SIZE - bounds.cx();
-					pos.y = c1.getY() * LayerManager.CELL_SIZE - bounds.cy();
+					pos.x = c1.x * LayerManager.CELL_SIZE - bounds.cx();
+					pos.y = c1.y * LayerManager.CELL_SIZE - bounds.cy();
 					return;
 				}
 			}

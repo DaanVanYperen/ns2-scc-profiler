@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.api.pathfinding;
+package net.mostlyoriginal.game.api.pathfinding.grid;
 
 import com.badlogic.gdx.ai.pfa.Connection;
 

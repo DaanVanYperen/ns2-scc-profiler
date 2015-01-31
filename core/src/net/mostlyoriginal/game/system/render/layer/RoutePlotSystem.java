@@ -15,6 +15,7 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.component.graphics.Renderable;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.api.DelayedEntitySystem;
+import net.mostlyoriginal.game.api.pathfinding.grid.GridNode;
 import net.mostlyoriginal.game.component.*;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Label;
@@ -24,7 +25,6 @@ import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.MapMetadataManager;
 import net.mostlyoriginal.game.system.logic.RenderMaskHandlerSystem;
 import net.mostlyoriginal.game.system.logic.analysis.PreferredRouteCalculationSystem;
-import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -152,10 +152,10 @@ public class RoutePlotSystem extends DelayedEntitySystem {
 	private void addLabel(Color lineColor, Path path, Pixmap pixmap, RenderMask renderMask, String text, DistanceIndicator distanceIndicator) {
 
 		int center = path.cells.size() / 2;
-		GridCell cell = path.cells.get(center);
+		GridNode cell = path.cells.get(center)  ;
 
 		// use a couple distance to get a smoother angle.
-		GridCell cell2 = center + 3 < path.cells.size() ? path.cells.get(center + 3) : cell;
+		GridNode cell2 = center + 3 < path.cells.size() ? path.cells.get(center + 3) : cell;
 
 		vTmp.set(cell.x, cell.y).sub(cell2.x, cell2.y).rotate90(-1).nor().scl(10).add(cell.x, cell.y);
 		drawBubble(lineColor, text, cell.x, cell.y, (int) vTmp.x, (int) vTmp.y, pixmap, renderMask, distanceIndicator);

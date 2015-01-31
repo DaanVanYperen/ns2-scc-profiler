@@ -6,6 +6,7 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
+import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.ai.pfa.PathFinderRequest;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -14,15 +15,14 @@ import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.api.DelayedEntitySystem;
-import net.mostlyoriginal.game.api.pathfinding.GridGraph;
-import net.mostlyoriginal.game.api.pathfinding.GridNode;
-import net.mostlyoriginal.game.api.pathfinding.GridNodeEuclideanHeuristic;
+import net.mostlyoriginal.game.api.pathfinding.grid.GridGraph;
+import net.mostlyoriginal.game.api.pathfinding.grid.GridNode;
+import net.mostlyoriginal.game.api.pathfinding.grid.GridNodeEuclideanHeuristic;
 import net.mostlyoriginal.game.component.Routable;
 import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
 import net.mostlyoriginal.game.system.LayerLoaderSystem;
-import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -139,10 +139,10 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 					int bY = (int) (posB.y + boundsB.cy()) / LayerManager.CELL_SIZE;
 					final GridNode cellB = graph.get(bX, bY);
 
-					mRoutable.get(a).setX(aX);
-					mRoutable.get(a).setY(aY);
-					mRoutable.get(b).setX(bX);
-					mRoutable.get(b).setY(bY);
+					entityA().setX(aX);
+					entityA().setY(aY);
+					entityB().setX(bX);
+					entityB().setY(bY);
 
 					if ( cellA == null || cellB == null )
 					{
@@ -154,30 +154,41 @@ public class RouteCalculationSystem extends DelayedEntitySystem {
 					request.changeStatus(PathFinderRequest.SEARCH_INITIALIZED);
 				}
 
-				// Allow spending 25 ms (approx 40 times per second)
 				if ( finder.search(request, TimeUtils.millisToNanos(MAX_RUNTIME_MS))) {
 					finished = true;
 					if (request.pathFound) {
-
-						// @TODO replace legacy usage of GridCell.
-						final LinkedList<GridCell> cells = new LinkedList<>();
-						for (Object node : request.resultPath) {
-							cells.add(new GridCell(((GridNode) node).x, ((GridNode) node).y));
-						}
-
-						final Path toDestination = new Path(new SafeEntityReference(b), cells, team, false);
-						ArrayList<GridCell> reversedCells = new ArrayList<GridCell>(cells);
-						Collections.reverse(reversedCells);
-						final Path toSource = new Path(new SafeEntityReference(a), reversedCells, team, true);
-						mRoutable.get(a).paths.get(team).add(toDestination);
-						mRoutable.get(b).paths.get(team).add(toSource);
-
+						generatePath(request.resultPath);
 						request = null;
 					}
 				}
 
 				if ( request != null ) request.statusChanged = false;
 			}
+		}
+
+		private void generatePath(GraphPath<GridNode> resultPath) {
+
+			// @TODO replace legacy usage of GridCell.
+			final LinkedList<GridNode> cells = new LinkedList<>();
+			for (Object node : resultPath) {
+				cells.add(new GridNode(((GridNode) node).x, ((GridNode) node).y));
+			}
+			ArrayList<GridNode> reversedCells = new ArrayList<>(cells);
+			Collections.reverse(reversedCells);
+
+			final Path toDestination = new Path(new SafeEntityReference(b), cells, team, false);
+			final Path toSource = new Path(new SafeEntityReference(a), reversedCells, team, true);
+
+			entityA().paths.get(team).add(toDestination);
+			entityB().paths.get(team).add(toSource);
+		}
+
+		private Routable entityB() {
+			return mRoutable.get(b);
+		}
+
+		private Routable entityA() {
+			return mRoutable.get(a);
 		}
 
 		@Override

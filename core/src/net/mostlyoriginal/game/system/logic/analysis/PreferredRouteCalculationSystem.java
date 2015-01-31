@@ -5,6 +5,10 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.ai.pfa.*;
+import com.badlogic.gdx.ai.pfa.indexed.DefaultIndexedGraph;
+import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
+import com.badlogic.gdx.utils.Array;
 import net.mostlyoriginal.api.component.basic.Pos;
 import net.mostlyoriginal.game.Path;
 import net.mostlyoriginal.game.api.DelayedEntitySystem;
@@ -13,13 +17,8 @@ import net.mostlyoriginal.game.component.Team;
 import net.mostlyoriginal.game.manager.LayerManager;
 import net.mostlyoriginal.game.manager.NavigationGridManager;
 import net.mostlyoriginal.game.system.logic.RefreshHandlerSystem;
-import org.xguzm.pathfinding.*;
-import org.xguzm.pathfinding.finders.AStarFinder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author Daan van Yperen
@@ -29,11 +28,8 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 
 	protected LayerManager layerManager;
 
-	private HashMap<Team, TeamGraph> teamGraphs = new HashMap<>();
-
 	protected ComponentMapper<Pos> mPos;
 	protected ComponentMapper<Routable> mRoutable;
-	private PathFinder<Routable> finder;
 	private NavigationGridManager navigationGridManager;
 	private Team pathfindTeam;
 
@@ -58,42 +54,47 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 
 	@Override
 	protected void initialize() {
-
 		setPrerequisiteSystems(routeCalculationSystem);
-
-		PathFinderOptions pathFinderOptions = new PathFinderOptions() {
-		};
-		pathFinderOptions.heuristic = new Heuristic() {
-			@Override
-			public float calculate(NavigationNode from, NavigationNode to) {
-				return teamGraphs.get(pathfindTeam).getMovementCost((Routable) from, (Routable) to, null);
-			}
-		};
-
-		finder = new AStarFinder<>(Routable.class, pathFinderOptions);
 	}
 
 	@Override
 	protected void collectJobs(ImmutableBag<Entity> entities, LinkedList<Job> jobs) {
 
-		for (Team team : Team.values()) {
-			teamGraphs.put(team, new TeamGraph(team));
+		final Array<Routable> routables = new Array<>(entities.size());
+		for (int a = 0, size = entities.size(); a < size; a++) {
+			// set index, this is required for the pathfinding logic.
+			final Routable routable = mRoutable.get(entities.get(a));
+			routables.add(routable);
+			routable.setIndex(a);
 		}
 
-		for (int a = 0, size = entities.size(); a < size; a++) {
-			for (int b = a + 1; b < size; b++) {
-				jobs.add(new CalculatePreferredRoute(entities.get(a), entities.get(b)));
+		for (Team team : Team.values()) {
+			final DefaultIndexedGraph<Routable> graph = new TeamDefaultIndexedGraph(team, routables);
+
+			for (int a = 0, size = entities.size(); a < size; a++) {
+
+				for (int b = a + 1; b < size; b++) {
+					jobs.add(new CalculatePreferredRoute(team, graph, entities.get(a), entities.get(b)));
+				}
 			}
 		}
 	}
 
 	private class CalculatePreferredRoute implements Job {
+		private Team team;
+		private DefaultIndexedGraph<Routable> graph;
 		private final Entity entityA;
 		private final Entity entityB;
+		private final IndexedAStarPathFinder<Routable> finder;
+		private CalculatePreferredRoute.RoutableHeuristic heuristic = new CalculatePreferredRoute.RoutableHeuristic();
 
-		public CalculatePreferredRoute(Entity entityA, Entity entityB) {
+		public CalculatePreferredRoute(Team team, DefaultIndexedGraph<Routable> graph, Entity entityA, Entity entityB) {
+			this.team = team;
+			this.graph = graph;
 			this.entityA = entityA;
 			this.entityB = entityB;
+
+			finder = new IndexedAStarPathFinder<>(graph);
 		}
 
 		@Override
@@ -102,21 +103,16 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 			final Routable routableB = mRoutable.get(entityB);
 
 			// we don't care about ignored preferred nodes.
-			if (routableA.isIgnoreForPreferred() || routableB.isIgnoreForPreferred())
+			if (routableA.isIgnoreForPreferred() || routableB.isIgnoreForPreferred()) {
 				return;
+			}
 
-			for (Team team : Team.values()) {
+			final GraphPath<Connection<Routable>> path = new DefaultGraphPath<>(8);
 
-				// bit of a hack to get the right distances for each team.
-				pathfindTeam = team;
-
-				final List<Routable> path = finder.findPath(routableA, routableB, teamGraphs.get(team));
-				if (path != null) {
-					path.add(0, routableA);
-
-					for (int i = 1; i < path.size(); i++) {
-						markPreferred(team, path.get(i - 1), path.get(i));
-					}
+          			if ( finder.searchConnectionPath(routableA, routableB, heuristic, path) )
+			{
+				for (Connection<Routable> connection : path) {
+					markPreferred(team, connection.getFromNode(), connection.getToNode());
 				}
 			}
 		}
@@ -138,6 +134,26 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 		public boolean isCompleted() {
 			return true;
 		}
+
+		private class RoutableHeuristic implements Heuristic<Routable> {
+			@Override
+			public float estimate(Routable node1, Routable node2) {
+
+				if ( node1 == node2 ) return 0;
+
+				// get all neighbours for team.
+				for (Path path : node1.paths.get(team)) {
+					Routable routable = getRoutable(path);
+					if (routable == node2) {
+						float l = path.getPixelLength();
+						float l2 = l * 0.005f;
+						return l * (l2 > 1 ? l2 : 1);
+					}
+				}
+
+				return 999999;
+			}
+		}
 	}
 
 	private Routable getRoutable(Path path) {
@@ -146,59 +162,48 @@ public class PreferredRouteCalculationSystem extends DelayedEntitySystem {
 				&& path.destination.isActive() ? mRoutable.get(path.destination.get()) : null;
 	}
 
-	public final class TeamGraph implements NavigationGraph<Routable> {
-
+	private class TeamDefaultIndexedGraph extends DefaultIndexedGraph<Routable> {
 		private Team team;
 
-		public TeamGraph(Team team) {
+		public TeamDefaultIndexedGraph(Team team, Array<Routable> nodes) {
+			super(nodes);
 			this.team = team;
 		}
 
 		@Override
-		public List<Routable> getNeighbors(Routable node) {
-			ArrayList<Routable> list = new ArrayList<Routable>();
+		public Array<Connection<Routable>> getConnections(final Routable fromRoutable) {
 
-			// get all neighbours for team.
-			for (Path path : node.paths.get(team)) {
-				Routable routable = getRoutable(path);
-				if (routable != null && !routable.isIgnoreForPreferred()) {
-					list.add(routable);
+			Array<Connection<Routable>> list = new Array<>();
+
+			// we are only interested in team routes that are not ignored as preferred routes.
+			for (Path path : fromRoutable.paths.get(team)) {
+				final Routable toRoutable = getRoutable(path);
+
+				if (toRoutable != null && !toRoutable.isIgnoreForPreferred()) {
+					list.add(new DefaultConnection<Routable>(fromRoutable, toRoutable) {
+						@Override
+						public float getCost () {
+
+							if ( toRoutable == fromRoutable ) return 0;
+
+							// get all neighbours for team.
+							for (Path path : fromRoutable.paths.get(team)) {
+								Routable routable = getRoutable(path);
+								if (routable == toRoutable) {
+									float l = path.getPixelLength();
+									float l2 = l * 0.005f;
+									return l * (l2 > 1 ? l2 : 1);
+								}
+							}
+
+							return 999999;
+
+						}
+					});
 				}
 			}
 
 			return list;
 		}
-
-		@Override
-		public List<Routable> getNeighbors(Routable node, PathFinderOptions opt) {
-			return getNeighbors(node);
-		}
-
-		@Override
-		public float getMovementCost(Routable node1, Routable node2, PathFinderOptions opt) {
-
-			// get all neighbours for team.
-			for (Path path : node1.paths.get(team)) {
-				Routable routable = getRoutable(path);
-				if (routable == node2) {
-					float l = path.getPixelLength();
-					float l2 = l * 0.005f;
-					return l * (l2 > 1 ? l2 : 1);
-				}
-			}
-
-			return 999999;
-		}
-
-		@Override
-		public boolean isWalkable(Routable node) {
-			return node.isWalkable();
-		}
-
-		@Override
-		public boolean lineOfSight(NavigationNode from, NavigationNode to) {
-			return true;
-		}
 	}
-
 }

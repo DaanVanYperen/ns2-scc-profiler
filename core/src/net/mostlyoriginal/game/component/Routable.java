@@ -1,8 +1,11 @@
 package net.mostlyoriginal.game.component;
 
 import com.artemis.Component;
+import com.badlogic.gdx.ai.pfa.Connection;
+import com.badlogic.gdx.ai.pfa.indexed.IndexedNode;
+import com.badlogic.gdx.utils.Array;
 import net.mostlyoriginal.game.Path;
-import org.xguzm.pathfinding.NavigationNode;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +14,7 @@ import java.util.List;
 /**
  * @author Daan van Yperen
  */
-public class Routable extends Component implements NavigationNode {
+public class Routable extends Component implements IndexedNode<Routable> {
 	public HashMap<Team, List<Path>> paths = new HashMap<>();
 
 	public Routable() {
@@ -20,93 +23,13 @@ public class Routable extends Component implements NavigationNode {
 		}
 	}
 
-	/* for path finders*/
+	private boolean ignoreForPreferred = false;
 	private int x;
 	private int y;
-	private float f, g, h;
-	private boolean isWalkable = true;
-	private int closedOnJob, openedOnJob;
-	private NavigationNode parent;
-	private boolean ignoreForPreferred = false;
-
-	//for BTree
 	private int index;
 
-	@Override
 	public void setIndex(int index) {
 		this.index = index;
-	}
-
-
-	@Override
-	public int getIndex() {
-		return index;
-	}
-
-	public boolean isWalkable() {
-		return isWalkable;
-	}
-
-	public void setWalkable(boolean isWalkable) {
-		this.isWalkable = isWalkable;
-	}
-
-	public float getF() {
-		return f;
-	}
-
-	public void setF(float f) {
-		this.f = f;
-	}
-
-	@Override
-	public float getG() {
-		return g;
-	}
-
-	@Override
-	public void setG(float g) {
-		this.g = g;
-	}
-
-	@Override
-	public float getH() {
-		return h;
-	}
-
-	@Override
-	public void setH(float h) {
-		this.h = h;
-	}
-
-	@Override
-	public NavigationNode getParent() {
-		return parent;
-	}
-
-	@Override
-	public void setParent(NavigationNode parent) {
-		this.parent = parent;
-	}
-
-	@Override
-	public int getClosedOnJob() {
-		return closedOnJob;
-	}
-
-	@Override
-	public void setClosedOnJob(int closedOnJob) {
-		this.closedOnJob = closedOnJob;
-	}
-
-	@Override
-	public int getOpenedOnJob() {
-		return openedOnJob;
-	}
-
-	@Override
-	public void setOpenedOnJob(int openedOnJob) {
-		this.openedOnJob = openedOnJob;
 	}
 
 	public int getX() {
@@ -131,5 +54,15 @@ public class Routable extends Component implements NavigationNode {
 
 	public void setIgnoreForPreferred(boolean ignoreForPreferred) {
 		this.ignoreForPreferred = ignoreForPreferred;
+	}
+
+	@Override
+	public int getIndex() {
+		return index;
+	}
+
+	@Override
+	public Array<Connection<Routable>> getConnections() {
+		throw new NotImplementedException();
 	}
 }

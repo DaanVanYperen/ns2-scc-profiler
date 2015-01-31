@@ -1,4 +1,4 @@
-package net.mostlyoriginal.game.api.pathfinding;
+package net.mostlyoriginal.game.api.pathfinding.grid;
 
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedNode;
@@ -23,6 +23,11 @@ public class GridNode implements IndexedNode<GridNode> {
 		this.x = x;
 		this.y = y;
 		this.index = index;
+	}
+
+	public GridNode(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override

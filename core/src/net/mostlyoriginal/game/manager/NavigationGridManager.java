@@ -2,7 +2,7 @@ package net.mostlyoriginal.game.manager;
 
 import com.artemis.Manager;
 import com.artemis.annotations.Wire;
-import net.mostlyoriginal.game.api.pathfinding.GridGraph;
+import net.mostlyoriginal.game.api.pathfinding.grid.GridGraph;
 import net.mostlyoriginal.game.component.Team;
 
 import java.util.HashMap;

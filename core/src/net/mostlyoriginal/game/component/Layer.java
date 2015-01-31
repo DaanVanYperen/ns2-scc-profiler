@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import net.mostlyoriginal.game.Path;
+import net.mostlyoriginal.game.api.pathfinding.grid.GridNode;
 import net.mostlyoriginal.game.manager.LayerManager;
-import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.List;
 
@@ -47,12 +47,12 @@ public class Layer extends Component {
 	public void drawPath(Path path, Color color, boolean shadow) {
 
 		// shadow.
-		final List<GridCell> cells = path.cells;
+		final List<GridNode> cells = path.cells;
 
 		if (shadow) {
 			pixmap.setColor(new Color(0, 0, 0, 0.35f));
 			for (int i = 1; i < cells.size(); i++) {
-				GridCell p1 = cells.get(i - 1);
+				GridNode p1 = cells.get(i - 1);
 				pixmap.drawPixel(
 						p1.x, pixmap.getHeight() - p1.y + 1);
 			}
@@ -60,8 +60,8 @@ public class Layer extends Component {
 
 		pixmap.setColor(color);
 		for (int i = 1; i < cells.size(); i++) {
-			GridCell p1 = cells.get(i - 1);
-			GridCell p2 = cells.get(i);
+			GridNode p1 = cells.get(i - 1);
+			GridNode p2 = cells.get(i);
 			pixmap.drawLine(
 					p1.x, pixmap.getHeight() - p1.y,
 					p2.x, pixmap.getHeight() - p2.y);

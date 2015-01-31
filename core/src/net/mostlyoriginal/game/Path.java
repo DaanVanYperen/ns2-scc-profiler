@@ -3,8 +3,8 @@ package net.mostlyoriginal.game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import net.mostlyoriginal.api.utils.reference.SafeEntityReference;
+import net.mostlyoriginal.game.api.pathfinding.grid.GridNode;
 import net.mostlyoriginal.game.component.Team;
-import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 public class Path implements Comparable<Path> {
 
 	public SafeEntityReference destination;
-	public List<GridCell> cells;
+	public List<GridNode> cells;
 	public Team team;
 	public boolean reversed = false;
 	public boolean preferred = false;
@@ -22,7 +22,7 @@ public class Path implements Comparable<Path> {
 	protected static final Vector2 vTmp = new Vector2();
 	public Color color = new Color();
 
-	public Path(SafeEntityReference destination, List<GridCell> cells, Team team, boolean reversed) {
+	public Path(SafeEntityReference destination, List<GridNode> cells, Team team, boolean reversed) {
 		this.destination = destination;
 		this.cells = cells;
 		this.team = team;
@@ -33,8 +33,8 @@ public class Path implements Comparable<Path> {
 	{
 		float length = 0;
 		for (int i = 1; i < cells.size(); i++) {
-			GridCell c1 = cells.get(i-1);
-			GridCell c2 = cells.get(i);
+			final GridNode c1 = cells.get(i-1);
+			final GridNode c2 = cells.get(i);
 			length += vTmp.set(c1.x, c1.y).sub(c2.x, c2.y).len();
 		}
 
