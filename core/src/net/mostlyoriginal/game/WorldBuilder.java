@@ -12,22 +12,38 @@ import com.artemis.utils.Bag;
  */
 public class WorldBuilder {
 
-	Bag<Manager> managers = new Bag<>();
-	Bag<SystemRegistration> systems = new Bag<>();
+	private Bag<Manager> managers;
+	private Bag<SystemRegistration> systems;
 
 	public WorldBuilder() {
+		reset();
 	}
 
-	/** Return world, built. */
+	/** Assemble world with managers and systems. */
 	public World build() {
 		World world = new World();
+		registerManagers(world);
+		registerSystems(world);
+		reset();
+		return world;
+	}
+
+	private void registerManagers(World world) {
 		for (Manager manager : managers) {
 			world.setManager(manager);
 		}
+	}
+
+	private void registerSystems(World world) {
 		for (SystemRegistration system : systems) {
 			world.setSystem( system.system, system.passive);
 		}
-		return world;
+	}
+
+	/** Reset builder */
+	private void reset() {
+		managers = new Bag<>();
+		systems = new Bag<>();
 	}
 
 	/** Return world, built and initialized */
@@ -38,7 +54,10 @@ public class WorldBuilder {
 		return world;
 	}
 
-	/** Add one or more managers to the world. */
+	/**
+	 * Add one or more managers to the world.
+	 * Managers are always added before systems.
+	 */
 	public WorldBuilder with(Manager ... managers) {
 		for (Manager manager : managers) {
 			this.managers.add(manager);
@@ -46,13 +65,19 @@ public class WorldBuilder {
 		return this;
 	}
 
-	/** Add one or more managers to the world. */
+	/**
+	 * Register active system(s).
+	 * Order is preserved.
+	 */
 	public WorldBuilder with(EntitySystem ... systems) {
 		addSystems(systems, false);
 		return this;
 	}
 
-	/** Register passive systems. */
+	/**
+	 * Register passive systems.
+	 * Order is preserved.
+	 */
 	public WorldBuilder withPassive(EntitySystem ... systems) {
 		addSystems(systems, true);
 		return this;
