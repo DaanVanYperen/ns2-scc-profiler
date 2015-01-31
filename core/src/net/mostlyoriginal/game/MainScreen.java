@@ -47,81 +47,64 @@ public class MainScreen implements Screen {
 
 	public MainScreen() {
 
-		world = new World();
-
-		/** UTILITY - MANAGERS */
-
-		world.setManager(new EventManager());
-
-		world.setManager(new GroupManager());
-		world.setManager(new TagManager());
-		world.setManager(new UuidEntityManager());
-
-		world.setManager(new NavigationGridManager());
-		world.setManager(new LayerManager());
-
-		world.setManager(new EntityFactoryManager());
-		world.setManager(new FontManager());
-
-		world.setManager(new MapMetadataManager());
-
-		/** UTILITY - PASSIVE */
-
-		world.setSystem(new CollisionSystem());
-
-		world.setSystem(new MouseCursorSystem());
-		world.setSystem(new MouseClickSystem());
-		world.setSystem(new DraggableSystem());
-		world.setSystem(new ButtonSystem());
-		world.setSystem(new ToolSystem());
-
-		world.setSystem(new DeletableSystem());
-
-		world.setSystem(new LayerLoaderSystem());
-
-		// 2. Plotting.
-		world.setSystem(new RoutePlotSystem());
-		world.setSystem(new TechpointSymmetrySystem());
-
-		world.setSystem(new TravelerSystem());
-
-		world.setSystem(new AssetSystem());
-		world.setSystem(new CameraSystem(CAMERA_ZOOM_FACTOR));
-		//world.setSystem(new BlockadeSystem());
-
-
-		world.setSystem(new RenderMaskHandlerSystem());
-
-		/** Rendering */
-
 		RenderBatchingSystem renderBatchingSystem = new RenderBatchingSystem();
-		world.setSystem(renderBatchingSystem);
-		world.setSystem(new AnimRenderSystem(renderBatchingSystem), false);
-		world.setSystem(new LayerRenderSystem(renderBatchingSystem), false);
-		world.setSystem(new LabelRenderSystem(renderBatchingSystem), false);
-
-		world.setSystem(new TeamChangingSystem());
-		world.setSystem(new TechpointPressureSystem());
-		world.setSystem(new DomainSystem());
-
-
-		world.setSystem(new RefreshHandlerSystem());
-		world.setSystem(new PersistHandlerSystem());
-
 		screenshotHandlerSystem = new ScreenshotHandlerSystem();
-		world.setSystem(screenshotHandlerSystem);
 
-		// 1. Route Calculation.
-		// we run these in reverse, so dependencies will have to cycle one frame before
-		// being called which will avoid hitching due to multiple systems processing at once.
-		world.setSystem(new PreferredRouteCalculationSystem());
-		world.setSystem(new RouteCalculationSystem());
-		world.setSystem(new NavigationGridCalculationSystem());
+		world = new WorldBuilder()
+				.with(
+						new EventManager(),
+						new GroupManager(),
+						new TagManager(),
+						new UuidEntityManager(),
+						new NavigationGridManager(),
+						new LayerManager(),
+						new EntityFactoryManager(),
+						new FontManager(),
+						new MapMetadataManager())
+				.with(
+						new CollisionSystem(),
+						new MouseCursorSystem(),
+						new MouseClickSystem(),
+						new DraggableSystem(),
+						new ButtonSystem(),
+						new ToolSystem(),
+						new DeletableSystem(),
+						new LayerLoaderSystem(),
 
-		world.setSystem(new InputSystem());
-		world.setSystem(new MilestoneHandlerSystem());
+						// 2. Plotting.
+						new RoutePlotSystem(),
+						new TechpointSymmetrySystem(),
+						new TravelerSystem(),
+						new AssetSystem(),
+						new CameraSystem(CAMERA_ZOOM_FACTOR),
+						new RenderMaskHandlerSystem(),
 
-		world.initialize();
+						/** Rendering */
+
+						renderBatchingSystem)
+				.withPassive(
+						new AnimRenderSystem(renderBatchingSystem),
+						new LayerRenderSystem(renderBatchingSystem),
+						new LabelRenderSystem(renderBatchingSystem))
+				.with(
+						new TeamChangingSystem(),
+						new TechpointPressureSystem(),
+						new DomainSystem(),
+
+						new RefreshHandlerSystem(),
+						new PersistHandlerSystem(),
+
+						screenshotHandlerSystem,
+
+						// 1. Route Calculation.
+						// we run these in reverse, so dependencies will have to cycle one frame before
+						// being called which will avoid hitching due to multiple systems processing at once.
+						new PreferredRouteCalculationSystem(),
+						new RouteCalculationSystem(),
+						new NavigationGridCalculationSystem(),
+
+						new InputSystem(),
+						new MilestoneHandlerSystem()).initialize();
 
 		new EntityBuilder(world).with(new MouseCursor(), new Pos(), new Bounds(0, 0, 11, 12), new Renderable(10000)).tag("cursor").build();
 	}
