@@ -12,7 +12,6 @@ import net.mostlyoriginal.api.component.graphics.Anim;
 import net.mostlyoriginal.api.component.graphics.Color;
 import net.mostlyoriginal.api.component.graphics.Invisible;
 import net.mostlyoriginal.api.component.graphics.Renderable;
-import net.mostlyoriginal.game.api.GdxUtil;
 import net.mostlyoriginal.game.component.ui.Button;
 import net.mostlyoriginal.game.component.ui.Clickable;
 import net.mostlyoriginal.game.component.ui.Label;
@@ -46,7 +45,7 @@ public class ButtonSystem extends EntityProcessingSystem {
         super.initialize();
 
         hintlabel = new Label("hintlabel");
-        new EntityBuilder(world).with(new Renderable(), new Pos(10, 6), hintlabel, GdxUtil.asColor("004290")).build();
+        new EntityBuilder(world).with(new Renderable(), new Pos(10, 6), hintlabel, new Color("004290")).build();
     }
 
     @Override
@@ -88,7 +87,7 @@ public class ButtonSystem extends EntityProcessingSystem {
                 mAnim.get(e).id = id;
             } else if (mColor.has(e)) {
                 // @todo fix this hack! XD
-                mColor.get(e).set(GdxUtil.asColor(id));
+                mColor.get(e).setHex(id);
             }
         }
     }
